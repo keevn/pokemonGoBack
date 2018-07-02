@@ -88,3 +88,7 @@ typings/
 
 .idea/
 /Server/target/
+/WebApp/.eslintrc
+/Server/Server.iml
+/WebApp/WebApp.iml
+/WebApp/package-lock.json

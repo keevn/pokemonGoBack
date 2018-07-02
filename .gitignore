@@ -88,3 +88,7 @@ typings/
 
 .idea/
 /Server/target/
+/WebApp/package-lock.json
+/.gitignore
+/WebApp/.eslintrc
+/Server/Server.iml

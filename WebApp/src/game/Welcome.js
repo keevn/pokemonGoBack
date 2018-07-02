@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {checkUsernameAvailability, checkEmailAvailability} from '../util/APIUtils';
 import './Welcome.css';
 import {Link} from 'react-router-dom';
 
@@ -8,7 +7,7 @@ import {Button, notification} from 'antd';
 class Welcome extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {};
     }
 
 

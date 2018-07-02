@@ -122,6 +122,7 @@ class App extends Component {
                                    render={(props) => <Profile isAuthenticated={this.state.isAuthenticated}
                                                                currentUser={this.state.currentUser} {...props}  />}>
                             </Route>
+                            <Redirect to="/"/>
                         </Switch>
                     </div>
                 </Content>

@@ -40,11 +40,11 @@ class GameList extends Component {
 
         promise
             .then(response => {
-                const polls = this.state.polls.slice();
+                const games = this.state.polls.slice();
                 const currentVotes = this.state.currentVotes.slice();
 
                 this.setState({
-                    games: polls.concat(response.content),
+                    games: games.concat(response.content),
                     page: response.page,
                     size: response.size,
                     totalElements: response.totalElements,

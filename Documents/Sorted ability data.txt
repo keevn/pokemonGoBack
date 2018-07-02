@@ -1,0 +1,201 @@
+1	Act Cute
+Your opponent puts a card from his or her hand on the bottom of his or her deck.
+
+2	Scratch	20
+
+3	Quick Attack	10+
+Flip a coin. If heads, this attack does 30 more damage.
+
+4	Flying Elekick	50
+
+5	Nuzzle 
+Flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed.
+
+6	Quick Attack	20+
+Flip a coin. If heads, this attack does 10 more damage.
+
+7	Circle Circuit	20x
+This attack does 20 damage times the number of your Benched Pokémon.
+
+8	Thunderbolt 	100
+Discard all Energy attached to this Pokémon.
+
+9	Rain Splash	20
+
+10	Soaking Horn	10+
+If this Pokémon was healed during this turn, this attack does 80 more damage.
+
+11	Reckless Charge	40
+This Pokémon does 10 damage to itself.
+
+12	Reckless Charge	20
+This Pokémon does 10 damage to itself.
+
+13	Cut	30
+
+14	Pound	10
+
+15	Clamp Crush	30
+Flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed and discard an Energy attached to that Pokémon.
+
+16	Spike Cannon	30x
+Flip 5 coins. This attack does 30 damage times the number of heads.
+
+17	Spiral Drain
+Heal 20 damage from this Pokemon
+
+18 	Aurora Beam	80
+
+19	Wing Attack	20
+
+20 	Brave Bird	80
+This Pokémon does 20 damage to itself.
+
+21	Lunge	20
+Flip a coin. If tails, this attack does nothing.
+
+22	Slash	30
+
+23	Nyan Press	40+
+Flip a coin. If heads, this attack does 40 more damage. If tails, your opponent's Active Pokémon is now Paralyzed.
+
+24	Random Spark
+This attack does 30 damage to 1 of your opponent's Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)
+
+25	Bite	40
+
+26	Bite	10
+
+27	Knuckle Punch	30
+
+28	Electroslug	90
+
+29	Knuckle Punch	20
+
+30	Destructive Beam
+Flip a coin. If heads, discard an Energy attached to your opponent's Active Pokémon.
+
+31	Tierno
+Draw 3 cards.
+
+32	Potion
+Heal 30 damage from 1 of your Pokémon.
+
+33	Misty's Determination
+Discard a card from your hand. If you do, look at the top 8 cards of your deck and put 1 of them into your hand. Shuffle the other cards back into your deck.
+
+34 	Pokémon Center Lady
+Heal 60 damage and remove all Special Conditions from 1 of your Pokémon.
+
+35	Clemont
+Search your deck for up to 4 Lightning Energy cards, reveal them, and put them into your hand. Shuffle your deck afterward.
+
+36	Ear Influence
+Move as many damage counters on your opponent's Pokémon as you like to any of your opponent's other Pokémon in any way you like.
+
+37	Psychic	60+
+This attack does 10 more damage for each Energy attached to your opponent's Active Pokémon.
+
+38	Hug	30
+The Defending Pokémon can't retreat during your opponent's next turn.
+
+39	Wish
+Search your deck for a card and put it into your hand. Shuffle your deck afterward.
+
+40	Heart Sign	50
+
+41	Act Tough	10+
+If this Pokémon has any Darkness Energy attached to it, this attack does 20 more damage.
+
+42	Exhausted Tackle
+Flip a coin. If heads, this attack does 30 damage to your opponent's Active Pokémon. If tails, this Pokémon does 30 damage to itself.
+
+43	Knuckle Punch	10
+
+44	Double Stab10×
+Flip 2 coins. This attack does 10 damage times the number of heads.
+
+45	Doduo Delivery
+Draw 2 cards.
+
+46	Fury Attack	40×
+Flip 3 coins. This attack does 40 damage times the number of heads.
+
+47	Rollout	10
+
+48	Flail	10x
+This attack does 10 damage times the number of damage counters on this Pokémon.
+
+49	Skill Dive
+This attack does 10 damage to 1 of your opponent's Pokémon. (Don't apply Weakness and Resistance for Benched Pokémo
+
+50	Poison Ring
+Your opponent's Active Pokémon is now Poisoned. That Pokémon can't retreat during your opponent's next turn.
+
+51	Sleep Poison
+Flip a coin. If heads, your opponent's Active Pokémon is now Asleep and Poisoned.
+
+52	Mine
+Look at the top card of your opponent's deck. Then, you may have your opponent shuffle his or her deck.
+
+53	Mud-Slap	20
+
+54	Earthquake	60
+This attack does 10 damage to each of your Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)
+
+55	Rock Tumble	60
+This attack's damage isn't affected by Resistance.
+
+56 Scratch	10
+
+57	Spacing Out
+Flip a coin. If heads, heal 10 damage from this Pokémon.
+
+58	Scavenge
+Discard a Psychic Energy attached to this Pokémon. If you do, put an Item card from your discard pile into your hand.
+
+59	Stretch Kick
+This attack does 30 damage to 1 of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)
+
+60	Spiral Kick	30
+
+61	Bullet Punch	20+
+Flip 2 coins. This attack does 20 more damage for each heads.
+
+62	Mach Cross	60
+
+63	Beatdown	40
+
+64	Twinkle
+Your opponent's Active Pokémon is now Asleep.
+
+65	Fake Out	30
+Flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed.
+
+66	Ambush	40+
+Flip a coin. If heads, this attack does 30 more damage.
+
+67	Floral Crown
+At the end of your opponent's turn, heal 20 damage from the Basic Pokémon this card is attached to.
+
+68	Poké Ball
+Flip a coin. If heads, search your deck for a Pokémon, reveal it, and put it into your hand. Shuffle your deck afterward.
+
+69	Shauna
+Shuffle your hand into your deck. Then, draw 5 cards.
+
+70	Pokémon Fan Club
+Search your deck for up to 2 Basic Pokémon, reveal them, and put them into your hand. Shuffle your deck afterward.
+
+71	Switch
+Switch your Active Pokémon with 1 of your Benched Pokémon.
+
+72	Energy Switch
+Move a basic Energy from 1 of your Pokémon to another of your Pokémon.
+
+73	Red Card
+Your opponent shuffles his or her hand into his or her deck and draws 4 cards.
+
+74	Wally
+Search your deck for a card that evolves from 1 of your Pokémon (excluding Pokémon-EX) and put it onto that Pokémon. (This counts as evolving that Pokémon.) Shuffle your deck afterward. You can use this card during your first turn or on a Pokémon that was put into play this turn.
+

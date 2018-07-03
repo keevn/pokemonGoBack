@@ -41,6 +41,10 @@ public class User extends DateAudit {
     @Size(max = 100)
     private String password;
 
+    @OneToOne(targetEntity = UserDeck.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "default_deck_id")
+    private UserDeck defaultDeck;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -104,5 +108,13 @@ public class User extends DateAudit {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public UserDeck getDefaultDeck() {
+        return defaultDeck;
+    }
+
+    public void setDefaultDeck(UserDeck deck) {
+        this.defaultDeck = deck;
     }
 }

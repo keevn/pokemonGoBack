@@ -8,7 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>PokemonGoBackServer</name>
+    <deck_name>PokemonGoBackServer</deck_name>
     <description>Team project Copm 354</description>
 
     <parent>

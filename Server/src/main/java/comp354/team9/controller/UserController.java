@@ -2,8 +2,10 @@ package comp354.team9.controller;
 
 import comp354.team9.exception.ResourceNotFoundException;
 import comp354.team9.model.User;
+import comp354.team9.model.UserDeck;
 import comp354.team9.payload.*;
 import comp354.team9.repository.UserRepository;
+import comp354.team9.repository.UserDeckRepository;
 import comp354.team9.security.UserPrincipal;
 import comp354.team9.security.CurrentUser;
 import org.slf4j.Logger;
@@ -12,12 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserDeckRepository userDeckRepository;
 
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -49,6 +56,13 @@ public class UserController {
         UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt());
 
         return userProfile;
+    }
+
+    @GetMapping("/users/{username}/decks")
+    public List<UserDeck> getUserDeckList(@PathVariable(value = "username") String username) {
+        List<UserDeck> decks = userDeckRepository.findByUserName(username);
+
+        return decks;
     }
     
 

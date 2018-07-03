@@ -7,6 +7,7 @@ public class UserProfile {
     private String username;
     private String name;
     private Instant joinedAt;
+    private Long defaultDeckId;
 
     public UserProfile(Long id, String username, String name, Instant joinedAt) {
         this.id = id;
@@ -46,5 +47,12 @@ public class UserProfile {
     public void setJoinedAt(Instant joinedAt) {
         this.joinedAt = joinedAt;
     }
-    
+
+    public Long getDefaultDeckId() {
+        return defaultDeckId;
+    }
+
+    public void setDefaultDeckId(Long defaultDeckId) {
+        this.defaultDeckId = defaultDeckId;
+    }
 }

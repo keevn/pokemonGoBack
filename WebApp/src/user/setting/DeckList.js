@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {getUserDecks} from '../../util/APIUtils';
 import {castVote} from '../../util/APIUtils';
 import LoadingIndicator from '../../common/LoadingIndicator';
-import {Button, Icon, notification} from 'antd';
+import {Button, Icon, Upload, notification} from 'antd';
 import {LIST_SIZE} from '../../constants';
 import {withRouter} from 'react-router-dom';
 import './DeckList.css';
@@ -89,8 +89,24 @@ class DeckList extends Component {
 
     render() {
 
+        const props = {
+            action: '',
+            onChange({file, fileList}) {
+                if (file.status !== 'uploading') {
+                    console.log(file, fileList);
+                }
+            },
+            defaultFileList: [],
+        };
+
         return (
             <div className="decks-container">
+                <h2>Upload deck.</h2>
+                <Upload {...props}>
+                    <Button>
+                        <Icon type="upload"/> Upload
+                    </Button>
+                </Upload>,
                 {
                     !this.state.isLoading && this.state.decks.length === 0 ? (
                         <div className="no-decks-found">

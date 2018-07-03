@@ -104,10 +104,10 @@ class Profile extends Component {
                                       className="profile-tabs">
                                     <TabPane tab={`${this.state.user.gameCount} Played Games`} key="1">
                                         <GameList username={this.props.match.params.username}
-                                                  type="USER_CREATED_POLLS"/>
+                                        />
                                     </TabPane>
                                     <TabPane tab={`Deck Management`} key="2">
-                                        <DeckList username={this.props.match.params.username} type="USER_VOTED_POLLS"/>
+                                        <DeckList username={this.props.match.params.username}/>
                                     </TabPane>
                                 </Tabs>
                             </div>

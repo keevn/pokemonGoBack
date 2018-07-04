@@ -1,11 +1,12 @@
 package comp354.team9.controller;
 
+import comp354.team9.service.UserDeckService;
+import comp354.team9.util.AppConstants;
 import comp354.team9.exception.ResourceNotFoundException;
 import comp354.team9.model.User;
 import comp354.team9.model.UserDeck;
 import comp354.team9.payload.*;
 import comp354.team9.repository.UserRepository;
-import comp354.team9.repository.UserDeckRepository;
 import comp354.team9.security.UserPrincipal;
 import comp354.team9.security.CurrentUser;
 import org.slf4j.Logger;
@@ -22,9 +23,8 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
-    private UserDeckRepository userDeckRepository;
-
-
+    private UserDeckService userDeckService;
+    
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/user/me")
@@ -65,6 +65,15 @@ public class UserController {
 
         return deck;
     }
+
+
+    @GetMapping("/users/{username}/decks")
+    public PagedResponse<DeckInfo> getPolls(@CurrentUser UserPrincipal currentUser,
+                                            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size, @PathVariable("username") String username) {
+        return userDeckService.getAllDecks(currentUser, page, size);
+    }
+
     
 
 }

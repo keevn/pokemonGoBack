@@ -16,7 +16,9 @@ public class UserProfile {
         this.username = user.getUsername();
         this.name = user.getName();
         this.joinedAt = user.getCreatedAt();
-        this.deck = new DeckInfo(user.getDefaultDeck());
+        if (user.getDefaultDeck()!=null)  {
+            this.deck = new DeckInfo(user.getDefaultDeck());
+        }else{this.deck=null;}
     }
 
     public Long getId() {

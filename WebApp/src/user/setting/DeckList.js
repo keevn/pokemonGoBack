@@ -27,7 +27,6 @@ class DeckList extends Component {
         this.loadDeckList = this.loadDeckList.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
         this.loadDefaultDeck = this.loadDefaultDeck.bind(this);
-        this.handleUpload = this.handleUpload.bind(this);
     }
 
     loadDefaultDeck() {
@@ -62,17 +61,15 @@ class DeckList extends Component {
 
         promise
             .then(response => {
-                const polls = this.state.polls.slice();
-                const currentVotes = this.state.currentVotes.slice();
+                const decks = this.state.decks.slice();
 
                 this.setState({
-                    polls: polls.concat(response.content),
+                    decks: decks.concat(response.content),
                     page: response.page,
                     size: response.size,
                     totalElements: response.totalElements,
                     totalPages: response.totalPages,
                     last: response.last,
-                    currentVotes: currentVotes.concat(Array(response.content.length).fill(null)),
                     isLoading: false
                 });
             }).catch(error => {
@@ -107,40 +104,7 @@ class DeckList extends Component {
     handleLoadMore() {
         this.loadDeckList(this.state.page + 1);
     }
-
-    handleUpload(file) {
-        const {fileList} = this.state;
-        const formData = new FormData();
-        fileList.forEach((file) => {
-            formData.append('files[]', file);
-        });
-
-        this.setState({
-            uploading: true,
-        });
-
-        // You can use any AJAX library you like
-        uploadDeckFile(file, () => {
-            this.setState({
-                fileList: [],
-                uploading: false,
-            });
-            notification.success({
-                message: 'PokemonGoBack',
-                description: 'upload successfully!'
-            });
-        }, () => {
-            this.setState({
-                uploading: false,
-            });
-            notification.error({
-                message: 'PokemonGoBack',
-                description: 'upload failed!'
-            });
-        });
-    }
-
-
+    
     render() {
 
         const props = {
@@ -178,11 +142,6 @@ class DeckList extends Component {
                     </Button>
                         </Upload>
                     </FormItem>
-                    <FormItem wrapperCol={{span: 12, offset: 6}}>
-                        <Button type="primary" htmlType="submit" size="large"
-                                className="login-form-button">Submit</Button>
-                    </FormItem>
-
                 </Form>
 
                 {

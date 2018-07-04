@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {getUserDecks, getUserDefaultDeck} from '../../util/APIUtils';
+import {getUserDecks, getUserDefaultDeck, uploadDeckFile} from '../../util/APIUtils';
 import {castVote} from '../../util/APIUtils';
 import LoadingIndicator from '../../common/LoadingIndicator';
-import {Button, Icon, Upload, notification} from 'antd';
-import {LIST_SIZE} from '../../constants';
+import {Button, Icon, Upload, notification, Form} from 'antd';
+import {ACCESS_TOKEN, LIST_SIZE, API_BASE_URL} from '../../constants';
 import {withRouter} from 'react-router-dom';
 import './DeckList.css';
+
+const FormItem = Form.Item;
 
 class DeckList extends Component {
     constructor(props) {
@@ -18,11 +20,14 @@ class DeckList extends Component {
             totalPages: 0,
             last: true,
             currentVotes: [],
-            isLoading: false
+            fileList: [],
+            isLoading: false,
+            uploading: false
         };
         this.loadDeckList = this.loadDeckList.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
         this.loadDefaultDeck = this.loadDefaultDeck.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
     }
 
     loadDefaultDeck() {
@@ -103,27 +108,83 @@ class DeckList extends Component {
         this.loadDeckList(this.state.page + 1);
     }
 
+    handleUpload(file) {
+        const {fileList} = this.state;
+        const formData = new FormData();
+        fileList.forEach((file) => {
+            formData.append('files[]', file);
+        });
+
+        this.setState({
+            uploading: true,
+        });
+
+        // You can use any AJAX library you like
+        uploadDeckFile(file, () => {
+            this.setState({
+                fileList: [],
+                uploading: false,
+            });
+            notification.success({
+                message: 'PokemonGoBack',
+                description: 'upload successfully!'
+            });
+        }, () => {
+            this.setState({
+                uploading: false,
+            });
+            notification.error({
+                message: 'PokemonGoBack',
+                description: 'upload failed!'
+            });
+        });
+    }
+
 
     render() {
 
         const props = {
-            action: '',
-            onChange({file, fileList}) {
-                if (file.status !== 'uploading') {
-                    console.log(file, fileList);
+            name: 'file',
+            action: API_BASE_URL + "/uploadFile",
+            headers: {
+                authorization: 'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
+            },
+            onChange(info) {
+                if (info.file.status !== 'uploading') {
+                    console.log(info.file, info.fileList);
+                }
+                if (info.file.status === 'done') {
+                    notification.success({
+                        message: 'PokemonGoBack',
+                        description: info.file.name + ' upload successfully!'
+                    });
+                } else if (info.file.status === 'error') {
+                    notification.error({
+                        message: 'PokemonGoBack',
+                        description: info.file.name + ' file upload failed.'
+                    });
                 }
             },
-            defaultFileList: [],
         };
 
         return (
             <div className="decks-container">
                 <h2>Upload deck.</h2>
-                <Upload {...props}>
+                <Form>
+                    <FormItem>
+                        <Upload {...props}>
                     <Button>
-                        <Icon type="upload"/> Upload
+                        <Icon type="upload"/> Click to choice deck file
                     </Button>
-                </Upload>,
+                        </Upload>
+                    </FormItem>
+                    <FormItem wrapperCol={{span: 12, offset: 6}}>
+                        <Button type="primary" htmlType="submit" size="large"
+                                className="login-form-button">Submit</Button>
+                    </FormItem>
+
+                </Form>
+
                 {
                     !this.state.isLoading && this.state.decks.length === 0 ? (
                         <div className="no-decks-found">

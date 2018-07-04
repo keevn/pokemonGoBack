@@ -1,5 +1,7 @@
 package comp354.team9.payload;
 
+import comp354.team9.model.User;
+
 import java.time.Instant;
 
 public class UserProfile {
@@ -7,14 +9,14 @@ public class UserProfile {
     private String username;
     private String name;
     private Instant joinedAt;
-    private Long defaultDeckId;
+    private DeckInfo deck;
 
-    public UserProfile(Long id, String username, String name, Instant joinedAt, Long defaultDeckId) {
-        this.id = id;
-        this.username = username;
-        this.name = name;
-        this.joinedAt = joinedAt;
-        this.defaultDeckId = defaultDeckId;
+    public UserProfile(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.name = user.getName();
+        this.joinedAt = user.getCreatedAt();
+        this.deck = new DeckInfo(user.getDefaultDeck());
     }
 
     public Long getId() {
@@ -49,11 +51,12 @@ public class UserProfile {
         this.joinedAt = joinedAt;
     }
 
-    public Long getDefaultDeckId() {
-        return defaultDeckId;
+
+    public DeckInfo getDeck() {
+        return deck;
     }
 
-    public void setDefaultDeckId(Long defaultDeckId) {
-        this.defaultDeckId = defaultDeckId;
+    public void setDeck(DeckInfo deck) {
+        this.deck = deck;
     }
 }

@@ -6,7 +6,7 @@ const request = (options) => {
     })
 
     if (localStorage.getItem(ACCESS_TOKEN)) {
-        headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN))
+        headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN));
     }
 
     const defaults = {headers: headers};
@@ -22,6 +22,7 @@ const request = (options) => {
             })
         );
 };
+
 
 export function login(loginRequest) {
     return request({
@@ -89,6 +90,32 @@ export function getUserDefaultDeck(username) {
         method: 'GET'
     });
 
+}
+
+export function uploadDeckFile(formData, onSuccess, onError) {
+
+
+    let options = {
+        url: API_BASE_URL + "/uploadFile",
+        method: 'POST',
+        body: formData,
+    }
+
+    const headers = new Headers({
+        'Accept': 'application/json'
+    });
+
+
+    if (localStorage.getItem(ACCESS_TOKEN)) {
+        headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN));
+    }
+
+    const defaults = {headers: headers};
+    options = Object.assign({}, defaults, options);
+
+    return fetch(options.url, options)
+        .then(onSuccess)
+        .catch(onError);
 }
 
 

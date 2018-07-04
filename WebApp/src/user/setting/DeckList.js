@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getUserDecks} from '../../util/APIUtils';
+import {getUserDecks, getUserDefaultDeck} from '../../util/APIUtils';
 import {castVote} from '../../util/APIUtils';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import {Button, Icon, Upload, notification} from 'antd';
@@ -22,6 +22,23 @@ class DeckList extends Component {
         };
         this.loadDeckList = this.loadDeckList.bind(this);
         this.handleLoadMore = this.handleLoadMore.bind(this);
+        this.loadDefaultDeck = this.loadDefaultDeck.bind(this);
+    }
+
+    loadDefaultDeck() {
+        let promise;
+        if (this.props.username)
+            promise = getUserDefaultDeck(this.props.username);
+
+        if (!promise) {
+            return;
+        }
+
+        promise
+            .then(response => {
+            });
+
+
     }
 
     loadDeckList(page = 0, size = LIST_SIZE) {
@@ -52,11 +69,11 @@ class DeckList extends Component {
                     last: response.last,
                     currentVotes: currentVotes.concat(Array(response.content.length).fill(null)),
                     isLoading: false
-                })
+                });
             }).catch(error => {
             this.setState({
                 isLoading: false
-            })
+            });
         });
 
     }

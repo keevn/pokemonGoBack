@@ -2,6 +2,8 @@ package comp354.team9.model;
 
 import comp354.team9.model.audit.DateAudit;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -45,6 +47,15 @@ public class User extends DateAudit {
     @JoinColumn(name = "default_deck_id")
     private UserDeck defaultDeck;
 
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(name = "user_id")
+    private Set<UserDeck> userDecks = new HashSet<>();
+
+    
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -116,5 +127,13 @@ public class User extends DateAudit {
 
     public void setDefaultDeck(UserDeck deck) {
         this.defaultDeck = deck;
+    }
+
+    public Set<UserDeck> getUserDecks() {
+        return this.userDecks;
+    }
+
+    public void setUserDecks(Set<UserDeck> userDecks) {
+        this.userDecks = userDecks;
     }
 }

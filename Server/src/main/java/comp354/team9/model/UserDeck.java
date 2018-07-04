@@ -1,20 +1,21 @@
 package comp354.team9.model;
 
 import comp354.team9.model.audit.DateAudit;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "user_deck")
+@Proxy(lazy = false)
+@Table(name = "user_decks")
 public class UserDeck extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -25,6 +26,10 @@ public class UserDeck extends DateAudit {
     @NotBlank
     @Size(max = 200)
     private String content;
+
+    public UserDeck() {
+
+    }
 
     public UserDeck(User user, String deckName, String content) {
         this.user = user;

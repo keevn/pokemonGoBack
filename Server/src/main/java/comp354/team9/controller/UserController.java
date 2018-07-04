@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -53,16 +51,19 @@ public class UserController {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt());
+        UserProfile userProfile = new UserProfile(user.getId(), user.getUsername(), user.getName(), user.getCreatedAt(), user.getDefaultDeck().getId());
 
         return userProfile;
     }
 
-    @GetMapping("/users/{username}/decks")
-    public List<UserDeck> getUserDeckList(@PathVariable(value = "username") String username) {
-        List<UserDeck> decks = userDeckRepository.findByUserName(username);
+    @GetMapping("/users/{username}/deck")
+    public UserDeck getUserDeckList(@PathVariable(value = "username") String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
-        return decks;
+        UserDeck deck = user.getDefaultDeck();
+
+        return deck;
     }
     
 

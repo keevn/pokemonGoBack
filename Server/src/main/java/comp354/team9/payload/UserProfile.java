@@ -9,11 +9,12 @@ public class UserProfile {
     private Instant joinedAt;
     private Long defaultDeckId;
 
-    public UserProfile(Long id, String username, String name, Instant joinedAt) {
+    public UserProfile(Long id, String username, String name, Instant joinedAt, Long defaultDeckId) {
         this.id = id;
         this.username = username;
         this.name = name;
         this.joinedAt = joinedAt;
+        this.defaultDeckId = defaultDeckId;
     }
 
     public Long getId() {

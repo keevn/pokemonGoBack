@@ -82,6 +82,15 @@ export function getUserDecks(username, page, size) {
     });
 }
 
+export function getUserDefaultDeck(username) {
+
+    return request({
+        url: API_BASE_URL + "/users/" + username + "/deck",
+        method: 'GET'
+    });
+
+}
+
 
 export function getUserGames(username, page, size) {
     page = page || 0;

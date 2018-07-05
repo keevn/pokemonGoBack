@@ -134,6 +134,17 @@
 				"ablility":8
 			}
 			]
+	},{
+		"id":22,
+		"name":"Misty's Determination",
+		"type":"trainer",
+		"cat":"supporter",
+		"ablility":33
+	},{
+		"id":25,
+		"name":"Lightning",
+		"type":"energy",
+		"cat":"lightning"
 	}
 	
 ]

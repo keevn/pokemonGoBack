@@ -58,15 +58,17 @@ public class FileStorageService {
     }
 
 
-    public String processDeckFile(MultipartFile file) {
+    public String processDeckFile(String fileName) {
 
 
         StringBuffer cards = new StringBuffer();
 
         try {
 
+            Resource resource = loadFileAsResource(fileName);
+            
             InputStreamReader read = new InputStreamReader(
-                    file.getInputStream());
+                    resource.getInputStream());
 
             BufferedReader bufferedReader = new BufferedReader(read);
             String lineTxt;

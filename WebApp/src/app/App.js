@@ -19,9 +19,9 @@ import NotFound from '../common/NotFound';
 import LoadingIndicator from '../common/LoadingIndicator';
 import PrivateRoute from '../common/PrivateRoute';
 
-import {Layout, notification} from 'antd';
+import {Layout, Menu, notification} from 'antd';
 
-const {Content} = Layout;
+const {Content, Sider} = Layout;
 
 class App extends Component {
     constructor(props) {
@@ -106,6 +106,7 @@ class App extends Component {
 
                 <Content className="app-content">
                     <div className="container">
+
                         <Switch>
                             <Route exact path="/"
                                    render={(props) => <Welcome isAuthenticated={this.state.isAuthenticated}

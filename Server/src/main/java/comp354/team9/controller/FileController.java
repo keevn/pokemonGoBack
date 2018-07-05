@@ -70,7 +70,7 @@ public class FileController {
 
         UploadFileResponse response = uploadFile(file);
 
-        String cardlist = fileStorageService.processDeckFile(file);
+        String cardlist = fileStorageService.processDeckFile(response.getFileName());
         User user = userRepository.findById(currentUser.getId()).get();
         UserDeck deck = new UserDeck(user, response.getFileName().substring(0, response.getFileName().length() - 4), cardlist);
 
@@ -80,7 +80,7 @@ public class FileController {
         if (user.getDefaultDeck() == null) {
             user.setDefaultDeck(deck);
             userRepository.save(user);
-        } 
+        }  
 
 
         return response;

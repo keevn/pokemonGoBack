@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -41,27 +42,45 @@ public class FileController {
     private UserDeckRepository userDeckRepository;
 
     @PostMapping("/api/uploadFile")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file, @CurrentUser UserPrincipal currentUser) {
+    @PreAuthorize("hasRole('USER')")
+    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
+                .path("/api/downloadFile/")
                 .path(fileName)
                 .toUriString();
 
+        return new UploadFileResponse(fileName, fileDownloadUri,
+                file.getContentType(), file.getSize());
+    }
+
+    @PostMapping("/api/uploadMultipleFiles")
+    @PreAuthorize("hasRole('USER')")
+    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+        return Arrays.asList(files)
+                .stream()
+                .map(file -> uploadFile(file))
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping("/api/uploadDeckFile")
+    @PreAuthorize("hasRole('USER')")
+    public UploadFileResponse uploadDeckFile(@RequestParam("file") MultipartFile file, @CurrentUser UserPrincipal currentUser) {
+
+        UploadFileResponse response = uploadFile(file);
+
         String cardlist = fileStorageService.processDeckFile(file);
         User user = userRepository.findById(currentUser.getId()).get();
-        UserDeck deck = new UserDeck(user, fileName.substring(0, fileName.length() - 4), cardlist);
-
-        userDeckRepository.save(deck);
+        UserDeck deck = new UserDeck(user, response.getFileName().substring(0, response.getFileName().length() - 4), cardlist);
 
         if (user.getDefaultDeck() == null) {
             user.setDefaultDeck(deck);
             userRepository.save(user);
-        }
+        } else
+            userDeckRepository.save(deck);
 
-        return new UploadFileResponse(fileName, fileDownloadUri,
-                file.getContentType(), file.getSize());
+        return response;
     }
 
 

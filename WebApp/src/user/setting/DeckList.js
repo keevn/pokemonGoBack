@@ -109,7 +109,7 @@ class DeckList extends Component {
 
         const props = {
             name: 'file',
-            action: API_BASE_URL + "/uploadFile",
+            action: API_BASE_URL + "/uploadDeckFile",
             headers: {
                 authorization: 'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
             },

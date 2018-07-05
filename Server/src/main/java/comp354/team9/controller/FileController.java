@@ -74,11 +74,14 @@ public class FileController {
         User user = userRepository.findById(currentUser.getId()).get();
         UserDeck deck = new UserDeck(user, response.getFileName().substring(0, response.getFileName().length() - 4), cardlist);
 
+
+        userDeckRepository.save(deck);
+        
         if (user.getDefaultDeck() == null) {
             user.setDefaultDeck(deck);
             userRepository.save(user);
-        } else
-            userDeckRepository.save(deck);
+        } 
+
 
         return response;
     }
@@ -106,5 +109,5 @@ public class FileController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
-    }
+    }                                       
 }

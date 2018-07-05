@@ -16,7 +16,7 @@
   {
     "id": 3,
     "damage": 10,
-    "plus":	true,
+    "plus":	"+",
     "name": "Quick Attack",
     "desc": "Flip a coin. If heads, this attack does 30 more damage.",
     "act": "target:opponent-active:10,cond:flip:dam:target:opponent-active:30",
@@ -40,7 +40,7 @@
     "id": 6,
     "name": "Quick Attack",
     "damage": 20,
-    "plus":	true,
+    "plus":	"+",
     "desc": "Flip a coin. If heads, this attack does 10 more damage.",
     "act": "target:opponent-active:20,cond:flip:dam:target:opponent-active:10",
     "action": "dam"

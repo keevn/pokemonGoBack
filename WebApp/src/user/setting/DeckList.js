@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import {getUserDecks, getUserDefaultDeck, uploadDeckFile} from '../../util/APIUtils';
-import {castVote} from '../../util/APIUtils';
 import LoadingIndicator from '../../common/LoadingIndicator';
-import {Button, Icon, Upload, notification, Form} from 'antd';
+import {Button, Icon,Upload, notification, Form} from 'antd';
 import {ACCESS_TOKEN, LIST_SIZE, API_BASE_URL} from '../../constants';
 import {withRouter} from 'react-router-dom';
 import './DeckList.css';

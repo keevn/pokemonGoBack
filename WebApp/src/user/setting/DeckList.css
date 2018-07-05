@@ -1,0 +1,9 @@
+.ant-upload-list-item-name {
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 22px;
+    width: 100%;
+    display: inline-block;
+}

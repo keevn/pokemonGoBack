@@ -21,7 +21,7 @@
 					"value":1
 				}
 				],
-				"ablility":1
+				"ability":1
 			},
 			{	"cost":[
 				{
@@ -29,7 +29,7 @@
 					"value":2
 				}
 				],
-				"ablility":2
+				"ability":2
 			}
 			]
 	},
@@ -57,7 +57,7 @@
 					"value":2
 				}
 				],
-				"ablility":3
+				"ability":3
 			},
 			{	"cost":[
 				{
@@ -69,7 +69,7 @@
 					"value":1
 				}
 				],
-				"ablility":4
+				"ability":4
 			}
 			]
 	},
@@ -97,7 +97,7 @@
 					"value":1
 				}
 				],
-				"ablility":5
+				"ability":5
 			},
 			{	"cost":[
 				{
@@ -105,7 +105,7 @@
 					"value":2
 				}
 				],
-				"ablility":6
+				"ability":6
 			}
 			]
 	},
@@ -129,7 +129,7 @@
 					"value":2
 				}
 				],
-				"ablility":7
+				"ability":7
 			},
 			{	"cost":[
 				{
@@ -141,7 +141,7 @@
 					"value":2
 				}
 				],
-				"ablility":8
+				"ability":8
 			}
 			]
 	},
@@ -173,7 +173,7 @@
 					"value":1
 				}
 				],
-				"ablility":9
+				"ability":9
 			},
 			]
 	},
@@ -197,7 +197,7 @@
 					"value":1
 				}
 				],
-				"ablility":10
+				"ability":10
 			},
 			{	"cost":[
 				{
@@ -205,7 +205,7 @@
 					"value":1
 				}
 				],
-				"ablility":11
+				"ability":11
 			}
 			]
 	},
@@ -233,7 +233,7 @@
 					"value":1
 				}
 				],
-				"ablility":12
+				"ability":12
 			}
 			]
 	},
@@ -257,7 +257,7 @@
 					"value":2
 				}
 				],
-				"ablility":13
+				"ability":13
 			}
 			]
 	},
@@ -285,7 +285,7 @@
 					"value":1
 				}
 				],
-				"ablility":14
+				"ability":14
 			}
 			]
 	},
@@ -318,7 +318,7 @@
 					"value":1
 				}
 				],
-				"ablility":15
+				"ability":15
 			},
 			{	"cost":[
 				
@@ -331,7 +331,7 @@
 					"value":2
 				}
 				],
-				"ablility":16
+				"ability":16
 			},
 			]
 	},
@@ -363,7 +363,7 @@
 					"value":1
 				}
 				],
-				"ablility":17
+				"ability":17
 			},
 			{	"cost":[
 				
@@ -376,7 +376,7 @@
 					"value":2
 				}
 				],
-				"ablility":18
+				"ability":18
 			},
 			]
 	},
@@ -401,7 +401,7 @@
 					"value":1
 				}
 				],
-				"ablility":19
+				"ability":19
 			},
 			{	"cost":[
 				
@@ -410,7 +410,7 @@
 					"value":9
 				}
 				],
-				"ablility":20
+				"ability":20
 			}
 			]
 	},
@@ -438,7 +438,7 @@
 					"value":1
 				}
 				],
-				"ablility":21
+				"ability":21
 			}
 			]
 	},
@@ -467,7 +467,7 @@
 					"value":2
 				}
 				],
-				"ablility":22
+				"ability":22
 			},
 			{	"cost":[
 				
@@ -476,7 +476,7 @@
 					"value":3
 				}
 				],
-				"ablility":23
+				"ability":23
 			}
 			]
 	},
@@ -505,7 +505,7 @@
 					"value":1
 				}
 				],
-				"ablility":24
+				"ability":24
 			},
 			{	"cost":[
 				
@@ -514,7 +514,7 @@
 					"value":2
 				}
 				],
-				"ablility":25
+				"ability":25
 			}
 			]
 	},
@@ -542,7 +542,7 @@
 					"value":1
 				}
 				],
-				"ablility":26
+				"ability":26
 			}
 			]
 	},
@@ -571,7 +571,7 @@
 					"value":2
 				}
 				],
-				"ablility":27
+				"ability":27
 			},
 			{	"cost":[
 				
@@ -584,7 +584,7 @@
 					"value":2
 				}
 				],
-				"ablility":28
+				"ability":28
 			},
 			]
 	},
@@ -612,7 +612,7 @@
 					"value":2
 				}
 				],
-				"ablility":29
+				"ability":29
 			}
 			]
 	},
@@ -640,7 +640,7 @@
 					"value":1
 				}
 				],
-				"ablility":14
+				"ability":14
 			},
 			{	"cost":[
 				
@@ -653,7 +653,7 @@
 					"value":1
 				}
 				],
-				"ablility":30
+				"ability":30
 			},
 			]
 	},
@@ -663,7 +663,7 @@
 		"name":"Tierno",
 		"type":"trainer",
 		"cat":"supporter",
-		"ablility":31
+		"ability":31
 	},
 
 	{
@@ -671,7 +671,7 @@
 		"name":"Potion",
 		"type":"trainer",
 		"cat":"item",
-		"ablility":32
+		"ability":32
 	},
 
 	{
@@ -679,7 +679,7 @@
 		"name":"Misty's Determination",
 		"type":"trainer",
 		"cat":"supporter",
-		"ablility":33
+		"ability":33
 	},
 
 	{
@@ -687,7 +687,7 @@
 		"name":"Pokémon Center Lady",
 		"type":"trainer",
 		"cat":"supporter",
-		"ablility":34
+		"ability":34
 	},
 
 	{
@@ -695,7 +695,7 @@
 		"name":"Clemont",
 		"type":"trainer",
 		"cat":"supporter",
-		"ablility":35
+		"ability":35
 	},
 
 	{
@@ -740,7 +740,7 @@
 					"value":1
 				}
 				],
-				"ablility":36
+				"ability":36
 			},
 			{	"cost":[
 				
@@ -749,7 +749,7 @@
 					"value":3
 				}
 				],
-				"ablility":37
+				"ability":37
 			},
 			]
 	},
@@ -781,7 +781,7 @@
 					"value":1
 				}
 				],
-				"ablility":38
+				"ability":38
 			}
 			]
 	},
@@ -810,7 +810,7 @@
 					"value":1
 				}
 				],
-				"ablility":39
+				"ability":39
 			},
 			{	"cost":[
 				
@@ -824,7 +824,7 @@
 					"value":1
 				}
 				],
-				"ablility":40
+				"ability":40
 			},
 			]
 	},
@@ -853,7 +853,7 @@
 					"value":1
 				}
 				],
-				"ablility":41
+				"ability":41
 			}
 			]
 	},
@@ -882,7 +882,7 @@
 					"value":1
 				}
 				],
-				"ablility":42
+				"ability":42
 			}
 			]
 	},
@@ -911,7 +911,7 @@
 					"value":1
 				}
 				],
-				"ablility":43
+				"ability":43
 			}
 			]
 	},
@@ -940,7 +940,7 @@
 					"value":1
 				}
 				],
-				"ablility":44
+				"ability":44
 			},
 			{	"cost":[
 				
@@ -950,7 +950,7 @@
 					"value":1
 				}
 				],
-				"ablility":45
+				"ability":45
 			},
 			]
 	},
@@ -980,7 +980,7 @@
 					"value":3
 				}
 				],
-				"ablility":46
+				"ability":46
 			}
 			]
 	},
@@ -1009,7 +1009,7 @@
 					"value":1
 				}
 				],
-				"ablility":47
+				"ability":47
 			},
 			{	"cost":[
 				
@@ -1019,7 +1019,7 @@
 					"value":2
 				}
 				],
-				"ablility":48
+				"ability":48
 			}
 			]
 	},
@@ -1048,7 +1048,7 @@
 					"value":1
 				}
 				],
-				"ablility":49
+				"ability":49
 			}
 			]
 	},
@@ -1082,7 +1082,7 @@
 					"value":1
 				}
 				],
-				"ablility":50
+				"ability":50
 			}
 			]
 	},
@@ -1111,7 +1111,7 @@
 					"value":1
 				}
 				],
-				"ablility":51
+				"ability":51
 			}
 			]
 	},
@@ -1140,7 +1140,7 @@
 					"value":1
 				}
 				],
-				"ablility":52
+				"ability":52
 			},
 			{	"cost":[
 				
@@ -1154,7 +1154,7 @@
 					"value":1
 				}
 				],
-				"ablility":53
+				"ability":53
 			}
 			]
 	},
@@ -1183,7 +1183,7 @@
 					"value":1
 				}
 				],
-				"ablility":54
+				"ability":54
 			},
 			{	"cost":[
 				
@@ -1197,7 +1197,7 @@
 					"value":1
 				}
 				],
-				"ablility":55
+				"ability":55
 			}
 			]
 	},
@@ -1229,7 +1229,7 @@
 					"value":1
 				}
 				],
-				"ablility":57
+				"ability":57
 			},
 			{	"cost":[
 				
@@ -1239,7 +1239,7 @@
 					"value":2
 				}
 				],
-				"ablility":58
+				"ability":58
 			}
 			]
 	},
@@ -1268,7 +1268,7 @@
 					"value":1
 				}
 				],
-				"ablility":59
+				"ability":59
 			},
 			{	"cost":[
 				
@@ -1278,7 +1278,7 @@
 					"value":2
 				}
 				],
-				"ablility":60
+				"ability":60
 			}
 			]
 	},
@@ -1307,7 +1307,7 @@
 					"value":2
 				}
 				],
-				"ablility":61
+				"ability":61
 			},
 			{	"cost":[
 				
@@ -1321,7 +1321,7 @@
 					"value":1
 				}
 				],
-				"ablility":62
+				"ability":62
 			}
 			]
 	},
@@ -1351,7 +1351,7 @@
 					"value":2
 				}
 				],
-				"ablility":63
+				"ability":63
 			}
 			]
 	},
@@ -1380,7 +1380,7 @@
 					"value":1
 				}
 				],
-				"ablility":64
+				"ability":64
 			}
 			]
 	},
@@ -1410,7 +1410,7 @@
 					"value":1
 				}
 				],
-				"ablility":65
+				"ability":65
 			},
 			{	"cost":[
 				
@@ -1420,7 +1420,7 @@
 					"value":2
 				}
 				],
-				"ablility":66
+				"ability":66
 			}
 			]
 	},
@@ -1430,7 +1430,7 @@
 		"name":"Floral Crown",
 		"type":"trainer",
 		"cat":"item",
-		"ablility":67
+		"ability":67
 	},
 
 	{
@@ -1438,7 +1438,7 @@
 		"name":"Poké Ball",
 		"type":"trainer",
 		"cat":"item",
-		"ablility":68
+		"ability":68
 	},
 
 	{
@@ -1446,7 +1446,7 @@
 		"name":"Shauna",
 		"type":"trainer",
 		"cat":"supporter",
-		"ablility":69
+		"ability":69
 	},
 
 	{
@@ -1454,7 +1454,7 @@
 		"name":"Pokémon Fan Club",
 		"type":"trainer",
 		"cat":"supporter",
-		"ablility":70
+		"ability":70
 	},
 
 	{
@@ -1462,7 +1462,7 @@
 		"name":"Switch",
 		"type":"trainer",
 		"cat":"item",
-		"ablility":71
+		"ability":71
 	},
 
 	{
@@ -1470,7 +1470,7 @@
 		"name":"Energy Switch",
 		"type":"trainer",
 		"cat":"item",
-		"ablility":72
+		"ability":72
 	},
 
 	{
@@ -1478,7 +1478,7 @@
 		"name":"Red Card",
 		"type":"trainer",
 		"cat":"item",
-		"ablility":73
+		"ability":73
 	},
 
 	{
@@ -1486,7 +1486,7 @@
 		"name":"Wally",
 		"type":"trainer",
 		"cat":"supporter",
-		"ablility":74
+		"ability":74
 	},
 
 	{

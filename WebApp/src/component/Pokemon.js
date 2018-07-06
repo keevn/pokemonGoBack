@@ -7,9 +7,6 @@ import {
     POKEMON_DEAD, CARD_ENERGY, POKEMON_STAGE_ONE, CARD_TRAINER, TRAINER_ITEM
 } from "./constants";
 import {Card} from "./Card";
-import {removeElementFromArray} from '../util/Helpers'
-
-
 
 
 export default class Pokemon {
@@ -24,10 +21,11 @@ export default class Pokemon {
         this.energyCategory = card.hp.cat;
         this.retreat = card.retreat;
         this.abilities = Pokemon._attachedAbility(card);
-        this.attachedEnergy = [];
+        this.cardList = new Map();
+        this.attachedEnergy = new Map();
         this.attachedItem = null;
-        
-        this.cardList=[card];
+
+        this.cardList.set(POKEMON_BASIC, card);
         this.damage = 0;
         this.status = POKEMON_NORMAL;
 
@@ -43,19 +41,21 @@ export default class Pokemon {
         this.detachEnergy = this.detachEnergy.bind(this);
         this.attachItem = this.attachItem.bind(this);
         this.detachItem = this.detachItem.bind(this);
+
+        this.toJson = this.toJson.bind(this);
     }
 
-    static restore(cardIdList,damage,status){
+    static restore(cardIdList, damage, status) {
         const pokemon = new Pokemon(Card.getCardInstants(cardIdList[0]));
 
         pokemon.damage = damage;
         pokemon.status = status;
 
-        for (let i=1;i < cardList.length;i++){
+        for (let i = 1; i < cardIdList.length; i++) {
             const card = Card.getCardInstants(cardIdList[i]);
-            if (card.type===CARD_ENERGY) pokemon.attachEnergy(card);
-            if (card.type===CARD_POKEMON && card.category===POKEMON_STAGE_ONE) pokemon.evolve(card);
-            if (card.type===CARD_TRAINER && card.category===TRAINER_ITEM) pokemon.attachItem();
+            if (card.type === CARD_ENERGY) pokemon.attachEnergy(card);
+            if (card.type === CARD_POKEMON && card.category === POKEMON_STAGE_ONE) pokemon.evolve(card);
+            if (card.type === CARD_TRAINER && card.category === TRAINER_ITEM) pokemon.attachItem();
         }
     }
 
@@ -65,7 +65,7 @@ export default class Pokemon {
         card.attacks.forEach(
             attack => {
                 abilities.push({
-                    "skill": abilityList[attack.ablility],
+                    "skill": abilityList[attack.ability],
                     "cost": attack.cost
                 });
             });
@@ -82,7 +82,7 @@ export default class Pokemon {
             this.hp = upgradeCard.hp.value;
             this.energyCategory = upgradeCard.hp.cat;
             this.abilities = Pokemon._attachedAbility(upgradeCard);
-            this.cardList.push(upgradeCard);
+            this.cardList.set(upgradeCard.category, upgradeCard);
 
             return true;
         }
@@ -95,8 +95,8 @@ export default class Pokemon {
 
         if (upgradeCard.type !== CARD_POKEMON) return false;
 
-        if (!upgradeCard.from)  return false;
-        
+        if (!upgradeCard.from) return false;
+
         return upgradeCard.from === this.name;
 
     }
@@ -117,32 +117,48 @@ export default class Pokemon {
 
     }
 
-    _abilityAvailable(cost){
+    _abilityAvailable(cost) {
 
-        let energyCounters = {colorless: 0};
+        let energyCounters = new Map();
+        energyCounters[ENERGY_COLORLESS]=0;
+
+        for (const [key, energyCard] of this.attachedEnergy) {
+
+           energyCounters.colorless++;
+
+            if (energyCounters.has(energyCard.category))
+                energyCounters[energyCard.category]=energyCounters[energyCard.category] +1;
+            else
+                energyCounters[energyCard.category]=1;
 
 
-        this.attachedEnergy.forEach((energy) => {
-            energyCounters.colorless++;
-            energyCounters[energy.cat]++;
-        });
+        }
 
         let available = true;
+        let costOfcolorless = 0;
 
         for (let i = 0; i < cost.length; i++) {
             let energy = cost[i];
             if (energy.cat !== ENERGY_COLORLESS) {
-                if (energyCounters[energy.cat] < energy.value) {
+                if (energyCounters[energy.cat]) {
+                    if ( energyCounters[energy.cat] < energy.value) {
+                        available = false;
+                        break;
+                    } else {
+                        energyCounters.colorless -= energy.value;
+                    }
+                } else {
                     available = false;
                     break;
-                } else {
-                    energyCounters.colorless -= energy.value;
                 }
+
             } else {
-                energyCounters.colorless -= energy.value;
+                costOfcolorless = energy.value ; //save the colorless require for the end
             }
         }
-        return (available && energyCounters.colorless >= 0);
+
+
+        return (available && energyCounters.colorless >= costOfcolorless);
     }
 
     isRetreatable() {
@@ -180,48 +196,63 @@ export default class Pokemon {
 
     }*/
 
-    attachEnergy(energyCard){
+    attachEnergy(energyCard) {
 
-        this.attachedEnergy.push(energyCard);
-        this.cardList.push(energyCard);
-        
+        this.attachedEnergy.set(`${CARD_ENERGY}_${energyCard.key}`, energyCard);
+        this.cardList.set(`${CARD_ENERGY}_${energyCard.key}`, energyCard);
+
     }
 
-    detachEnergy(energyCategory){
+    detachEnergy(energyCategory, n = 1) {
 
-        let energyCard;
+        let i = 0;
 
-        if (energyCategory && energyCategory !== ENERGY_COLORLESS){
+        let deletedCard = [];
 
-            for (let i=0;i<this.attachedEnergy.length;i++){
-                 if (this.attachedEnergy[i].category===energyCategory)
-                     energyCard =  removeElementFromArray(this.attachedEnergy,this.attachedEnergy[i]);
+        if (energyCategory && energyCategory !== ENERGY_COLORLESS) {
+
+
+            for (const [key, energyCard] of this.attachedEnergy) {
+                if (energyCard.category === energyCategory) {
+                    deletedCard[i] = energyCard;
+                    i++;
+                    if (i === n) break;
+                }
             }
 
-            removeElementFromArray(this.cardList,energyCard);
 
-        }else{
+        } else {
 
-            this.attachedEnergy.pop();
-            energyCard = this.cardList.pop();
+            for (const [key, energyCard] of this.attachedEnergy) {
+                deletedCard[i] = energyCard;
+                i++;
+                if (i === n) break;
+            }
         }
 
-         return energyCard;
-          
-    }
+        for (let j = 0; j < n; j++) {
+            this.attachedEnergy.delete(`${CARD_ENERGY}_${deletedCard[j].key}`);
+            this.cardList.delete(`${CARD_ENERGY}_${deletedCard[j].key}`);
+        }
 
-    attachItem(itemCard){
-
-       this.attachedItem=itemCard;
-       this.cardList.push(itemCard);
+        return deletedCard;
 
     }
 
-    detachItem(){
+    attachItem(itemCard) {
 
-        let itemCard = removeElementFromArray(this.cardList,this.attachedItem);
+        this.attachedItem = itemCard;
+        this.cardList.set(`${itemCard.category}_${itemCard.key}`, itemCard);
 
-        this.attachedItem =null ;
+    }
+
+    detachItem() {
+
+        let itemCard = this.attachedItem;
+
+        this.cardList.delete(`${itemCard.category}_${itemCard.key}`);
+
+        this.attachedItem = null;
 
         return itemCard;
     }
@@ -230,19 +261,22 @@ export default class Pokemon {
     hurt(amount) {
 
         this.damage += amount;
-        if (this.damage>=this.hp) {
+        if (this.damage >= this.hp) {
             this.damage = this.hp;
-            this.status=POKEMON_DEAD;
+            this.status = POKEMON_DEAD;
         }
 
     }
 
-    heal(amount){
+    heal(amount) {
 
-        this.damag = this.damage < amount? 0:this.damage-=amount;
+        this.damage = this.damage < amount ? 0 : this.damage -= amount;
 
     }
-    
+
+    toJson() {
+
+    }
 
 }
 

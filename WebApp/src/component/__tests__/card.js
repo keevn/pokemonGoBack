@@ -38,6 +38,12 @@ test('randomCard() get random cards from specific type and category', ()=> {
     expect(item_pokemonCard).toBeInstanceOf(TrainerCard);
     expect(item_pokemonCard.category).toBe(TRAINER_ITEM);
 
+    const attachable_item_pokemonCard= randomCard(CARD_TRAINER,TRAINER_ITEM,true);
+
+    expect(attachable_item_pokemonCard).toBeInstanceOf(TrainerCard);
+    expect(attachable_item_pokemonCard.category).toBe(TRAINER_ITEM);
+    //expect(attachable_item_pokemonCard.attachable).toBeTruthy();
+
     const colorless_energyCard= randomCard(CARD_ENERGY,ENERGY_COLORLESS);
 
     expect(colorless_energyCard).toBeInstanceOf(EnergyCard);

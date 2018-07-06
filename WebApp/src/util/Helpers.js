@@ -28,7 +28,3 @@ export function formatDateTime(dateTimeString) {
 
     return date.getDate() + ' ' + monthNames[monthIndex] + ' ' + year + ' - ' + date.getHours() + ':' + date.getMinutes();
 }
-
-export function removeElementFromArray(array, element) {
-    return array.filter(e => e !== element);
-}

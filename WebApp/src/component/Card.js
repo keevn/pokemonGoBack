@@ -1,13 +1,24 @@
-import {cardList} from './mockData/data';
-import {CARD_ENERGY, CARD_POKEMON, CARD_TRAINER, ENERGY_COLORLESS, POKEMON_BASIC, POKEMON_STAGE_ONE} from "./constants";
+import {cardList,abilityList} from './mockData/data';
+import {
+    CARD_ENERGY,
+    CARD_POKEMON,
+    CARD_TRAINER,
+    ENERGY_COLORLESS,
+    POKEMON_BASIC,
+    POKEMON_STAGE_ONE,
+    TRAINER_ITEM
+} from "./constants";
+import Random from "random-id";
 
 export class Card {
     constructor(id) {
         this._card = cardList[id];
+        this.key =  Random(24);
         this.id = this._card.id;
         this.name = this._card.name;
         this.type = this._card.type;
         this.category = this._card.cat;
+        this.attachable = false;
     }
 
     static getCardInstants(id){
@@ -27,7 +38,10 @@ export class PokemonCard extends Card{
         this.hp = this._card.hp;
         this.attacks= this._card.attacks;
         this.retreat= this._card.retreat;
-        if (this._card.from) this.from = this._card.from;
+        if (this._card.from) {               //stage-one pokemon, which is attachable
+            this.from = this._card.from;
+            this.attachable = true;
+        }
     }
 }
 
@@ -35,6 +49,7 @@ export class EnergyCard extends Card {
     constructor(id){
         super(id);
         if (this.type !== CARD_ENERGY) throw new CardTypeError();
+        this.attachable = true;                                    //all energy card are attachable
     }
 }
 
@@ -44,32 +59,36 @@ export class TrainerCard extends Card {
     constructor(id) {
         super(id);
         if (this.type !== CARD_TRAINER) throw new CardTypeError();
-        this.ablility = this._card.ablility;
+        this.ability = this._card.ability;
+        this.attachable = (this.ability === 67) ;  //for now only ability 'Floral Crown' is attachable
     }
 
 }
 
-export function randomCard(type,category) {
+export function randomCard(type,category,attachable=false) {
 
     let find=false;
-    let card_id = 0;
+    let card;
 
 
 
     while (!find) {
-        
-        const card = cardList[randomInteger(1,58)];
-        if (category && category!= ENERGY_COLORLESS)
-            find = (card.type === type && card.cat===category);
+
+        let card_id = randomInteger(1,58);
+        if (card_id==27 || card_id==42) continue;
+        card = Card.getCardInstants(card_id);
+        if (card.type && category && category!== ENERGY_COLORLESS)
+            find = (card.type === type && card.category===category);
         else
             find = (card.type === type) ;
 
-
-        if (find) card_id = card.id;
+        if (find && attachable) {
+            find = card.attachable;
+        }
 
     }
 
-    return Card.getCardInstants(card_id);
+    return card;
 
 }
 
@@ -77,20 +96,19 @@ export function findBasicCard(stageOneCard){
     
     let card_id = 1;
 
-    while (true && card_id<cardList.length) {
+    while (card_id < cardList.length) {
 
         const card = cardList[card_id];
         if (card.type === CARD_POKEMON && card.cat===POKEMON_BASIC && stageOneCard.from===card.name)
             break;
         else card_id++;
     }
-
-    console.log(card_id,cardList.length);
     
-    if (card_id == cardList.length)  return null;
+    if (card_id === cardList.length)  return null;
     return Card.getCardInstants(card_id);
 }
 
 function randomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+

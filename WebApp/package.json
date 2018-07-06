@@ -7,7 +7,8 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "random-id": "0.0.2"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -16,11 +17,12 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "ajv": "^6.5.1",
     "babel-plugin-import": "^1.6.5",
-    "react-app-rewire-less": "^2.1.0",
-    "react-app-rewired": "^1.4.1",
     "eslint": "^4.1.1",
     "eslint-plugin-react": "^7.10.0",
-    "ajv": "^6.5.1"
+    "jtest": "0.0.1",
+    "react-app-rewire-less": "^2.1.0",
+    "react-app-rewired": "^1.4.1"
   }
 }

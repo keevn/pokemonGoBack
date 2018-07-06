@@ -1,4 +1,4 @@
-[
+[{},
 	{
 		"id":1,
 		"name":"Glameow",
@@ -21,7 +21,7 @@
 					"value":1
 				}
 				],
-				"ablility":1
+				"ability":1
 			},
 			{	"cost":[
 				{
@@ -29,10 +29,13 @@
 					"value":2
 				}
 				],
-				"ablility":2
+				"ability":2
 			}
 			]
-	},{
+	},
+
+
+	{
 		"id":2,
 		"name":"Pikachu Libre",
 		"type":"pokemon",
@@ -54,7 +57,7 @@
 					"value":2
 				}
 				],
-				"ablility":3
+				"ability":3
 			},
 			{	"cost":[
 				{
@@ -66,10 +69,13 @@
 					"value":1
 				}
 				],
-				"ablility":4
+				"ability":4
 			}
 			]
-	},{
+	},
+
+
+	{
 		"id":3,
 		"name":"Pikachu",
 		"type":"pokemon",
@@ -91,7 +97,7 @@
 					"value":1
 				}
 				],
-				"ablility":5
+				"ability":5
 			},
 			{	"cost":[
 				{
@@ -99,18 +105,22 @@
 					"value":2
 				}
 				],
-				"ablility":6
+				"ability":6
 			}
 			]
-	},{
+	},
+
+
+	{
 		"id":4,
 		"name":"Raichu",
 		"type":"pokemon",
 		"cat":"stage-one",
+		"from":"Pikachu",
 		"hp":
 			{
-				"cat":"lightning",
-				"value":90
+				"cat":"water",
+				"value":60
 			},
 		"attacks":[
 			{	"cost":[
@@ -119,7 +129,7 @@
 					"value":2
 				}
 				],
-				"ablility":7
+				"ability":7
 			},
 			{	"cost":[
 				{
@@ -131,20 +141,1366 @@
 					"value":2
 				}
 				],
-				"ablility":8
+				"ability":8
 			}
 			]
-	},{
+	},
+
+
+	{
+		"id":5,
+		"name":"Shellder",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"water",
+				"value":90
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				{
+					"cat":"colorless",
+					"value":1
+				},
+				{
+					"cat":"water",
+					"value":1
+				}
+				],
+				"ability":9
+			},
+			]
+	},
+
+	{
+		"id":6,
+		"name":"Seaking",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Goldeen",
+		"hp":
+			{
+				"cat":"water",
+				"value":90
+			},
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"water",
+					"value":1
+				}
+				],
+				"ability":10
+			},
+			{	"cost":[
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":11
+			}
+			]
+	},
+
+	{
+		"id":7,
+		"name":"Goldeen",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"water",
+				"value":60
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":12
+			}
+			]
+	},
+
+	{
+		"id":8,
+		"name":"Frogadier",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Froakie",
+		"hp":
+			{
+				"cat":"water",
+				"value":70
+			},
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":2
+				}
+				],
+				"ability":13
+			}
+			]
+	},
+
+	{
+		"id":9,
+		"name":"Froakie",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"water",
+				"value":50
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":14
+			}
+			]
+	},
+
+	{
+		"id":10,
+		"name":"Cloyster",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Shellder",
+		"hp":
+			{
+				"cat":"water",
+				"value":100
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":3
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":1
+				},
+				{
+					"cat":"water",
+					"value":1
+				}
+				],
+				"ability":15
+			},
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":1
+				},
+				{
+					"cat":"water",
+					"value":2
+				}
+				],
+				"ability":16
+			},
+			]
+	},
+
+	{
+		"id":11,
+		"name":"Suicune",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"water",
+				"value":100
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":1
+				},
+				{
+					"cat":"water",
+					"value":1
+				}
+				],
+				"ability":17
+			},
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":1
+				},
+				{
+					"cat":"water",
+					"value":2
+				}
+				],
+				"ability":18
+			},
+			]
+	},
+
+
+	{
+		"id":12,
+		"name":"Swanna",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Ducklett",
+		"hp":
+			{
+				"cat":"water",
+				"value":80
+			},
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":19
+			},
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":9
+				}
+				],
+				"ability":20
+			}
+			]
+	},
+
+	{
+		"id":13,
+		"name":"Ducklett",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"water",
+				"value":60
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":21
+			}
+			]
+	},
+
+	{
+		"id":14,
+		"name":"Ducklett",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Glameow",
+		"hp":
+			{
+				"cat":"colorless",
+				"value":100
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":2
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":2
+				}
+				],
+				"ability":22
+			},
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":3
+				}
+				],
+				"ability":23
+			}
+			]
+	},
+
+	{
+		"id":15,
+		"name":"Manectric",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Electrike",
+		"hp":
+			{
+				"cat":"lightning",
+				"value":90
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"lightning",
+					"value":1
+				}
+				],
+				"ability":24
+			},
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":2
+				}
+				],
+				"ability":25
+			}
+			]
+	},
+
+	{
+		"id":16,
+		"name":"Electrike",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"lightning",
+				"value":60
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":26
+			}
+			]
+	},
+
+	{
+		"id":17,
+		"name":"Electivire",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Electabuzz",
+		"hp":
+			{
+				"cat":"lightning",
+				"value":110
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":3
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":2
+				}
+				],
+				"ability":27
+			},
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":1
+				},
+				{
+					"cat":"lightning",
+					"value":2
+				}
+				],
+				"ability":28
+			},
+			]
+	},
+
+	{
+		"id":18,
+		"name":"Electabuzz",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"lightning",
+				"value":70
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":2
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":2
+				}
+				],
+				"ability":29
+			}
+			]
+	},
+
+	{
+		"id":19,
+		"name":"Helioptile",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"lightning",
+				"value":60
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"lightning",
+					"value":1
+				}
+				],
+				"ability":14
+			},
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":1
+				},
+				{
+					"cat":"lightning",
+					"value":1
+				}
+				],
+				"ability":30
+			},
+			]
+	},
+
+	{
+		"id":20,
+		"name":"Tierno",
+		"type":"trainer",
+		"cat":"supporter",
+		"ability":31
+	},
+
+	{
+		"id":21,
+		"name":"Potion",
+		"type":"trainer",
+		"cat":"item",
+		"ability":32
+	},
+
+	{
 		"id":22,
 		"name":"Misty's Determination",
 		"type":"trainer",
 		"cat":"supporter",
-		"ablility":33
-	},{
+		"ability":33
+	},
+
+	{
+		"id":23,
+		"name":"Pokémon Center Lady",
+		"type":"trainer",
+		"cat":"supporter",
+		"ability":34
+	},
+
+	{
+		"id":24,
+		"name":"Clemont",
+		"type":"trainer",
+		"cat":"supporter",
+		"ability":35
+	},
+
+	{
 		"id":25,
 		"name":"Lightning",
 		"type":"energy",
 		"cat":"lightning"
-	}
+	},
+
+	{
+		"id":26,
+		"name":"Water",
+		"type":"energy",
+		"cat":"water"
+	},
+
+	{
+	},
+
+
+	{
+		"id":28,
+		"name":"Meowstic",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Espurr",
+		"hp":
+			{
+				"cat":"psychic",
+				"value":90
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"psychic",
+					"value":1
+				}
+				],
+				"ability":36
+			},
+			{	"cost":[
+				
+				{
+					"cat":"psychic",
+					"value":3
+				}
+				],
+				"ability":37
+			},
+			]
+	},
+
+	{
+		"id":29,
+		"name":"Jynx",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"psychic",
+				"value":70
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				{
+					"cat":"colorless",
+					"value":2
+				},
+				{
+					"cat":"psychic",
+					"value":1
+				}
+				],
+				"ability":38
+			}
+			]
+	},
+
+	{
+		"id":30,
+		"name":"Jirachi",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"psychic",
+				"value":70
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"psychic",
+					"value":1
+				}
+				],
+				"ability":39
+			},
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":2
+				},
+				{
+					"cat":"psychic",
+					"value":1
+				}
+				],
+				"ability":40
+			},
+			]
+	},
+
+	{
+		"id":31,
+		"name":"Meowth",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"colorless",
+				"value":60
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":41
+			}
+			]
+	},
+
+	{
+		"id":32,
+		"name":"Meowth",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"colorless",
+				"value":60
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":42
+			}
+			]
+	},
+
+	{
+		"id":33,
+		"name":"Machop",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"colorless",
+				"value":70
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":2
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"fight",
+					"value":1
+				}
+				],
+				"ability":43
+			}
+			]
+	},
+
+	{
+		"id":34,
+		"name":"Doduo",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"colorless",
+				"value":60
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":44
+			},
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":45
+			},
+			]
+	},
+
+	{
+		"id":35,
+		"name":"Dodrio",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Doduo",
+		"hp":
+			{
+				"cat":"colorless",
+				"value":90
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":3
+				}
+				],
+				"ability":46
+			}
+			]
+	},
+
+	{
+		"id":36,
+		"name":"Geodude",
+		"type":"pokemon",
+		"cat":"fight",
+		"hp":
+			{
+				"cat":"colorless",
+				"value":90
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":2
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"fight",
+					"value":1
+				}
+				],
+				"ability":47
+			},
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":2
+				}
+				],
+				"ability":48
+			}
+			]
+	},
+
+	{
+		"id":37,
+		"name":"Zubat",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"psychic",
+				"value":50
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":49
+			}
+			]
+	},
+
+	{
+		"id":38,
+		"name":"Haunter",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Gastly",
+		"hp":
+			{
+				"cat":"psychic",
+				"value":70
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":1
+				},
+				{
+					"cat":"psychic",
+					"value":1
+				}
+				],
+				"ability":50
+			}
+			]
+	},
+
+	{
+		"id":39,
+		"name":"Gastly",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"psychic",
+				"value":50
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":51
+			}
+			]
+	},
+
+	{
+		"id":40,
+		"name":"Diglett",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"fight",
+				"value":50
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"fight",
+					"value":1
+				}
+				],
+				"ability":52
+			},
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":1
+				},
+				{
+					"cat":"fight",
+					"value":1
+				}
+				],
+				"ability":53
+			}
+			]
+	},
+	{
+		"id":41,
+		"name":"Dugtrio",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Diglett",
+		"hp":
+			{
+				"cat":"fight",
+				"value":90
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"fight",
+					"value":1
+				}
+				],
+				"ability":54
+			},
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":2
+				},
+				{
+					"cat":"fight",
+					"value":1
+				}
+				],
+				"ability":55
+			}
+			]
+	},
+
+	{
+	},	
+
+	{
+		"id":43,
+		"name":"Slowpoke",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"psychic",
+				"value":50
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":57
+			},
+			{	"cost":[
+				
+				
+				{
+					"cat":"psychic",
+					"value":2
+				}
+				],
+				"ability":58
+			}
+			]
+	},
+
+	{
+		"id":44,
+		"name":"Hitmonlee",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"fight",
+				"value":90
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"fight",
+					"value":1
+				}
+				],
+				"ability":59
+			},
+			{	"cost":[
+				
+				
+				{
+					"cat":"fight",
+					"value":2
+				}
+				],
+				"ability":60
+			}
+			]
+	},
+
+	{
+		"id":45,
+		"name":"Hitmonchan",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"fight",
+				"value":90
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":2
+				}
+				],
+				"ability":61
+			},
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":2
+				},
+				{
+					"cat":"fight",
+					"value":1
+				}
+				],
+				"ability":62
+			}
+			]
+	},
+
+	{
+		"id":46,
+		"name":"Machoke",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Machop",
+		"hp":
+			{
+				"cat":"fight",
+				"value":90
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":2
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":2
+				}
+				],
+				"ability":63
+			}
+			]
+	},
+
+	{
+		"id":47,
+		"name":"Espurr",
+		"type":"pokemon",
+		"cat":"basic",
+		"hp":
+			{
+				"cat":"psychic",
+				"value":50
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":64
+			}
+			]
+	},
+
+	{
+		"id":48,
+		"name":"Persian",
+		"type":"pokemon",
+		"cat":"stage-one",
+		"from":"Meowth",
+		"hp":
+			{
+				"cat":"colorless",
+				"value":90
+			},
+		"retreat":[
+			{
+				"cat":"colorless",
+				"value":1
+			}],
+		"attacks":[
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":1
+				}
+				],
+				"ability":65
+			},
+			{	"cost":[
+				
+				
+				{
+					"cat":"colorless",
+					"value":2
+				}
+				],
+				"ability":66
+			}
+			]
+	},
+
+	{
+		"id":49,
+		"name":"Floral Crown",
+		"type":"trainer",
+		"cat":"item",
+		"ability":67
+	},
+
+	{
+		"id":50,
+		"name":"Poké Ball",
+		"type":"trainer",
+		"cat":"item",
+		"ability":68
+	},
+
+	{
+		"id":51,
+		"name":"Shauna",
+		"type":"trainer",
+		"cat":"supporter",
+		"ability":69
+	},
+
+	{
+		"id":52,
+		"name":"Pokémon Fan Club",
+		"type":"trainer",
+		"cat":"supporter",
+		"ability":70
+	},
+
+	{
+		"id":53,
+		"name":"Switch",
+		"type":"trainer",
+		"cat":"item",
+		"ability":71
+	},
+
+	{
+		"id":54,
+		"name":"Energy Switch",
+		"type":"trainer",
+		"cat":"item",
+		"ability":72
+	},
+
+	{
+		"id":55,
+		"name":"Red Card",
+		"type":"trainer",
+		"cat":"item",
+		"ability":73
+	},
+
+	{
+		"id":56,
+		"name":"Wally",
+		"type":"trainer",
+		"cat":"supporter",
+		"ability":74
+	},
+
+	{
+		"id":57,
+		"name":"Fight",
+		"type":"energy",
+		"cat":"fight"
+	},
+
+	{
+		"id":58,
+		"name":"Psychic",
+		"type":"energy",
+		"cat":"psychic"
+	},
 	
 ]

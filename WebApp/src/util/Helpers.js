@@ -27,4 +27,4 @@ export function formatDateTime(dateTimeString) {
     const year = date.getFullYear();
 
     return date.getDate() + ' ' + monthNames[monthIndex] + ' ' + year + ' - ' + date.getHours() + ':' + date.getMinutes();
-}  
+}

@@ -116,7 +116,7 @@
 		"name":"Raichu",
 		"type":"pokemon",
 		"cat":"stage-one",
-		"from":"pokemon",
+		"from":"Pikachu",
 		"hp":
 			{
 				"cat":"water",
@@ -891,7 +891,7 @@
 		"id":33,
 		"name":"Machop",
 		"type":"pokemon",
-		"cat":"fight",
+		"cat":"basic",
 		"hp":
 			{
 				"cat":"colorless",
@@ -1158,50 +1158,6 @@
 			}
 			]
 	},
-
-	{
-		"id":40,
-		"name":"Diglett",
-		"type":"pokemon",
-		"cat":"basic",
-		"hp":
-			{
-				"cat":"fight",
-				"value":50
-			},
-		"retreat":[
-			{
-				"cat":"colorless",
-				"value":1
-			}],
-		"attacks":[
-			{	"cost":[
-				
-				
-				{
-					"cat":"fight",
-					"value":1
-				}
-				],
-				"ablility":52
-			},
-			{	"cost":[
-				
-				
-				{
-					"cat":"colorless",
-					"value":1
-				},
-				{
-					"cat":"fight",
-					"value":1
-				}
-				],
-				"ablility":53
-			}
-			]
-	},
-
 	{
 		"id":41,
 		"name":"Dugtrio",

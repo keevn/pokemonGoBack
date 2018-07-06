@@ -1,9 +1,11 @@
 package comp354.team9;
 
+import comp354.team9.service.FileStorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import comp354.team9.model.*;
@@ -29,6 +31,9 @@ public class PokemonGoBackTests {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
 
     @Test
@@ -91,6 +96,20 @@ public class PokemonGoBackTests {
         assertThat(user.getUserDecks().size())
                 .isEqualTo(decklist.size());
     }
+
+    @Test
+    public void deckFileParseTest(){
+        
+        String cardlist = fileStorageService.processDeckFile("deck1.txt");
+
+        String deck1CardList = "51,52,53,58,44,43,33,32,57,57,34,35,33,33,45,46,28,31,46,47,29,57,58,57,57,55,58,56,58,58,58,57,48,57,57,38,58,58,34,36,37,54,39,52,41,49,50,37,58,39,40,40,57,47,36,30,58,54,57,30";
+
+        assertThat(cardlist)
+                .isEqualTo(deck1CardList);
+
+    }
+
+    
 
 
 }

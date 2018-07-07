@@ -6,14 +6,14 @@ import {
     POKEMON_NORMAL,
     POKEMON_DEAD, CARD_ENERGY, POKEMON_STAGE_ONE, CARD_TRAINER, TRAINER_ITEM
 } from "./constants";
-import {Card} from "./Card";
+import {Card, CardTypeError} from "./model/Card";
 
 
 export default class Pokemon {
 
     constructor(card) {
-        if (!card) throw new Error("No card to be used to initial a pokemon");
-        if (card.type !== CARD_POKEMON || card.category !== POKEMON_BASIC) throw new Error("Stage-one card can not be used to initialize a pokemon");
+        if (!card) throw new CardTypeError("No card to be used to initial a pokemon");
+        if (card.type !== CARD_POKEMON || card.category !== POKEMON_BASIC) throw new CardTypeError("Stage-one card can not be used to initialize a pokemon");
         this.name = card.name;
         this.type = CARD_POKEMON;
         this.category = card.category;

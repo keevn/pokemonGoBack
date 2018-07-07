@@ -1,5 +1,5 @@
 import Pokemon from "../Pokemon";
-import {Card, EnergyCard, findBasicCard, randomCard, TrainerCard} from "../Card";
+import {Card, CardTypeError, EnergyCard, findBasicCard, randomCard, TrainerCard} from "../model/Card";
 import {abilityList} from "../mockData/data";
 import {
     CARD_ENERGY,
@@ -11,31 +11,31 @@ import {
     POKEMON_NORMAL, CARD_TRAINER, TRAINER_ITEM, ENERGY_LIGHTNING, ENERGY_DARKNESS, ENERGY_FIGHT
 } from "../constants";
 
-test('Pokemon() initial a basic pokemon', ()=> {
+test('Pokemon() initial a basic pokemon', () => {
 
-    const pokemoncard= randomCard(CARD_POKEMON,POKEMON_BASIC);
+    const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
 
-    const pokemon= new Pokemon(pokemoncard);
+    const pokemon = new Pokemon(pokemoncard);
 
     expect(pokemon).toBeInstanceOf(Pokemon);
 
 });
 
-test('Pokemon() can not be initialized by a stage-one pokemon', ()=> {
+test('Pokemon() can not be initialized by a stage-one pokemon', () => {
 
-    const pokemoncard= randomCard(CARD_POKEMON,POKEMON_STAGE_ONE);
+    const pokemoncard = randomCard(CARD_POKEMON, POKEMON_STAGE_ONE);
 
     const t = () => {
-        new Pokemon(pokemoncard) ;
+        new Pokemon(pokemoncard);
     };
 
-    expect(t).toThrow("Stage-one card can not be used to initialize a pokemon");
+    expect(t).toThrow(CardTypeError);
 
 });
 
-test('_attachedAbility() :generate ablility list from a pokemon', ()=> {
+test('_attachedAbility() :generate ablility list from a pokemon', () => {
 
-    const pokemoncard= Card.getCardInstants(11);
+    const pokemoncard = Card.getCardInstants(11);
 
     const abilities = Pokemon._attachedAbility(pokemoncard);
 
@@ -44,23 +44,23 @@ test('_attachedAbility() :generate ablility list from a pokemon', ()=> {
     expect(abilities[1].skill).toEqual(abilityList[18]);
 });
 
-test('evolvableFrom() : able to evolve from stage-one PokemonCard', ()=> {
+test('evolvableFrom() : able to evolve from stage-one PokemonCard', () => {
 
-    const upgradecard= Card.getCardInstants(4);
-    const pokemoncard= Card.getCardInstants(3);
+    const upgradecard = Card.getCardInstants(4);
+    const pokemoncard = Card.getCardInstants(3);
 
-    const pokemon= new Pokemon(pokemoncard);
-    
+    const pokemon = new Pokemon(pokemoncard);
+
     expect(pokemon.evolvableFrom(upgradecard)).toBeTruthy();
 
 });
 
-test('evolve() : evolve from stage-one PokemonCard', ()=> {
+test('evolve() : evolve from stage-one PokemonCard', () => {
 
-    const upgradecard= Card.getCardInstants(4);
-    const pokemoncard= Card.getCardInstants(3);
+    const upgradecard = Card.getCardInstants(4);
+    const pokemoncard = Card.getCardInstants(3);
 
-    const pokemon= new Pokemon(pokemoncard);
+    const pokemon = new Pokemon(pokemoncard);
 
     const old_skillList = pokemon.abilities;
 
@@ -71,61 +71,61 @@ test('evolve() : evolve from stage-one PokemonCard', ()=> {
 
 });
 
-test('attachEnergy() : add a energy card to a basic Pokemon', ()=> {
+test('attachEnergy() : add a energy card to a basic Pokemon', () => {
 
-    const pokemoncard= randomCard(CARD_POKEMON,POKEMON_BASIC);
-    const energy= randomCard(CARD_ENERGY);
+    const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
+    const energy = randomCard(CARD_ENERGY);
 
-    const pokemon= new Pokemon(pokemoncard);
+    const pokemon = new Pokemon(pokemoncard);
 
     const energyNumber = pokemon.attachedEnergy.size;
 
     pokemon.attachEnergy(energy);
 
     expect(pokemon.attachedEnergy.get(`${CARD_ENERGY}_${energy.key}`)).toEqual(energy);
-    expect(pokemon.attachedEnergy.size).toBe(energyNumber+1);
+    expect(pokemon.attachedEnergy.size).toBe(energyNumber + 1);
 
 });
 
-test('attachEnergy() : add repeated key energycard', ()=> {
+test('attachEnergy() : add repeated key energycard', () => {
 
-    const stageonecard =  randomCard(CARD_POKEMON,POKEMON_STAGE_ONE);
+    const stageonecard = randomCard(CARD_POKEMON, POKEMON_STAGE_ONE);
 
-    const pokemoncard= findBasicCard(stageonecard);
+    const pokemoncard = findBasicCard(stageonecard);
 
-    let energy= randomCard(CARD_ENERGY);
+    let energy = randomCard(CARD_ENERGY);
 
-    const pokemon= new Pokemon(pokemoncard);
+    const pokemon = new Pokemon(pokemoncard);
 
     const cardNumber = pokemon.cardList.size;
 
     const energyNumber = pokemon.attachedEnergy.size;
 
-    const key1= energy.key;
+    const key1 = energy.key;
 
     pokemon.attachEnergy(energy);
 
     pokemon.evolve(stageonecard);
 
-   // energy= randomCard(CARD_ENERGY);                        //if energy card's key is the same ,only attach once
+    // energy= randomCard(CARD_ENERGY);                        //if energy card's key is the same ,only attach once
     pokemon.attachEnergy(energy);
 
     expect(pokemon.attachedEnergy.get(key1)).not.toBeNull();
-    expect(pokemon.attachedEnergy.size).toBe(energyNumber+1);
-    expect(pokemon.cardList.size).toBe(cardNumber+2);    //there is a pokemon card in the front of cardlist
+    expect(pokemon.attachedEnergy.size).toBe(energyNumber + 1);
+    expect(pokemon.cardList.size).toBe(cardNumber + 2);    //there is a pokemon card in the front of cardlist
 });
 
-test('attachEnergy() : add a energy card to after evolve Pokemon', ()=> {
+test('attachEnergy() : add a energy card to after evolve Pokemon', () => {
 
-    const stageonecard =  randomCard(CARD_POKEMON,POKEMON_STAGE_ONE);
+    const stageonecard = randomCard(CARD_POKEMON, POKEMON_STAGE_ONE);
 
-    const pokemoncard= findBasicCard(stageonecard);
+    const pokemoncard = findBasicCard(stageonecard);
 
-    let energy= randomCard(CARD_ENERGY);
-    
-    const key1 =  energy.key;
+    let energy = randomCard(CARD_ENERGY);
 
-    const pokemon= new Pokemon(pokemoncard);
+    const key1 = energy.key;
+
+    const pokemon = new Pokemon(pokemoncard);
 
     const cardNumber = pokemon.cardList.size;
 
@@ -134,64 +134,63 @@ test('attachEnergy() : add a energy card to after evolve Pokemon', ()=> {
     pokemon.attachEnergy(energy);
 
     pokemon.evolve(stageonecard);
-    
-    energy= randomCard(CARD_ENERGY);
-    const key2= energy.key;
-    
+
+    energy = randomCard(CARD_ENERGY);
+    const key2 = energy.key;
+
     pokemon.attachEnergy(energy);
 
     expect(pokemon.attachedEnergy.has(`${CARD_ENERGY}_${key1}`)).toBeTruthy();
     expect(pokemon.attachedEnergy.has(`${CARD_ENERGY}_${key2}`)).toBeTruthy();
-    expect(pokemon.attachedEnergy.size).toBe(energyNumber+2);
-    expect(pokemon.cardList.size).toBe(cardNumber+3);    //there is a pokemon card in the front of cardlist
+    expect(pokemon.attachedEnergy.size).toBe(energyNumber + 2);
+    expect(pokemon.cardList.size).toBe(cardNumber + 3);    //there is a pokemon card in the front of cardlist
 });
 
 
-test('detachEnergy() : remove a energy card to Pokemon', ()=> {
+test('detachEnergy() : remove a energy card to Pokemon', () => {
 
-    const pokemoncard= randomCard(CARD_POKEMON,POKEMON_BASIC);
-    let energy= randomCard(CARD_ENERGY,ENERGY_WATER);
+    const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
+    let energy = randomCard(CARD_ENERGY, ENERGY_WATER);
 
-    const pokemon= new Pokemon(pokemoncard);
+    const pokemon = new Pokemon(pokemoncard);
 
     const energyNumber = pokemon.attachedEnergy.size;
     const cardNumber = pokemon.cardList.size;
 
     pokemon.attachEnergy(energy);
 
-    energy= randomCard(CARD_ENERGY,ENERGY_WATER);
+    energy = randomCard(CARD_ENERGY, ENERGY_WATER);
     pokemon.attachEnergy(energy);
-    
-    expect(pokemon.attachedEnergy.size).toBe(energyNumber+2);
-    expect(pokemon.cardList.size).toBe(cardNumber+2);
+
+    expect(pokemon.attachedEnergy.size).toBe(energyNumber + 2);
+    expect(pokemon.cardList.size).toBe(cardNumber + 2);
 
     const removedEnergy = pokemon.detachEnergy();
 
-    expect(pokemon.attachedEnergy.size).toBe(energyNumber+1);
-    expect(pokemon.cardList.size).toBe(cardNumber+1);
+    expect(pokemon.attachedEnergy.size).toBe(energyNumber + 1);
+    expect(pokemon.cardList.size).toBe(cardNumber + 1);
 
 
-
-    energy= randomCard(CARD_ENERGY,ENERGY_WATER);
+    energy = randomCard(CARD_ENERGY, ENERGY_WATER);
     pokemon.attachEnergy(energy);
 
-    pokemon.detachEnergy(ENERGY_WATER,2);
+    pokemon.detachEnergy(ENERGY_WATER, 2);
 
     expect(pokemon.attachedEnergy.size).toBe(energyNumber);
     expect(pokemon.cardList.size).toBe(cardNumber);
-    
+
 });
 
 
-test('attachItem() : attach itemcard this pokemon', ()=> {
+test('attachItem() : attach itemcard this pokemon', () => {
 
-    const pokemoncard= randomCard(CARD_POKEMON,POKEMON_BASIC);
+    const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
 
-    const pokemon= new Pokemon(pokemoncard);
+    const pokemon = new Pokemon(pokemoncard);
 
-    const itemcard= randomCard(CARD_TRAINER,TRAINER_ITEM,true);
+    const itemcard = randomCard(CARD_TRAINER, TRAINER_ITEM, true);
 
-    if (itemcard.attachable)  pokemon.attachItem(itemcard);
+    if (itemcard.attachable) pokemon.attachItem(itemcard);
 
     expect(pokemon.attachedItem).toBeInstanceOf(TrainerCard);
     expect(pokemon.cardList.size).toBe(2);
@@ -199,15 +198,15 @@ test('attachItem() : attach itemcard this pokemon', ()=> {
 
 });
 
-test('detachItem() : detach itemcard from pokemon', ()=> {
+test('detachItem() : detach itemcard from pokemon', () => {
 
-    const pokemoncard= randomCard(CARD_POKEMON,POKEMON_BASIC);
+    const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
 
-    const pokemon= new Pokemon(pokemoncard);
+    const pokemon = new Pokemon(pokemoncard);
 
-    const itemcard= randomCard(CARD_TRAINER,TRAINER_ITEM,true);
+    const itemcard = randomCard(CARD_TRAINER, TRAINER_ITEM, true);
 
-    if (itemcard.attachable)  pokemon.attachItem(itemcard);
+    if (itemcard.attachable) pokemon.attachItem(itemcard);
 
     expect(pokemon.attachedItem).toBeInstanceOf(TrainerCard);
     expect(pokemon.cardList.size).toBe(2);
@@ -220,37 +219,35 @@ test('detachItem() : detach itemcard from pokemon', ()=> {
 });
 
 
+test('hurt(hp) : attack this pokemon', () => {
 
-test('hurt(hp) : attack this pokemon', ()=> {
+    const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
 
-    const pokemoncard= randomCard(CARD_POKEMON,POKEMON_BASIC);
-
-    const pokemon= new Pokemon(pokemoncard);
+    const pokemon = new Pokemon(pokemoncard);
 
     const damageBeforeAttack = pokemon.damage;
 
     pokemon.hurt(20);
 
-    expect(pokemon.damage).toBe(damageBeforeAttack+20);
+    expect(pokemon.damage).toBe(damageBeforeAttack + 20);
 
 
-    pokemon.hurt(pokemon.hp+20);
+    pokemon.hurt(pokemon.hp + 20);
 
     expect(pokemon.damage).toBe(pokemon.hp);
     expect(pokemon.status).toBe(POKEMON_DEAD);
-    
+
 });
 
-test('heal(hp) : heal this pokemon', ()=> {
+test('heal(hp) : heal this pokemon', () => {
 
-    const pokemoncard= randomCard(CARD_POKEMON,POKEMON_BASIC);
+    const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
 
-    const pokemon= new Pokemon(pokemoncard);
+    const pokemon = new Pokemon(pokemoncard);
 
     const damageBeforeAttack = pokemon.damage;
 
     pokemon.hurt(20);
-
 
 
     pokemon.heal(10);
@@ -263,44 +260,42 @@ test('heal(hp) : heal this pokemon', ()=> {
     expect(pokemon.status).toBe(POKEMON_NORMAL);
 
 
-
 });
 
 
-test('getAvailableSills() : find available skill list', ()=> {
+test('getAvailableSills() : find available skill list', () => {
 
-    const stageone= Card.getCardInstants(6);
+    const stageone = Card.getCardInstants(6);
 
 
     const pokemoncard = findBasicCard(stageone);
 
-    const pokemon= new Pokemon(pokemoncard);
+    const pokemon = new Pokemon(pokemoncard);
 
     pokemon.evolve(stageone);
 
-    pokemon.attachEnergy(randomCard(CARD_ENERGY,ENERGY_FIGHT));
+    pokemon.attachEnergy(randomCard(CARD_ENERGY, ENERGY_FIGHT));
 
     expect(pokemon.attachedEnergy.size).toBe(1);
     expect(pokemon.getAvailableSills().length).toBe(1);
 
 
-    pokemon.attachEnergy(randomCard(CARD_ENERGY,ENERGY_WATER));
+    pokemon.attachEnergy(randomCard(CARD_ENERGY, ENERGY_WATER));
 
 
     expect(pokemon.attachedEnergy.size).toBe(2);
-    const skills =pokemon.getAvailableSills();
+    const skills = pokemon.getAvailableSills();
     expect(skills.length).toBe(2);
     expect(skills[1].skill.id).toBe(11);
 
 
-
 });
 
-test('isRetreatable() ', ()=> {
+test('isRetreatable() ', () => {
 
-    const pokemoncard = randomCard(CARD_POKEMON,POKEMON_BASIC);
+    const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
 
-    const pokemon= new Pokemon(pokemoncard);
+    const pokemon = new Pokemon(pokemoncard);
 
     pokemon.attachEnergy(randomCard(CARD_ENERGY));
 
@@ -309,7 +304,6 @@ test('isRetreatable() ', ()=> {
     pokemon.detachEnergy();
 
     expect(pokemon.isRetreatable()).not.toBeTruthy();
-
 
 
 });

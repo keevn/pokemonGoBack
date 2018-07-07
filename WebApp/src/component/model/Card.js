@@ -1,13 +1,12 @@
-import {cardList,abilityList} from './mockData/data';
+import {cardList} from '../mockData/data';
 import {
     CARD_ENERGY,
     CARD_POKEMON,
     CARD_TRAINER,
     ENERGY_COLORLESS,
-    POKEMON_BASIC,
-    POKEMON_STAGE_ONE,
-    TRAINER_ITEM
-} from "./constants";
+    POKEMON_BASIC ,
+    ENERGY_DARKNESS
+} from "../constants";
 import Random from "random-id";
 
 export class Card {
@@ -70,7 +69,8 @@ export function randomCard(type,category,attachable=false) {
     let find=false;
     let card;
 
-
+    if (type===CARD_ENERGY && category===ENERGY_DARKNESS)
+        throw new CardTypeError("darkness energy card does exist in current collection. ");
 
     while (!find) {
 
@@ -111,4 +111,20 @@ export function findBasicCard(stageOneCard){
 function randomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+
+
+export class CardTypeError extends Error {
+    constructor(...args) {
+        super(...args)
+
+        this.name = this.constructor.name;
+        if (typeof Error.captureStackTrace === 'function') {
+            Error.captureStackTrace(this, this.constructor);
+        } else {
+            this.stack = (new Error(message)).stack;
+        }
+    }
+}
+
 

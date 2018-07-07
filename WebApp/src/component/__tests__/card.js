@@ -1,4 +1,4 @@
-import {Card, EnergyCard, PokemonCard, TrainerCard,randomCard,findBasicCard} from "../Card";
+import {Card, EnergyCard, PokemonCard, TrainerCard,randomCard,findBasicCard,CardTypeError} from "../model/Card";
 import {
     CARD_ENERGY,
     CARD_POKEMON,
@@ -8,7 +8,7 @@ import {
     ENERGY_FIGHT,
     POKEMON_BASIC,
     POKEMON_STAGE_ONE,
-    CARD_TRAINER, TRAINER_ITEM, TRAINER_SUPPORTER
+    CARD_TRAINER, TRAINER_ITEM, TRAINER_SUPPORTER, ENERGY_DARKNESS
 } from "../constants";
 
 test('randomCard() get random cards from specific type and category', ()=> {
@@ -42,7 +42,7 @@ test('randomCard() get random cards from specific type and category', ()=> {
 
     expect(attachable_item_pokemonCard).toBeInstanceOf(TrainerCard);
     expect(attachable_item_pokemonCard.category).toBe(TRAINER_ITEM);
-    //expect(attachable_item_pokemonCard.attachable).toBeTruthy();
+    expect(attachable_item_pokemonCard.attachable).toBeTruthy();
 
     const colorless_energyCard= randomCard(CARD_ENERGY,ENERGY_COLORLESS);
 
@@ -69,6 +69,12 @@ test('randomCard() get random cards from specific type and category', ()=> {
 
     expect(fight_energyCard).toBeInstanceOf(EnergyCard);
     expect(fight_energyCard.category).toBe(ENERGY_FIGHT);
+
+    const t = () => {
+        randomCard(CARD_ENERGY,ENERGY_DARKNESS);
+    };
+
+    expect(t).toThrow(CardTypeError);
 
 });
 
@@ -105,7 +111,7 @@ test('get a EnergyCard instant', ()=> {
 
 });
 
-test('findBasicCard() by stageone pokemoncard', ()=> {
+test('findBasicCard(stageone) by stageone pokemoncard', ()=> {
 
     const stageonecard =  randomCard(CARD_POKEMON,POKEMON_STAGE_ONE);
 

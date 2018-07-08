@@ -28,3 +28,8 @@ export function formatDateTime(dateTimeString) {
 
     return date.getDate() + ' ' + monthNames[monthIndex] + ' ' + year + ' - ' + date.getHours() + ':' + date.getMinutes();
 }
+
+
+export function randomInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

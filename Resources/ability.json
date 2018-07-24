@@ -3,15 +3,26 @@
     "id": 1,
     "name": "Act Cute",
     "desc": "Your opponent puts a card from his or her hand on the bottom of his or her deck.",
-    "act": "target: opponent: destination: deck: bottom: choice: them:1",
-    "action": "deck"
+    "actions": [
+    	{	"act":"search"
+    		"target":"opponent",
+			"from":"opponent-hand",
+    		"amount":1,
+    		"to":"opponent-deck",
+		}
+    ]
   },
   {
     "id": 2,
     "name": "Scratch",
     "damage": 20,
-    "act": "target:opponent-active:20",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[20],
+   		}
+   	]
   },
   {
     "id": 3,
@@ -19,22 +30,45 @@
     "plus":	"+",
     "name": "Quick Attack",
     "desc": "Flip a coin. If heads, this attack does 30 more damage.",
-    "act": "target:opponent-active:10,cond:flip:dam:target:opponent-active:30",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"flip-coin",
+    	 	"times":1,
+    	},
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+    		"value":[10,40],
+    	}
+    ]
   },
   {
     "id": 4,
     "name": "Flying Elekick",
     "damage": 50,
-    "act": "target:opponent-active:50",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[50],
+   		}
+   	]
   },
   {
     "id": 5,
     "name": "Nuzzle",
     "desc": "Flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed.",
-    "act": "flip:applystat:status:paralyzed:opponent-active",
-    "action": "cond"
+    "actions": [
+    	{
+    		"act":"flip-coin",
+    	 	"times":1
+    	},
+    	{
+    		"act":"apply-status",
+    		"target":"opponent-active",
+    		"value":["","paralyzed"],
+    	}
+    ]
   },
   {
     "id": 6,
@@ -42,35 +76,84 @@
     "damage": 20,
     "plus":	"+",
     "desc": "Flip a coin. If heads, this attack does 10 more damage.",
-    "act": "target:opponent-active:20,cond:flip:dam:target:opponent-active:10",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"flip-coin",
+    	 	"times":1,
+    	},
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+    		"value":[20,30],
+    	}
+    ]
   },
   {
     "id": 7,
     "name": "Circle Circuit",
     "desc": "This attack does 20 damage times the number of your Benched Pokémon.",
-    "act": "target:opponent-active:20*count(target:your-bench)",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"count",
+    	 	"target":"your-bench"
+    	},
+    	{
+    		"act":"dam"
+    		"target":"opponent-active",
+    		"value":[0,20,40,60,80,100,120,140],
+    	}
+    ]
   },
   {
     "id": 8,
     "name": "Thunderbolt",
+    "damage": 100,
     "desc": "Discard all Energy attached to this Pokémon.",
-    "act": "target:opponent-active:100,deenergize:target:your-active:count(target:your-active:energy)",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+    		"value":[100],
+    	},
+    	{
+    		"act":"count",
+    	 	"target":"your-active:energy"
+    	},
+    	{
+    		"act":"deenergize",
+    		"target":"your-active",
+    		"value":"all",
+    	}
+    ]
   },
   {
     "id": 9,
     "name": "Rain Splash",
     "desc": "This attack does 20 damage.",
-    "act": "target:opponent-active:20",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[20],
+   		}
+   	]
   },
   {
     "id": 10,
     "name": "Soaking Horn",
     "desc": "This attack does 10 damage to opponent-active pokemon.If this Pokémon was healed during this turn, this attack does 80 more damage.",
-    "act": "target:opponent-active:10,cond:healed:target:your-active:dam:target:opponent-active:80",
+    "actions": [
+    	{	
+    		"act":"isHealed",
+    		"value":1,
+    	},
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[10,90],
+   		}
+   	]
+   	"act": "target:opponent-active:10,cond:healed:target:your-active:dam:target:opponent-active:80",
     "action": "dam"
   },
   {
@@ -106,7 +189,7 @@
     "name": "Clamp Crush",
     "desc": "This attack does 30 damage. Then, flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed and discard an Energy attached to that Pokémon.",
     "act": "dam:target:opponent-active:30,cond:flip:deenergize:target:opponent-active:1,applystat:status:paralyzed:opponent-active",
-    "action": "deck"
+    "action": "dam"
   },
   {
     "id": 16,
@@ -351,7 +434,7 @@
     "name": "Poison Ring",
     "desc": "Your opponent's Active Pokémon is now Poisoned. That Pokémon can't retreat during your opponent's next turn",
     "act": "applystat:status:stuck:opponent-active,applystat:status:poisoned:opponent-active",
-    "action": "deck"
+    "action": "applystat"
   },
   {
     "id": 51,
@@ -405,7 +488,7 @@
   {
     "id": 58,
     "name": "Scavenge",
-    "desc": "Search your discard pile for a Trainer card, show it to your opponent, and put it into your hand.",
+    "desc": "Discard a Energy attached to this Pokemon,if you do,put an Item card from your discard pile into your hand.",
     "act": "ability:deenergize:target:your-active:1:(search:target:your:source:discard:filter:cat:item:1)",
     "action": "cond"
   },

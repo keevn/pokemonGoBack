@@ -4,11 +4,11 @@
     "name": "Act Cute",
     "desc": "Your opponent puts a card from his or her hand on the bottom of his or her deck.",
     "actions": [
-    	{	"act":"search"
-    		"target":"opponent",
-			"from":"opponent-hand",
+    	{	
+    		"act":"search"
+    		"target":"opponent-hand",
     		"amount":1,
-    		"to":"opponent-deck",
+    		"to":"opponent-deck:bottom",
 		}
     ]
   },
@@ -95,7 +95,7 @@
     "actions": [
     	{
     		"act":"count",
-    	 	"target":"your-bench"
+    	 	"target":"your-bench",
     	},
     	{
     		"act":"dam"
@@ -153,8 +153,6 @@
    			"value":[10,90],
    		}
    	]
-   	"act": "target:opponent-active:10,cond:healed:target:your-active:dam:target:opponent-active:80",
-    "action": "dam"
   },
   {
     "id": 11,

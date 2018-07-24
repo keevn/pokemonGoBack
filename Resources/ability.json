@@ -381,63 +381,121 @@
     "name": "Random Spark",
     "desc": "This attack does 30 damage to 1 of your opponent's Pokémon randomly. (Don't apply Weakness and Resistance for Benched Pokémon.)",
     "act": "target:choice:opponent:30",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"your-random-pokemon",
+   			"value":[30],
+   		},
+    ]
   },
   {
     "id": 25,
     "name": "Bite",
     "desc": "The opponent-active damage 40 HP",
     "act": "target:opponent-active:40",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[40],
+   		}
+   	]
   },
   {
     "id": 26,
     "name": "Bite",
     "desc": "The opponent-active damage 10 HP",
     "act": "target:opponent-active:10",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[10],
+   		}
+   	]
   },
   {
     "id": 27,
     "name": "Knuckle Punch",
     "desc": "This attack does 30 damage.",
     "act": "target:opponent-active:30",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[30],
+   		}
+   	]
   },
   {
     "id": 28,
     "name": "Electroslug",
     "desc": "This attack does 90 damage to your opponent-active pokemon.",
     "act": "target:opponent-active:90",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[90],
+   		}
+   	]
   },
   {
     "id": 29,
     "name": "Knuckle Punch",
     "desc": "This attack does 20 damage.",
     "act": "target:opponent-active:20",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[20],
+   		}
+   	]
   },
   {
     "id": 30,
     "name": "Destructive Beam",
     "desc": "Flip a coin. If heads, discard an Energy attached to your opponent's Active Pokémon.",
     "act": "cond:flip:deenergize:target:opponent-active:1",
-    "action": "cond"
+    "actions": [
+   		{
+    		"act":"flip-coin",
+    	 	"times":1
+    	},
+    	{
+    		"act":"deenergize",
+    		"target":"opponent-active",
+    		"value":1,
+    	}
+   	]
   },
   {
     "id": 31,
     "name": "Tierno",
     "desc": "Draw 3 cards",
     "act": "3",
-    "action": "draw"
+    "actions": [
+   		{
+    		"act":"draw",
+    	 	"times":3
+    	}
+   	]
   },
   {
     "id": 32,
     "name": "Potion",
     "desc": "(Trainer card) Heal 30 damage from 1 of your Pokémon.",
     "act": "target:choice:your:30",
-    "action": "heal"
+    "actions": [
+    	{
+    		"act":"heal",
+    		"target":"your-pick-pokemon",
+   			"value":[30],
+   		},
+    ]
+    
   },
   {
     "id": 33,

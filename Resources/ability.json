@@ -5,8 +5,9 @@
     "desc": "Your opponent puts a card from his or her hand on the bottom of his or her deck.",
     "actions": [
     	{	
-    		"act":"search"
-    		"target":"opponent-hand",
+    		"act":"pick"
+    		"target":"opponent",
+    		"from":"opponent-hand",
     		"amount":1,
     		"to":"opponent-deck:bottom",
 		}
@@ -159,91 +160,221 @@
     "name": "Reckless Charge",
     "desc": "This attack does 40 damage to opponent-active pokemon. And then, this attack also does 10 damage to itself.",
     "act": "target:opponent-active:40,dam:target:your-active:10",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[40],
+   		},
+    	{
+    		"act":"dam",
+    		"target":"your-active",
+   			"value":[10],
+   		}
+   	]
   },
   {
     "id": 12,
     "name": "Reckless Charge",
     "desc": "This attack does 20 damage to opponent-active pokemon. And then, this attack also does 10 damage to itself.",
     "act": "target:opponent-active:20,dam:target:your-active:10",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[20],
+   		},
+    	{
+    		"act":"dam",
+    		"target":"your-active",
+   			"value":[10],
+   		}
+   	]
   },
   {
     "id": 13,
     "name": "Cut",
     "desc": "This attack does 30 damage.",
     "act": "target:opponent-active:30",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[30],
+   		}
+   	]
   },
   {
     "id": 14,
     "name": "Pound",
     "desc": "This attack does 10 damage.",
     "act": "target:opponent-active:10",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[10],
+   		}
+   	]
   },
   {
     "id": 15,
     "name": "Clamp Crush",
     "desc": "This attack does 30 damage. Then, flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed and discard an Energy attached to that Pokémon.",
     "act": "dam:target:opponent-active:30,cond:flip:deenergize:target:opponent-active:1,applystat:status:paralyzed:opponent-active",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[30],
+   		},
+   		{
+    		"act":"flip-coin",
+    	 	"times":1
+    	},
+    	{
+    		"act":"apply-status",
+    		"target":"opponent-active",
+    		"value":["","paralyzed"],
+    	},
+    	{
+    		"act":"deenergize",
+    		"target":"opponent-active",
+    		"value":1,
+    	}
+   	]
   },
   {
     "id": 16,
     "name": "Spike Cannon",
     "desc": "Flip 5 coins. This attack does 30 damage times the number of heads.",
     "act": "target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30",
-    "action": "dam"
+    "actions": [
+   		{
+    		"act":"flip-coin",
+    	 	"times":5
+    	},
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[0,30,60,90,120],
+   		}
+    ]
   },
   {
     "id": 17,
     "name": "Spiral Drain",
     "desc": "This attack does 10 damage to opponent-active pokemon. Also, this attack also heal 20 damage from this Pokémon.",
     "act": "target:opponent-active:20,heal:target:your-active:20",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[20],
+   		},
+   		{
+    		"act":"heal",
+    		"target":"your-active",
+   			"value":[20],
+   		}
+   	]
   },
   {
     "id": 18,
     "name": "Aurora Beam",
     "desc": "The opponent-active damage 80 HP",
     "act": "target:opponent-active:80",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[80],
+   		}
+   	]
   },
   {
     "id": 19,
     "name": "Wing Attack",
     "desc": "This attack does 20 damage to opponent-active pokemon.",
     "act": "target:opponent-active:20",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[20],
+   		}
+   	]
   },
   {
     "id": 20,
     "name": "Brave Bird",
     "desc": "This Pokémon does 80 damage to the opponent-active Pokémon and does 20 damage to itself.",
     "act": "target:opponent-active:80,dam:target:your-active:20",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[80],
+   		},
+   		{
+    		"act":"heal",
+    		"target":"your-active",
+   			"value":[20],
+   		}
+   	]
   },
   {
     "id": 21,
     "name": "Lunge",
     "desc": "Flip a coin. If tails, this attack does nothing.",
     "act": "flip:dam:target:opponent-active:20",
-    "action": "cond"
+    "actions": [
+   		{
+    		"act":"flip-coin",
+    	 	"times":1
+    	},
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[0,20],
+   		}
+    ]
   },
   {
     "id": 22,
     "name": "Slash",
     "desc": "This attack does 30 damage to opponent-active pokemon.",
     "act": "target:opponent-active:30",
-    "action": "dam"
+    "actions": [
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[30],
+   		}
+   	]
   },
   {
     "id": 23,
     "name": "Nyan Press",
     "desc": "Flip a coin. If heads, this attack does 40 more damage. If tails, your opponent's Active Pokémon is now Paralyzed.",
     "act": "target:opponent-active:40,cond:flip:dam:target:opponent-active:40:else:applystat:status:paralyzed:opponent-active",
-    "action": "dam"
+    "actions": [
+   		{
+    		"act":"flip-coin",
+    	 	"times":1
+    	},
+    	{
+    		"act":"dam",
+    		"target":"opponent-active",
+   			"value":[40,80],
+   		},
+   		{
+    		"act":"apply-status",
+    		"target":"opponent-active",
+    		"value":["paralyzed",""],
+    	},
+   		
+    ]
   },
   {
     "id": 24,

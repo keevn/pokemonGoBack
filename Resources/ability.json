@@ -1,1067 +1,1085 @@
 [{},
-  {
-    "id": 1,
-    "name": "Act Cute",
-    "desc": "Your opponent puts a card from his or her hand on the bottom of his or her deck.",
-    "actions": [
-    	{	
-    		"act":"pick"
-    		"target":"opponent",
-    		"from":"opponent-hand",
-    		"amount":1,
-    		"to":"opponent-deck:bottom",
-		}
-    ]
-  },
-  {
-    "id": 2,
-    "name": "Scratch",
-    "damage": 20,
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[20],
-   		}
-   	]
-  },
-  {
-    "id": 3,
-    "damage": 10,
-    "plus":	"+",
-    "name": "Quick Attack",
-    "desc": "Flip a coin. If heads, this attack does 30 more damage.",
-    "actions": [
-    	{
-    		"act":"flip-coin",
-    	 	"times":1,
-    	},
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-    		"value":[10,40],
-    	}
-    ]
-  },
-  {
-    "id": 4,
-    "name": "Flying Elekick",
-    "damage": 50,
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[50],
-   		}
-   	]
-  },
-  {
-    "id": 5,
-    "name": "Nuzzle",
-    "desc": "Flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed.",
-    "actions": [
-    	{
-    		"act":"flip-coin",
-    	 	"times":1
-    	},
-    	{
-    		"act":"apply-status",
-    		"target":"opponent-active",
-    		"value":["","paralyzed"],
-    	}
-    ]
-  },
-  {
-    "id": 6,
-    "name": "Quick Attack",
-    "damage": 20,
-    "plus":	"+",
-    "desc": "Flip a coin. If heads, this attack does 10 more damage.",
-    "actions": [
-    	{
-    		"act":"flip-coin",
-    	 	"times":1,
-    	},
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-    		"value":[20,30],
-    	}
-    ]
-  },
-  {
-    "id": 7,
-    "name": "Circle Circuit",
-    "desc": "This attack does 20 damage times the number of your Benched Pokémon.",
-    "actions": [
-    	{
-    		"act":"count",
-    	 	"target":"your-bench",
-    	},
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-    		"value":[0,20,40,60,80,100,120,140],
-    	}
-    ]
-  },
-  {
-    "id": 8,
-    "name": "Thunderbolt",
-    "damage": 100,
-    "desc": "Discard all Energy attached to this Pokémon.",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-    		"value":[100],
-    	},
-    	{
-    		"act":"count",
-    	 	"target":"your-active:energy"
-    	},
-    	{
-    		"act":"deenergize",
-    		"target":"your-active",
-    		"value":"all",
-    	}
-    ]
-  },
-  {
-    "id": 9,
-    "name": "Rain Splash",
-    "desc": "This attack does 20 damage.",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[20],
-   		}
-   	]
-  },
-  {
-    "id": 10,
-    "name": "Soaking Horn",
-    "desc": "This attack does 10 damage to opponent-active pokemon.If this Pokémon was healed during this turn, this attack does 80 more damage.",
-    "actions": [
-    	{	
-    		"act":"isHealed",
-    		"value":1,
-    	},
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[10,90],
-   		}
-   	]
-  },
-  {
-    "id": 11,
-    "name": "Reckless Charge",
-    "desc": "This attack does 40 damage to opponent-active pokemon. And then, this attack also does 10 damage to itself.",
-    "act": "target:opponent-active:40,dam:target:your-active:10",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[40],
-   		},
-    	{
-    		"act":"dam",
-    		"target":"your-active",
-   			"value":[10],
-   		}
-   	]
-  },
-  {
-    "id": 12,
-    "name": "Reckless Charge",
-    "desc": "This attack does 20 damage to opponent-active pokemon. And then, this attack also does 10 damage to itself.",
-    "act": "target:opponent-active:20,dam:target:your-active:10",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[20],
-   		},
-    	{
-    		"act":"dam",
-    		"target":"your-active",
-   			"value":[10],
-   		}
-   	]
-  },
-  {
-    "id": 13,
-    "name": "Cut",
-    "desc": "This attack does 30 damage.",
-    "act": "target:opponent-active:30",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[30],
-   		}
-   	]
-  },
-  {
-    "id": 14,
-    "name": "Pound",
-    "desc": "This attack does 10 damage.",
-    "act": "target:opponent-active:10",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[10],
-   		}
-   	]
-  },
-  {
-    "id": 15,
-    "name": "Clamp Crush",
-    "desc": "This attack does 30 damage. Then, flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed and discard an Energy attached to that Pokémon.",
-    "act": "dam:target:opponent-active:30,cond:flip:deenergize:target:opponent-active:1,applystat:status:paralyzed:opponent-active",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[30],
-   		},
-   		{
-    		"act":"flip-coin",
-    	 	"times":1
-    	},
-    	{
-    		"act":"apply-status",
-    		"target":"opponent-active",
-    		"value":["","paralyzed"],
-    	},
-    	{
-    		"act":"deenergize",
-    		"target":"opponent-active",
-    		"value":1,
-    	}
-   	]
-  },
-  {
-    "id": 16,
-    "name": "Spike Cannon",
-    "desc": "Flip 5 coins. This attack does 30 damage times the number of heads.",
-    "act": "target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30",
-    "actions": [
-   		{
-    		"act":"flip-coin",
-    	 	"times":5
-    	},
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[0,30,60,90,120],
-   		}
-    ]
-  },
-  {
-    "id": 17,
-    "name": "Spiral Drain",
-    "desc": "This attack does 10 damage to opponent-active pokemon. Also, this attack also heal 20 damage from this Pokémon.",
-    "act": "target:opponent-active:20,heal:target:your-active:20",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[20],
-   		},
-   		{
-    		"act":"heal",
-    		"target":"your-active",
-   			"value":[20],
-   		}
-   	]
-  },
-  {
-    "id": 18,
-    "name": "Aurora Beam",
-    "desc": "The opponent-active damage 80 HP",
-    "act": "target:opponent-active:80",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[80],
-   		}
-   	]
-  },
-  {
-    "id": 19,
-    "name": "Wing Attack",
-    "desc": "This attack does 20 damage to opponent-active pokemon.",
-    "act": "target:opponent-active:20",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[20],
-   		}
-   	]
-  },
-  {
-    "id": 20,
-    "name": "Brave Bird",
-    "desc": "This Pokémon does 80 damage to the opponent-active Pokémon and does 20 damage to itself.",
-    "act": "target:opponent-active:80,dam:target:your-active:20",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[80],
-   		},
-   		{
-    		"act":"heal",
-    		"target":"your-active",
-   			"value":[20],
-   		}
-   	]
-  },
-  {
-    "id": 21,
-    "name": "Lunge",
-    "desc": "Flip a coin. If tails, this attack does nothing.",
-    "act": "flip:dam:target:opponent-active:20",
-    "actions": [
-   		{
-    		"act":"flip-coin",
-    	 	"times":1
-    	},
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[0,20],
-   		}
-    ]
-  },
-  {
-    "id": 22,
-    "name": "Slash",
-    "desc": "This attack does 30 damage to opponent-active pokemon.",
-    "act": "target:opponent-active:30",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[30],
-   		}
-   	]
-  },
-  {
-    "id": 23,
-    "name": "Nyan Press",
-    "desc": "Flip a coin. If heads, this attack does 40 more damage. If tails, your opponent's Active Pokémon is now Paralyzed.",
-    "act": "target:opponent-active:40,cond:flip:dam:target:opponent-active:40:else:applystat:status:paralyzed:opponent-active",
-    "actions": [
-   		{
-    		"act":"flip-coin",
-    	 	"times":1
-    	},
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[40,80],
-   		},
-   		{
-    		"act":"apply-status",
-    		"target":"opponent-active",
-    		"value":["paralyzed",""],
-    	},
-   		
-    ]
-  },
-  {
-    "id": 24,
-    "name": "Random Spark",
-    "desc": "This attack does 30 damage to 1 of your opponent's Pokémon randomly. (Don't apply Weakness and Resistance for Benched Pokémon.)",
-    "act": "target:choice:opponent:30",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"your-random-pokemon",
-   			"value":[30],
-   		},
-    ]
-  },
-  {
-    "id": 25,
-    "name": "Bite",
-    "desc": "The opponent-active damage 40 HP",
-    "act": "target:opponent-active:40",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[40],
-   		}
-   	]
-  },
-  {
-    "id": 26,
-    "name": "Bite",
-    "desc": "The opponent-active damage 10 HP",
-    "act": "target:opponent-active:10",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[10],
-   		}
-   	]
-  },
-  {
-    "id": 27,
-    "name": "Knuckle Punch",
-    "desc": "This attack does 30 damage.",
-    "act": "target:opponent-active:30",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[30],
-   		}
-   	]
-  },
-  {
-    "id": 28,
-    "name": "Electroslug",
-    "desc": "This attack does 90 damage to your opponent-active pokemon.",
-    "act": "target:opponent-active:90",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[90],
-   		}
-   	]
-  },
-  {
-    "id": 29,
-    "name": "Knuckle Punch",
-    "desc": "This attack does 20 damage.",
-    "act": "target:opponent-active:20",
-    "actions": [
-    	{
-    		"act":"dam",
-    		"target":"opponent-active",
-   			"value":[20],
-   		}
-   	]
-  },
-  {
-    "id": 30,
-    "name": "Destructive Beam",
-    "desc": "Flip a coin. If heads, discard an Energy attached to your opponent's Active Pokémon.",
-    "act": "cond:flip:deenergize:target:opponent-active:1",
-    "actions": [
-   		{
-    		"act":"flip-coin",
-    	 	"times":1
-    	},
-    	{
-    		"act":"deenergize",
-    		"target":"opponent-active",
-    		"value":1,
-    	}
-   	]
-  },
-  {
-    "id": 31,
-    "name": "Tierno",
-    "desc": "Draw 3 cards",
-    "act": "3",
-    "actions": [
-   		{
-    		"act":"draw",
-    	 	"times":3,
-    	}
-   	]
-  },
-  {
-    "id": 32,
-    "name": "Potion",
-    "desc": "(Trainer card) Heal 30 damage from 1 of your Pokémon.",
-    "act": "target:choice:your:30",
-    "actions": [
-    	{
-    		"act":"heal",
-    		"target":"your-pick-pokemon",
-   			"value":[30],
-   		}
-    ]
-    
-  },
-  {
-    "id": 33,
-    "name": "Misty's Determination",
-    "desc": "(Trainer card) Discard a card from your hand. If you do, look at the top 8 cards of your deck and put 1 of them into your hand. Shuffle the other cards back into your deck.",
-    "act": "ability:deck:target:your:destination:discard:choice:you:1:(search:target:your:source:deck:filter:top:8:1,shuffle:target:your)",
-    "action": [
-      { 
-        "act":"discard",
-        "target":"your-hand",
-        "from":"your-hand",
-        "amount":1,
-        "to":"your-DiscardPile",
-    },
-    {
-      "act":"filter",
-      "target":"your-hand"
-      "不会- -!"
-    },
-    { 
-        "act":"pick",
-        "target":"your-deck",
-        "from":"your-deck:top",
-        "amount":1,
-        "to":"your-hand",
-    },
-    { 
-        "act":"shuffle",
-        "target":"your-deck",
-    }
-    ]
-  },
-  {
-    "id": 34,
-    "name": "Pokémon Center Lady",
-    "desc": "(Trainer card) Heal 60 damage and remove all Special Conditions from 1 of your Pokémon.",
-    "act": "target:choice:your:60,destat:target:last",
-    "action": [
-      {
-        "act":"heal",
-        "target":"your-pick-pokemon",
-        "value":[60],
-      },
-      {
-        "act":"remove-status",
-        "target":"your-pick-pokemon",
-        "value":[""],
+        {
+            "id": 1,
+            "name": "Act Cute",
+            "desc": "Your opponent puts a card from his or her hand on the bottom of his or her deck.",
+            "actions": [
+                {
+                    "act":"pick",
+                    "target":"opponent",
+                    "from":"opponent-hand",
+                    "amount":1,
+                    "to":"opponent-deck:bottom",
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Scratch",
+            "damage": 20,
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[20],
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "damage": 10,
+            "plus":	"+",
+            "name": "Quick Attack",
+            "desc": "Flip a coin. If heads, this attack does 30 more damage.",
+            "actions": [
+                {
+                    "act":"flip-coin",
+                    "times":1,
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[10,40],
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "Flying Elekick",
+            "damage": 50,
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[50],
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "Nuzzle",
+            "desc": "Flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed.",
+            "actions": [
+                {
+                    "act":"flip-coin",
+                    "times":1
+                },
+                {
+                    "act":"apply-status",
+                    "target":"opponent-active",
+                    "value":["","paralyzed"],
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "name": "Quick Attack",
+            "damage": 20,
+            "plus":	"+",
+            "desc": "Flip a coin. If heads, this attack does 10 more damage.",
+            "actions": [
+                {
+                    "act":"flip-coin",
+                    "times":1,
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[20,30],
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "name": "Circle Circuit",
+            "damage":20,
+            "plus": "x",
+            "desc": "This attack does 20 damage times the number of your Benched Pokémon.",
+            "actions": [
+                {
+                    "act":"count",
+                    "target":"your-bench",
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[0,20,40,60,80,100,120,140],
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "name": "Thunderbolt",
+            "damage": 100,
+            "desc": "Discard all Energy attached to this Pokémon.",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[100],
+                },
+                {
+                    "act":"count",
+                    "target":"your-active:energy"
+                },
+                {
+                    "act":"deenergize",
+                    "target":"your-active",
+                    "value":"all",
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "name": "Rain Splash",
+            "damage": 20,
+            "desc": "This attack does 20 damage.",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[20],
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "name": "Soaking Horn",
+            "damage":10,
+            "plus": "x",
+            "desc": "This attack does 10 damage to opponent-active pokemon.If this Pokémon was healed during this turn, this attack does 80 more damage.",
+            "actions": [
+                {
+                    "act":"isHealed",
+                    "value":1,
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[10,90],
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "name": "Reckless Charge",
+            "damage":40,
+            "desc": "This attack does 40 damage to opponent-active pokemon. And then, this attack also does 10 damage to itself.",
+            "act": "target:opponent-active:40,dam:target:your-active:10",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[40],
+                },
+                {
+                    "act":"dam",
+                    "target":"your-active",
+                    "value":[10],
+                }
+            ]
+        },
+        {
+            "id": 12,
+            "name": "Reckless Charge",
+            "damage": 20,
+            "desc": "This attack does 20 damage to opponent-active pokemon. And then, this attack also does 10 damage to itself.",
+            "act": "target:opponent-active:20,dam:target:your-active:10",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[20],
+                },
+                {
+                    "act":"dam",
+                    "target":"your-active",
+                    "value":[10],
+                }
+            ]
+        },
+        {
+            "id": 13,
+            "name": "Cut",
+            "damage": 30,
+            "desc": "This attack does 30 damage.",
+            "act": "target:opponent-active:30",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[30],
+                }
+            ]
+        },
+        {
+            "id": 14,
+            "name": "Pound",
+            "damage": 10,
+            "desc": "This attack does 10 damage.",
+            "act": "target:opponent-active:10",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[10],
+                }
+            ]
+        },
+        {
+            "id": 15,
+            "name": "Clamp Crush",
+            "damage": 30,
+            "desc": "This attack does 30 damage. Then, flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed and discard an Energy attached to that Pokémon.",
+            "act": "dam:target:opponent-active:30,cond:flip:deenergize:target:opponent-active:1,applystat:status:paralyzed:opponent-active",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[30],
+                },
+                {
+                    "act":"flip-coin",
+                    "times":1
+                },
+                {
+                    "act":"apply-status",
+                    "target":"opponent-active",
+                    "value":["","paralyzed"],
+                },
+                {
+                    "act":"deenergize",
+                    "target":"opponent-active",
+                    "value":1,
+                }
+            ]
+        },
+        {
+            "id": 16,
+            "name": "Spike Cannon",
+            "damage":30,
+            "plus":"x",
+            "desc": "Flip 5 coins. This attack does 30 damage times the number of heads.",
+            "act": "target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30",
+            "actions": [
+                {
+                    "act":"flip-coin",
+                    "times":5
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[0,30,60,90,120],
+                }
+            ]
+        },
+        {
+            "id": 17,
+            "name": "Spiral Drain",
+            "damage": 20,
+            "desc": "Heal 20 damage from this Pokemon.",
+            "act": "target:opponent-active:20,heal:target:your-active:20",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[20],
+                },
+                {
+                    "act":"heal",
+                    "target":"your-active",
+                    "value":[20],
+                }
+            ]
+        },
+        {
+            "id": 18,
+            "name": "Aurora Beam",
+            "damage":80,
+            "desc": "The opponent-active damage 80 HP",
+            "act": "target:opponent-active:80",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[80],
+                }
+            ]
+        },
+        {
+            "id": 19,
+            "name": "Wing Attack",
+            "damage":20,
+            "desc": "This attack does 20 damage to opponent-active pokemon.",
+            "act": "target:opponent-active:20",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[20],
+                }
+            ]
+        },
+        {
+            "id": 20,
+            "name": "Brave Bird",
+            "damage":80,
+            "desc": "This Pokémon does 80 damage to the opponent-active Pokémon and does 20 damage to itself.",
+            "act": "target:opponent-active:80,dam:target:your-active:20",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[80],
+                },
+                {
+                    "act":"heal",
+                    "target":"your-active",
+                    "value":[20],
+                }
+            ]
+        },
+        {
+            "id": 21,
+            "name": "Lunge",
+            "damage":20,
+            "desc": "Flip a coin. If tails, this attack does nothing.",
+            "act": "flip:dam:target:opponent-active:20",
+            "actions": [
+                {
+                    "act":"flip-coin",
+                    "times":1
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[0,20],
+                }
+            ]
+        },
+        {
+            "id": 22,
+            "name": "Slash",
+            "damage":30,
+            "desc": "This attack does 30 damage to opponent-active pokemon.",
+            "act": "target:opponent-active:30",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[30],
+                }
+            ]
+        },
+        {
+            "id": 23,
+            "name": "Nyan Press",
+            "desc": "Flip a coin. If heads, this attack does 40 more damage. If tails, your opponent's Active Pokémon is now Paralyzed.",
+            "act": "target:opponent-active:40,cond:flip:dam:target:opponent-active:40:else:applystat:status:paralyzed:opponent-active",
+            "actions": [
+                {
+                    "act":"flip-coin",
+                    "times":1
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[40,80],
+                },
+                {
+                    "act":"apply-status",
+                    "target":"opponent-active",
+                    "value":["paralyzed",""],
+                },
 
-      },
+            ]
+        },
+        {
+            "id": 24,
+            "name": "Random Spark",
+            "desc": "This attack does 30 damage to 1 of your opponent's Pokémon randomly. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+            "act": "target:choice:opponent:30",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"your-random-pokemon",
+                    "value":[30],
+                },
+            ]
+        },
+        {
+            "id": 25,
+            "name": "Bite",
+            "desc": "The opponent-active damage 40 HP",
+            "act": "target:opponent-active:40",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[40],
+                }
+            ]
+        },
+        {
+            "id": 26,
+            "name": "Bite",
+            "desc": "The opponent-active damage 10 HP",
+            "act": "target:opponent-active:10",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[10],
+                }
+            ]
+        },
+        {
+            "id": 27,
+            "name": "Knuckle Punch",
+            "desc": "This attack does 30 damage.",
+            "act": "target:opponent-active:30",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[30],
+                }
+            ]
+        },
+        {
+            "id": 28,
+            "name": "Electroslug",
+            "desc": "This attack does 90 damage to your opponent-active pokemon.",
+            "act": "target:opponent-active:90",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[90],
+                }
+            ]
+        },
+        {
+            "id": 29,
+            "name": "Knuckle Punch",
+            "desc": "This attack does 20 damage.",
+            "act": "target:opponent-active:20",
+            "actions": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[20],
+                }
+            ]
+        },
+        {
+            "id": 30,
+            "name": "Destructive Beam",
+            "desc": "Flip a coin. If heads, discard an Energy attached to your opponent's Active Pokémon.",
+            "act": "cond:flip:deenergize:target:opponent-active:1",
+            "actions": [
+                {
+                    "act":"flip-coin",
+                    "times":1
+                },
+                {
+                    "act":"deenergize",
+                    "target":"opponent-active",
+                    "value":1,
+                }
+            ]
+        },
+        {
+            "id": 31,
+            "name": "Tierno",
+            "desc": "Draw 3 cards",
+            "act": "3",
+            "actions": [
+                {
+                    "act":"draw",
+                    "times":3,
+                }
+            ]
+        },
+        {
+            "id": 32,
+            "name": "Potion",
+            "desc": "(Trainer card) Heal 30 damage from 1 of your Pokémon.",
+            "act": "target:choice:your:30",
+            "actions": [
+                {
+                    "act":"heal",
+                    "target":"your-pick-pokemon",
+                    "value":[30],
+                }
+            ]
+
+        },
+        {
+            "id": 33,
+            "name": "Misty's Determination",
+            "desc": "(Trainer card) Discard a card from your hand. If you do, look at the top 8 cards of your deck and put 1 of them into your hand. Shuffle the other cards back into your deck.",
+            "act": "ability:deck:target:your:destination:discard:choice:you:1:(search:target:your:source:deck:filter:top:8:1,shuffle:target:your)",
+            "action": [
+                {
+                    "act":"discard",
+                    "target":"your-hand",
+                    "from":"your-hand",
+                    "amount":1,
+                    "to":"your-DiscardPile",
+                },
+                {
+                    "act":"filter",
+                    "target":"your-hand",
+                },
+                {
+                    "act":"pick",
+                    "target":"your-deck",
+                    "from":"your-deck:top",
+                    "amount":1,
+                    "to":"your-hand",
+                },
+                {
+                    "act":"shuffle",
+                    "target":"your-deck",
+                }
+            ]
+        },
+        {
+            "id": 34,
+            "name": "Pokémon Center Lady",
+            "desc": "(Trainer card) Heal 60 damage and remove all Special Conditions from 1 of your Pokémon.",
+            "act": "target:choice:your:60,destat:target:last",
+            "action": [
+                {
+                    "act":"heal",
+                    "target":"your-pick-pokemon",
+                    "value":[60],
+                },
+                {
+                    "act":"remove-status",
+                    "target":"your-pick-pokemon",
+                    "value":[""],
+
+                },
+            ]
+        },
+        {
+            "id": 35,
+            "name": "Clemont",
+            "desc": "(Trainer card) Search your deck for up to 4 (electric) Energy cards, reveal them, and put them into your hand. Shuffle your deck afterward.",
+            "act": "target:your:source:deck:filter:energy:4",
+            "action": "search"
+        },
+        {
+            "id": 36,
+            "name": "Ear Influence",
+            "desc": "Move as many damage counters on your opponent's Pokémon as you like to any of your opponent's other Pokémon in any way you like.",
+            "act": "source:choice:opponent:destination:opponent:count(target:last:source:damage)",
+            "action": [
+
+            ]
+        },
+        {
+            "id": 37,
+            "name": "Psychic",
+            "desc": "This attack does 60 damage. And then, this attack also does 10 more damage for each Energy attached to your opponent's Active Pokémon.",
+            "act": "target:opponent-active:60,dam:target:opponent-active:count(target:opponent-active:energy)*10",
+            "action": [{
+                "act":"count",
+                "target":"your-active:energy",
+            },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[60,70,80,90,100,110,120],
+                }
+            ]
+        },
+        {
+            "id": 38,
+            "name": "Hug",
+            "desc": "This attack does 30 damage. Moreover, the Defending Pokémon can't retreat during your opponent's next turn.",
+            "act": "target:opponent-active:30,applystat:status:stuck:opponent-active",
+            "action": [{
+                "act":"dam",
+                "target":"opponent-active",
+                "value":[30],
+            },
+                {
+                    "act":"apply-status",
+                    "target":"your-pick-pokemon",
+                    "value":["stuck"],
+                }
+            ]
+        },
+        {
+            "id": 39,
+            "name": "Wish",
+            "desc": "Search your deck for a card and put it into your hand. Shuffle your deck afterward.",
+            "act": "target:your:source:deck:1",
+            "action": [
+                {
+                    "act":"pick",
+                    "target":"your-deck",
+                    "from":"your-deck",
+                    "amount":1,
+                    "to":"your-hand",
+                },
+                {
+                    "act":"shuffle",
+                    "target":"your-deck",
+                }
+            ]
+        },
+        {
+            "id": 40,
+            "name": "Heart Sign",
+            "desc": "This attack does 50 damage.",
+            "act": "target:opponent-active:50",
+            "action": [{
+                "act":"dam",
+                "target":"opponent-active",
+                "value":[50],
+            }]
+        },
+        {
+            "id": 41,
+            "name": "Act Tough",
+            "desc": "If your-active Pokémon has any Energy attached to it, this attack does 20 more damage;If not, this attack does only 10 damage",
+            "act": "target:opponent-active:10,cond:count(target:your-active:energy:psychic)>0:dam:target:opponent-active:20",
+            "action": [{
+                "act":"hasEnergy",
+                "value":"1",
+            },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[10,30],
+                }
+            ]
+        },
+        {
+            "id": 42,
+            "name": "Exhausted Tackle",
+            "desc": "Flip a coin. If heads, this attack does 30 damage to your opponent's Active Pokémon. If tails, this Pokémon does 30 damage to itself.",
+            "act": "flip:dam:target:opponent-active:30:else:dam:target:your-active:30",
+            "action": [
+                {
+                    "act":"flip-coin",
+                    "times":1,
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[0,30],
+                },
+                {
+                    "act":"dam",
+                    "target":"your-active",
+                    "value":[0,30],
+                }
+            ]
+        },
+        {
+            "id": 43,
+            "name": "Knuckle Punch",
+            "desc": "This attack does 10 damage.",
+            "act": "target:opponent-active:10",
+            "action": [{
+                "act":"dam",
+                "target":"opponent-active",
+                "value":[10],
+            }]
+        },
+        {
+            "id": 44,
+            "name": "Double Stab",
+            "desc": "Flip 2 coins. This attack does 10 damage times the number of heads.",
+            "act": "flip:dam:target:opponent-active:10,cond:flip:dam:target:opponent-active:10",
+            "action": [
+                {
+                    "act":"flip-coin",
+                    "times":2,
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[0,10,20],
+                }]
+        },
+        {
+            "id": 45,
+            "name": "Doduo Delivery",
+            "desc": "Draw 2 cards.",
+            "act": "2",
+            "action": [
+                {
+                    "act":"draw",
+                    "times":2,
+                }
+            ]
+        },
+        {
+            "id": 46,
+            "name": "Fury Attack",
+            "desc": "This attack does 40 damage and then, flip 3 coins. This attack also does 40 damage times the number of heads.",
+            "act": "target:opponent-active:40,cond:flip:dam:target:opponent-active:40,cond:flip:dam:target:opponent-active:40,cond:flip:dam:target:opponent-active:40",
+            "action": [
+                {
+                    "act":"flip-coin",
+                    "times":3,
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[40,80,120,160],
+                }]
+        },
+        {
+            "id": 47,
+            "name": "Rollout",
+            "desc": "This attack does 10 damage to opponent-active pokemon.",
+            "act": "target:opponent-active:10",
+            "action": [{
+                "act":"dam",
+                "target":"opponent-active",
+                "value":[10],
+            }]
+        },
+        {
+            "id": 48,
+            "name": "Flail",
+            "desc": "This attack does 10 damage times the number of damage counters on this Pokémon.",
+            "act": "target:opponent-active:count(target:your-active:damage)*10",
+            "action": [
+                {
+                    "act":"count",
+                    "target":"your-active:damage",
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[0,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160],
+                }]
+        },
+        {
+            "id": 49,
+            "name": "Skill Dive",
+            "desc": "This attack does 10 damage to 1 of your opponent's Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+            "act": "target:opponent:10",
+            "action": [
+                {
+                    "act":"dam",
+                    "target":"opponent-random-pokemon",
+                    "amount":1,
+                    "value":[10],
+                }]
+        },
+        {
+            "id": 50,
+            "name": "Poison Ring",
+            "desc": "Your opponent's Active Pokémon is now Poisoned. That Pokémon can't retreat during your opponent's next turn",
+            "act": "applystat:status:stuck:opponent-active,applystat:status:poisoned:opponent-active",
+            "action": [{
+                "act":"apply-status",
+                "target":"opponent-active",
+                "value":["stuck","poisoned"],
+            }]
+        },
+        {
+            "id": 51,
+            "name": "Sleep Poison",
+            "desc": "Flip a coin. If heads, your opponent's Active Pokémon is now Asleep and Poisoned.",
+            "act": "flip:(applystat:status:asleep:opponent-active,applystat:status:poisoned:opponent-active)",
+            "action": [
+                {
+                    "act":"flip-coin",
+                    "times":1,
+                },
+                {
+                    "act":"apply-status",
+                    "target":"opponent-active",
+                    "value":["","poisoned"],
+                }]
+        },
+        {
+            "id": 52,
+            "name": "Mine",
+            "desc": "Look at the top card of your opponent's deck. Then, you may have your opponent shuffle his or her deck.",
+            "act": "target:opponent:source:deck:filter:top:1:0,cond:choice:shuffle:target:opponent",
+            "action": [
+                {
+                    "act":"look",
+                    "target":"opponent-deck:top",
+                    "amount":1,
+                },
+                {
+                    "act":"shuffle",
+                    "target":"opponent-deck",
+                }]
+        },
+        {
+            "id": 53,
+            "name": "Mud Slap",
+            "desc": "This attack does 20 damage.",
+            "act": "target:opponent-active:20",
+            "action": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[20],
+                }]
+        },
+        {
+            "id": 54,
+            "name": "Earthquake",
+            "desc": "This attack does 60 damage to your opponent-active pokemon. And then, this attack also does 10 damage to each of your Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+            "act": "target:opponent-active:60,dam:target:your-bench:10",
+            "action": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[60],
+                },{
+                    "act":"dam",
+                    "target":"your-bench",
+                    "amount":"all",
+                    "value":[10],
+                }]
+        },
+        {
+            "id": 55,
+            "name": "Rock Tumble",
+            "desc": "This attack does 60 damage to opponent-active pokemon. This attack's damage isn't affected by Resistance",
+            "act": "target:opponent-active:60",
+            "action": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[60],
+                }]
+        },
+        {
+            "id": 56,
+            "name": "Scratch",
+            "desc": "This attack does 10 damage to opponent-active pokemon.",
+            "act": "target:opponent-active:10",
+            "action": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[10],
+                }]
+        },
+        {
+            "id": 57,
+            "name": "Spacing Out",
+            "desc": "Flip a coin. If heads, heal 10 damage from this Pokémon.",
+            "act": "flip:heal:target:your-active:10",
+            "action": [
+                {
+                    "act":"flip-coin",
+                    "times":1,
+                },
+                {
+                    "act":"heal",
+                    "target":"your-active",
+                    "value":[0,10],
+                }]
+        },
+        {
+            "id": 58,
+            "name": "Scavenge",
+            "desc": "Discard a Energy attached to this Pokemon,if you do,put an Item card from your discard pile into your hand.",
+            "act": "ability:deenergize:target:your-active:1:(search:target:your:source:discard:filter:cat:item:1)",
+            "action": [
+                {
+                    "act":"deenergize",
+                    "target":"your-active",
+                    "value":[1],
+                },
+                {
+                    "act":"pick",
+                    "target":"your-DiscardPile",
+                    "from":"your-DiscardPile",
+                    "amount":1,
+                    "filter":"item",
+                    "to":"your-hand",
+                }
+            ]
+        },
+        {
+            "id": 59,
+            "name": "Stretch Kick",
+            "desc": "This attack does 30 damage to 1 of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
+            "act": "target:choice:opponent-bench:30",
+            "action": [
+                {
+                    "act":"dam",
+                    "target":"opponent-random-benched-pokemon",
+                    "amount":1,
+                    "value":[30],
+                }]
+        },
+        {
+            "id": 60,
+            "name": "Spiral Kick",
+            "desc": "This attack does 30 damage to opponent-active pokemon.",
+            "act": "target:opponent-active:30",
+            "action": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[30],
+                }]
+        },
+        {
+            "id": 61,
+            "name": "Bullet Punch",
+            "desc": "This attack does 20 damage. And then, flip 2 coins. This attack does 20 more damage for each heads. If tail, do no more damage.",
+            "act": "target:opponent-active:80,dam:target:your-active:20",
+            "action": [
+                {
+                    "act":"flip-coin",
+                    "times":2,
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[20,40,60],
+                }]
+        },
+        {
+            "id": 62,
+            "name": "Mach Cross",
+            "desc": "This attack does 60 damage.",
+            "act": "target:opponent-active:60",
+            "action": [{
+                "act":"dam",
+                "target":"opponent-active",
+                "value":[60],
+            }]
+        },
+        {
+            "id": 63,
+            "name": "Beatdown",
+            "desc": "The opponent-active damage 40 HP",
+            "act": "target:opponent-active:40",
+            "action": [{
+                "act":"dam",
+                "target":"opponent-active",
+                "value":[40],
+            }]
+        },
+        {
+            "id": 64,
+            "name": "Twinkle",
+            "desc": "Your opponent's Active Pokémon is now Asleep.",
+            "act": "status:asleep:opponent-active",
+            "action": [{
+                "act":"apply-status",
+                "target":"opponent-active",
+                "value":["asleep"],
+            }]
+        },
+        {
+            "id": 65,
+            "name": "Fake Out",
+            "desc": "This attack does 30 damage to your opponent-active pokemon. And then, flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed.",
+            "act": "target:opponent-active:30,cond:flip:applystat:status:paralyzed:opponent-active",
+            "action": [
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[30],
+                },
+                {
+                    "act":"flip-coin",
+                    "times":1,
+                },
+                {
+                    "act":"apply-status",
+                    "target":"opponent-active",
+                    "value":["","paralyzed"],
+                }
+            ]
+        },
+        {
+            "id": 66,
+            "name": "Ambush",
+            "desc": "Flip a coin. If heads, this attack does 30 more damage. If not, this attack does 40 damage",
+            "act": "target:opponent-active:40,cond:flip:dam:target:opponent-active:30",
+            "action": [{
+                "act":"flip-coin",
+                "times":1,
+            },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[40,70],
+                }]
+        },
+        {
+            "id": 67,
+            "name": "Floral Crown",
+            "desc": "At the end of your opponent's turn, heal 20 damage from the Basic Pokémon this card is attached to.",
+            "act": "target:your:trigger:opponent:turn-end:(heal:target:self:20)",
+            "effect":'pos',
+            "action": [
+                {
+                    "act":"heal",
+                    "target":"attached-pokemon",
+                    "value":[20],
+                }]
+        },
+        {
+            "id": 68,
+            "name": "Poké Ball",
+            "desc": "(Trainer card) Flip a coin. If heads, search your deck for a Pokémon, reveal it, and put it into your hand. Then, shuffle your deck.",
+            "act": "flip:search:target:your:source:deck:filter:pokemon:1",
+            "action": "cond"
+        },
+        {
+            "id": 69,
+            "name": "Shauna",
+            "desc": "(Trainer card) Shuffle your hand into your deck. Then, draw 5 cards.",
+            "act": "target:your:destination:deck:count(your-hand),shuffle:target:your,draw:5",
+            "action": "deck"
+        },
+        {
+            "id": 70,
+            "name": "Pokémon Fan Club",
+            "desc": "(Trainer card) Search your deck for up to 2 Basic Pokémon, reveal them, and put them into your hand. Shuffle your deck afterward.",
+            "act": "target:your:source:deck:filter:pokemon:cat:basic:2,shuffle:target:your",
+            "action": "search"
+        },
+        {
+            "id": 71,
+            "name": "Switch",
+            "desc": "Switch your Active Pokémon with 1 of your Benched Pokémon.",
+            "act": "source:your-active:destination:choice:your-bench",
+            "action": "swap"
+        },
+        {
+            "id": 72,
+            "name": "Energy Switch",
+            "desc": "(Trainer card) Move a basic Energy from 1 of your Pokémon to another of your Pokémon.",
+            "act": "target:choice:your:1:target:choice:your:1",
+            "action": "reenergize"
+        },
+        {
+            "id": 73,
+            "name": "Red Card",
+            "desc": "Your opponent shuffles his or her hand into his or her deck and draws 4 cards.",
+            "act": "target:opponent:destination:deck:count(opponent-hand),shuffle:target:opponent,draw:opponent:4",
+            "action": "deck"
+        },
+        {
+            "id": 74,
+            "name": "Wally",
+            "desc": "(Trainer card) Search your deck for a card that evolves from 1 of your Pokémon (excluding Pokémon-EX) and put it onto that Pokémon. (This counts as evolving that Pokémon.) Shuffle your deck afterward. You can use this card during your first turn or on a Pokémon that was put into play this turn.",
+            "act": "target:choice:your-pokemon:cat:basic:source:deck:filter:evolves-from:target:last:1,shuffle:target:your",
+            "action": "search"
+        }
     ]
-  },
-  {
-    "id": 35,
-    "name": "Clemont",
-    "desc": "(Trainer card) Search your deck for up to 4 (electric) Energy cards, reveal them, and put them into your hand. Shuffle your deck afterward.",
-    "act": "target:your:source:deck:filter:energy:4",
-    "action": "search"
-  },
-  {
-    "id": 36,
-    "name": "Ear Influence",
-    "desc": "Move as many damage counters on your opponent's Pokémon as you like to any of your opponent's other Pokémon in any way you like.",
-    "act": "source:choice:opponent:destination:opponent:count(target:last:source:damage)",
-    "action": [
-      
-    ]
-  },
-  {
-    "id": 37,
-    "name": "Psychic",
-    "desc": "This attack does 60 damage. And then, this attack also does 10 more damage for each Energy attached to your opponent's Active Pokémon.",
-    "act": "target:opponent-active:60,dam:target:opponent-active:count(target:opponent-active:energy)*10",
-    "action": [{
-        "act":"count",
-        "target":"your-active:energy",
-      },
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[60,70,80,90,100,110,120],
-      }
-    ]
-  },
-  {
-    "id": 38,
-    "name": "Hug",
-    "desc": "This attack does 30 damage. Moreover, the Defending Pokémon can't retreat during your opponent's next turn.",
-    "act": "target:opponent-active:30,applystat:status:stuck:opponent-active",
-    "action": [{
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[30],
-      },
-      {
-        "act":"apply-status",
-        "target":"your-pick-pokemon",
-        "value":["stuck"],
-      }
-    ]
-  },
-  {
-    "id": 39,
-    "name": "Wish",
-    "desc": "Search your deck for a card and put it into your hand. Shuffle your deck afterward.",
-    "act": "target:your:source:deck:1",
-    "action": [
-      { 
-        "act":"pick",
-        "target":"your-deck",
-        "from":"your-deck",
-        "amount":1,
-        "to":"your-hand",
-    },
-    { 
-        "act":"shuffle",
-        "target":"your-deck",
-    }
-    ]
-  },
-  {
-    "id": 40,
-    "name": "Heart Sign",
-    "desc": "This attack does 50 damage.",
-    "act": "target:opponent-active:50",
-    "action": [{
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[50],
-      }]
-  },
-  {
-    "id": 41,
-    "name": "Act Tough",
-    "desc": "If your-active Pokémon has any Energy attached to it, this attack does 20 more damage;If not, this attack does only 10 damage",
-    "act": "target:opponent-active:10,cond:count(target:your-active:energy:psychic)>0:dam:target:opponent-active:20",
-    "action": [{
-        "act":"hasEnergy",
-        "value":"1",
-      },
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[10,30],
-      }
-    ]
-  },
-  {
-    "id": 42,
-    "name": "Exhausted Tackle",
-    "desc": "Flip a coin. If heads, this attack does 30 damage to your opponent's Active Pokémon. If tails, this Pokémon does 30 damage to itself.",
-    "act": "flip:dam:target:opponent-active:30:else:dam:target:your-active:30",
-    "action": [
-      {
-        "act":"flip-coin",
-        "times":1,
-      },
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[0,30],
-      },
-      {
-        "act":"dam",
-        "target":"your-active",
-        "value":[0,30],
-      }
-    ]
-  },
-  {
-    "id": 43,
-    "name": "Knuckle Punch",
-    "desc": "This attack does 10 damage.",
-    "act": "target:opponent-active:10",
-    "action": [{
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[10],
-      }]
-  },
-  {
-    "id": 44,
-    "name": "Double Stab",
-    "desc": "Flip 2 coins. This attack does 10 damage times the number of heads.",
-    "act": "flip:dam:target:opponent-active:10,cond:flip:dam:target:opponent-active:10",
-    "action": [
-      {
-        "act":"flip-coin",
-        "times":2,
-      },
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[0,10,20],
-      }]
-  },
-  {
-    "id": 45,
-    "name": "Doduo Delivery",
-    "desc": "Draw 2 cards.",
-    "act": "2",
-    "action": [
-      {
-        "act":"draw",
-        "times":2,
-      }
-    ]
-  },
-  {
-    "id": 46,
-    "name": "Fury Attack",
-    "desc": "This attack does 40 damage and then, flip 3 coins. This attack also does 40 damage times the number of heads.",
-    "act": "target:opponent-active:40,cond:flip:dam:target:opponent-active:40,cond:flip:dam:target:opponent-active:40,cond:flip:dam:target:opponent-active:40",
-    "action": [
-      {
-        "act":"flip-coin",
-        "times":3,
-      },
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[40,80,120,160],
-      }]
-  },
-  {
-    "id": 47,
-    "name": "Rollout",
-    "desc": "This attack does 10 damage to opponent-active pokemon.",
-    "act": "target:opponent-active:10",
-    "action": [{
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[10],
-      }]
-  },
-  {
-    "id": 48,
-    "name": "Flail",
-    "desc": "This attack does 10 damage times the number of damage counters on this Pokémon.",
-    "act": "target:opponent-active:count(target:your-active:damage)*10",
-    "action": [
-      {
-        "act":"count",
-        "target":"opponent-active",
-      },
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160],
-      }]
-  },
-  {
-    "id": 49,
-    "name": "Skill Dive",
-    "desc": "This attack does 10 damage to 1 of your opponent's Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
-    "act": "target:opponent:10",
-    "action": [
-      {
-        "act":"dam",
-        "target":"opponent-random-pokemon",
-        "amount":1,
-        "value":[10],
-      }]
-  },
-  {
-    "id": 50,
-    "name": "Poison Ring",
-    "desc": "Your opponent's Active Pokémon is now Poisoned. That Pokémon can't retreat during your opponent's next turn",
-    "act": "applystat:status:stuck:opponent-active,applystat:status:poisoned:opponent-active",
-    "action": [{
-        "act":"apply-status",
-        "target":"opponent-active",
-        "value":["stuck","poisoned"],
-      }]
-  },
-  {
-    "id": 51,
-    "name": "Sleep Poison",
-    "desc": "Flip a coin. If heads, your opponent's Active Pokémon is now Asleep and Poisoned.",
-    "act": "flip:(applystat:status:asleep:opponent-active,applystat:status:poisoned:opponent-active)",
-    "action": [
-      {
-        "act":"flip-coin",
-        "times":1,
-      },
-      {
-        "act":"apply-status",
-        "target":"opponent-active",
-        "value":["","poisoned"],
-      }]
-  },
-  {
-    "id": 52,
-    "name": "Mine",
-    "desc": "Look at the top card of your opponent's deck. Then, you may have your opponent shuffle his or her deck.",
-    "act": "target:opponent:source:deck:filter:top:1:0,cond:choice:shuffle:target:opponent",
-    "action": [
-      {
-        "act":"look",
-        "target":"opponent-deck:top",
-        "amount":1,
-      },
-      {
-        "act":"shuffle",
-        "target":"opponent-deck",
-      }]
-  },
-  {
-    "id": 53,
-    "name": "Mud Slap",
-    "desc": "This attack does 20 damage.",
-    "act": "target:opponent-active:20",
-    "action": [
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[20],
-      }]
-  },
-  {
-    "id": 54,
-    "name": "Earthquake",
-    "desc": "This attack does 60 damage to your opponent-active pokemon. And then, this attack also does 10 damage to each of your Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
-    "act": "target:opponent-active:60,dam:target:your-bench:10",
-    "action": [
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[60],
-      },{
-        "act":"dam",
-        "target":"your-bench",
-        "amount":"all",
-        "value":[10],
-      }]
-  },
-  {
-    "id": 55,
-    "name": "Rock Tumble",
-    "desc": "This attack does 60 damage to opponent-active pokemon. This attack's damage isn't affected by Resistance",
-    "act": "target:opponent-active:60",
-    "action": [
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[60],
-      }]
-  },
-  {
-    "id": 56,
-    "name": "Scratch",
-    "desc": "This attack does 10 damage to opponent-active pokemon.",
-    "act": "target:opponent-active:10",
-    "action": [
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[10],
-      }]
-  },
-  {
-    "id": 57,
-    "name": "Spacing Out",
-    "desc": "Flip a coin. If heads, heal 10 damage from this Pokémon.",
-    "act": "flip:heal:target:your-active:10",
-    "action": [
-      {
-        "act":"flip-coin",
-        "times":1,
-      },
-    {
-        "act":"heal",
-        "target":"your-active",
-        "value":[0,10],
-      }]
-  },
-  {
-    "id": 58,
-    "name": "Scavenge",
-    "desc": "Discard a Energy attached to this Pokemon,if you do,put an Item card from your discard pile into your hand.",
-    "act": "ability:deenergize:target:your-active:1:(search:target:your:source:discard:filter:cat:item:1)",
-    "action": [
-      {
-        "act":"deenergize",
-        "target":"your-active",
-        "value":[1],
-      },
-      {
-        "act":"pick",
-        "target":"your-DiscardPile",
-        "from":"your-DiscardPile",
-        "amount":1,
-        "filter":"item",
-        "to":"your-hand",
-      }
-    ]
-  },
-  {
-    "id": 59,
-    "name": "Stretch Kick",
-    "desc": "This attack does 30 damage to 1 of your opponent's Benched Pokémon. (Don't apply Weakness and Resistance for Benched Pokémon.)",
-    "act": "target:choice:opponent-bench:30",
-    "action": [
-      {
-        "act":"dam",
-        "target":"opponent-random-benched-pokemon",
-        "amount":1,
-        "value":[30],
-      }]
-  },
-  {
-    "id": 60,
-    "name": "Spiral Kick",
-    "desc": "This attack does 30 damage to opponent-active pokemon.",
-    "act": "target:opponent-active:30",
-    "action": [
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[30],
-      }]
-  },
-  {
-    "id": 61,
-    "name": "Bullet Punch",
-    "desc": "This attack does 20 damage. And then, flip 2 coins. This attack does 20 more damage for each heads. If tail, do no more damage.",
-    "act": "target:opponent-active:80,dam:target:your-active:20",
-    "action": [
-      {
-        "act":"flip-coin",
-        "times":2,
-      },
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[20,40,60],
-      }]
-  },
-  {
-    "id": 62,
-    "name": "Mach Cross",
-    "desc": "This attack does 60 damage.",
-    "act": "target:opponent-active:60",
-    "action": [{
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[60],
-      }]
-  },
-  {
-    "id": 63,
-    "name": "Beatdown",
-    "desc": "The opponent-active damage 40 HP",
-    "act": "target:opponent-active:40",
-    "action": [{
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[40],
-      }]
-  },
-  {
-    "id": 64,
-    "name": "Twinkle",
-    "desc": "Your opponent's Active Pokémon is now Asleep.",
-    "act": "status:asleep:opponent-active",
-    "action": [{
-        "act":"apply-status",
-        "target":"opponent-active",
-        "value":["asleep"],
-      }]
-  },
-  {
-    "id": 65,
-    "name": "Fake Out",
-    "desc": "This attack does 30 damage to your opponent-active pokemon. And then, flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed.",
-    "act": "target:opponent-active:30,cond:flip:applystat:status:paralyzed:opponent-active",
-    "action": [
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[30],
-      },
-      {
-        "act":"flip-coin",
-        "times":1,
-      },
-      {
-        "act":"apply-status",
-        "target":"opponent-active",
-        "value":["","paralyzed"],
-      }
-    ]
-  },
-  {
-    "id": 66,
-    "name": "Ambush",
-    "desc": "Flip a coin. If heads, this attack does 30 more damage. If not, this attack does 40 damage",
-    "act": "target:opponent-active:40,cond:flip:dam:target:opponent-active:30",
-    "action": [{
-        "act":"flip-coin",
-        "times":1,
-      },
-      {
-        "act":"dam",
-        "target":"opponent-active",
-        "value":[40,70],
-      }]
-  },
-  {
-    "id": 67,
-    "name": "Floral Crown",
-    "desc": "(Trainer card) At the end of your opponent's turn, heal 20 damage from the Basic Pokémon this card is attached to.",
-    "act": "target:your:trigger:opponent:turn-end:(heal:target:self:20)",
-    "action": [
-      {
-        "act":"heal",
-        "target":"your-pick-basic-pokemon",
-        "value":[20],
-     }]
-  },
-  {
-    "id": 68,
-    "name": "Poké Ball",
-    "desc": "(Trainer card) Flip a coin. If heads, search your deck for a Pokémon, reveal it, and put it into your hand. Then, shuffle your deck.",
-    "act": "flip:search:target:your:source:deck:filter:pokemon:1",
-    "action": "cond"
-  },
-  {
-    "id": 69,
-    "name": "Shauna",
-    "desc": "(Trainer card) Shuffle your hand into your deck. Then, draw 5 cards.",
-    "act": "target:your:destination:deck:count(your-hand),shuffle:target:your,draw:5",
-    "action": "deck"
-  },
-  {
-    "id": 70,
-    "name": "Pokémon Fan Club",
-    "desc": "(Trainer card) Search your deck for up to 2 Basic Pokémon, reveal them, and put them into your hand. Shuffle your deck afterward.",
-    "act": "target:your:source:deck:filter:pokemon:cat:basic:2,shuffle:target:your",
-    "action": "search"
-  },
-  {
-    "id": 71,
-    "name": "Switch",
-    "desc": "Switch your Active Pokémon with 1 of your Benched Pokémon.",
-    "act": "source:your-active:destination:choice:your-bench",
-    "action": "swap"
-  },
-  {
-    "id": 72,
-    "name": "Energy Switch",
-    "desc": "(Trainer card) Move a basic Energy from 1 of your Pokémon to another of your Pokémon.",
-    "act": "target:choice:your:1:target:choice:your:1",
-    "action": "reenergize"
-  },
-  {
-    "id": 73,
-    "name": "Red Card",
-    "desc": "Your opponent shuffles his or her hand into his or her deck and draws 4 cards.",
-    "act": "target:opponent:destination:deck:count(opponent-hand),shuffle:target:opponent,draw:opponent:4",
-    "action": "deck"
-  },
-  {
-    "id": 74,
-    "name": "Wally",
-    "desc": "(Trainer card) Search your deck for a card that evolves from 1 of your Pokémon (excluding Pokémon-EX) and put it onto that Pokémon. (This counts as evolving that Pokémon.) Shuffle your deck afterward. You can use this card during your first turn or on a Pokémon that was put into play this turn.",
-    "act": "target:choice:your-pokemon:cat:basic:source:deck:filter:evolves-from:target:last:1,shuffle:target:your",
-    "action": "search"
-  }
-]

@@ -25,3 +25,6 @@ export const ENERGY_WATER="water";
 export const ENERGY_PSYCHIC="psychic";
 export const ENERGY_FIGHT="fight";
 export const ENERGY_DARKNESS="darkness";
+
+export const EFFECT_POSITIVE='pos';
+export const EFFECT_NEGITIVE='neg';

@@ -5,6 +5,9 @@ import {
 } from 'react-router-dom';
 import './AppHeader.css';
 import {Layout, Menu, Dropdown, Icon} from 'antd';
+import {connect} from "react-redux";
+
+import {handleLogout} from "../util/APIUtils";
 
 const Header = Layout.Header;
 
@@ -15,17 +18,22 @@ class AppHeader extends Component {
     }
 
     handleMenuClick({key}) {
+
+        const { history } = this.props;
+
         if (key === "logout") {
-            this.props.onLogout();
+            handleLogout({history});
         }
     }
 
+
     render() {
         let menuItems;
+
         if (this.props.currentUser) {
             menuItems = [
                 <Menu.Item key="/">
-                    <Link to="/">
+                    <Link to="/app">
                         <Icon type="home" className="nav-icon"/>
                     </Link>
                 </Menu.Item>,
@@ -38,10 +46,10 @@ class AppHeader extends Component {
         } else {
             menuItems = [
                 <Menu.Item key="/login">
-                    <Link to="/login">Login</Link>
+                    <Link to="/auth/login">Login</Link>
                 </Menu.Item>,
                 <Menu.Item key="/signup">
-                    <Link to="/signup">Signup</Link>
+                    <Link to="/auth/signup">Signup</Link>
                 </Menu.Item>
             ];
         }
@@ -78,7 +86,7 @@ function ProfileDropdownMenu(props) {
             </Menu.Item>
             <Menu.Divider/>
             <Menu.Item key="profile" className="dropdown-item">
-                <Link to={`/users/${props.currentUser.username}`}>Profile</Link>
+                <Link to={`/app/users/${props.currentUser.username}`}>Profile</Link>
             </Menu.Item>
             <Menu.Item key="logout" className="dropdown-item">
                 Logout
@@ -99,4 +107,9 @@ function ProfileDropdownMenu(props) {
 }
 
 
-export default withRouter(AppHeader);
+const stateToProps = ({ userReducer }) => ({
+    currentUser:userReducer.currentUser,
+    isAuthenticated: userReducer.isAuthenticated
+});
+
+export default withRouter(connect(stateToProps)(AppHeader));

@@ -1,4 +1,4 @@
-import {cardList} from '../mockData/data';
+import {cardList,abilityList} from '../../mockData/data';
 import {
     CARD_ENERGY,
     CARD_POKEMON,
@@ -38,6 +38,7 @@ export class Card {
                 return new TrainerCard(id);
             case CARD_ENERGY:
                 return new EnergyCard(id);
+            default:throw new CardTypeError("unknown card type.");
         }
     }
 
@@ -93,16 +94,20 @@ export class TrainerCard extends Card {
     constructor(id) {
         super(id);
         if (this.type !== CARD_TRAINER) throw new CardTypeError();
-        this.ability = this._card.ability;
-        this.attachable = (this.ability === 67);  //for now only ability 'Floral Crown' is attachable
+        this.ability = abilityList[this._card.ability];
+        this.attachable = (this.ability === abilityList[67]);  //for now only ability 'Floral Crown' is attachable
 
+
+        if (this.attachable) this.effect = abilityList[this._card.ability].effect;
         this.attachTo = this.attachTo.bind(this);
     }
 
 
     attachTo(pokemon) {
 
-        if (this.attachable) pokemon.attachItem(this);
+        if (this.attachable) {
+            pokemon.attachItem(this);
+        }
 
         super.afterAttach();
         return pokemon;
@@ -120,8 +125,9 @@ export function randomCard(type, category, attachable = false) {
     while (!find) {
 
         let card_id = randomInteger(1, 58);
-        if (card_id == 27 || card_id == 42) continue;
+        if (card_id === 27 || card_id === 42) continue;
         card = Card.getCardInstants(card_id);
+        if (!type) break;
         if (card.type && category && category !== ENERGY_COLORLESS)
             find = (card.type === type && card.category === category);
         else

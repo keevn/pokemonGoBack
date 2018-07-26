@@ -232,7 +232,7 @@ class Signup extends Component {
                                     size="large"
                                     className="signup-form-button"
                                     disabled={this.isFormInvalid()}>Sign up</Button>
-                            Already registed? <Link to="/login">Login now!</Link>
+                            Already registed? <Link to="/auth/login">Login now!</Link>
                         </FormItem>
                     </Form>
                 </div>

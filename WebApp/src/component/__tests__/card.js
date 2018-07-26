@@ -13,6 +13,11 @@ import {
 
 test('randomCard() get random cards from specific type and category', ()=> {
 
+    const anyCard= randomCard();
+
+    expect(anyCard).toBeInstanceOf(Card);
+
+
     const pokemonCard= randomCard(CARD_POKEMON);
 
     expect(pokemonCard).toBeInstanceOf(PokemonCard);

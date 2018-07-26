@@ -1,0 +1,19 @@
+.bench-outer {
+    background-color: #EEE;
+    color: #FFF;
+    position: relative;
+    width: 1000px;
+    height: 270px;
+    font: 28px/1em "Helvetica";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
+    padding: 5px;
+}
+.bench {
+    height: 100%;
+    width: 100%;
+}

@@ -10,9 +10,9 @@ const RetreatBar = (props) => {
          pokemon.retreat();
     }
 
-    return pokemon.isRetreatable() ? <div className='retreatBar'>
+    return pokemon.isRetreatable() ? <div className='retreat-bar'>
         <div className="ability-container" onClick={(e) =>handleOnClick(e,pokemon)}>
-            <div className="ability-content retreat-bar">Retreat
+            <div className="ability-content">Retreat
                 {pokemon.retreatCost.map((cost) => {
                     return range(cost.value).map((i) => {
                         const name = `energyIcon icon-${cost.cat}`;

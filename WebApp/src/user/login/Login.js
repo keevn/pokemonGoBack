@@ -1,21 +1,38 @@
 import React, {Component} from 'react';
-import {login} from '../../util/APIUtils';
+import {getCurrentUser, login} from '../../util/APIUtils';
 import './Login.css';
 import {Link} from 'react-router-dom';
 import {ACCESS_TOKEN} from '../../constants';
 
 import {Form, Input, Button, Icon, notification} from 'antd';
+import {loadCurrentUser, setLoading} from "../../actions/user";
+import store from "../../store";
 
 const FormItem = Form.Item;
 
+const _onLogin = (history) => {
+    return ()=>{
+        store.dispatch(setLoading(true));
+        getCurrentUser().then((response) => {
+            notification.success({
+                message: 'PokemonGoBack',
+                description: "You're successfully logged in.",
+            });
+            store.dispatch(loadCurrentUser(response));
+            history.push('/app');
+        });
+    };
+};
+
 class Login extends Component {
+    
     render() {
         const AntWrappedLoginForm = Form.create()(LoginForm)
         return (
             <div className="login-container">
                 <h1 className="page-title">Login</h1>
                 <div className="login-content">
-                    <AntWrappedLoginForm onLogin={this.props.onLogin}/>
+                    <AntWrappedLoginForm onLogin={_onLogin(this.props.history)}/>
                 </div>
             </div>
         );
@@ -83,7 +100,7 @@ class LoginForm extends Component {
                 </FormItem>
                 <FormItem>
                     <Button type="primary" htmlType="submit" size="large" className="login-form-button">Login</Button>
-                    Or <Link to="/signup">register now!</Link>
+                    Or <Link to="/auth/signup">register now!</Link>
                 </FormItem>
             </Form>
         );

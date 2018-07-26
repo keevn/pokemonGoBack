@@ -1,9 +1,13 @@
 import {API_BASE_URL, LIST_SIZE, ACCESS_TOKEN} from '../constants';
+import {notification} from 'antd';
+import {logout} from "../actions/user";
+import store from "../store";
+
 
 const request = (options) => {
     const headers = new Headers({
         'Content-Type': 'application/json',
-    })
+    });
 
     if (localStorage.getItem(ACCESS_TOKEN)) {
         headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN));
@@ -99,7 +103,7 @@ export function uploadDeckFile(formData, onSuccess, onError) {
         url: API_BASE_URL + "/uploadFile",
         method: 'POST',
         body: formData,
-    }
+    };
 
     const headers = new Headers({
         'Accept': 'application/json'
@@ -138,3 +142,19 @@ export function joinGame(username) {
 
 }
 
+export function handleLogout({redirectTo = "/login", notificationType = "success",
+                                 description = "You're successfully logged out.",
+                                 history}) {
+
+    localStorage.removeItem(ACCESS_TOKEN);
+
+    store.dispatch(logout());
+
+    history.push(redirectTo);
+
+    notification[notificationType]({
+        message: 'PokemonGoBack',
+        description: description,
+    });
+    
+};

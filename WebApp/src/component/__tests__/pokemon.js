@@ -1,6 +1,6 @@
 import Pokemon from "../Pokemon";
 import {Card, CardTypeError, EnergyCard, findBasicCard, randomCard, TrainerCard} from "../model/Card";
-import {abilityList} from "../mockData/data";
+import {abilityList} from "../../mockData/data";
 import {
     CARD_ENERGY,
     CARD_POKEMON,
@@ -8,7 +8,14 @@ import {
     POKEMON_BASIC,
     POKEMON_STAGE_ONE,
     POKEMON_DEAD,
-    POKEMON_NORMAL, CARD_TRAINER, TRAINER_ITEM, ENERGY_LIGHTNING, ENERGY_DARKNESS, ENERGY_FIGHT
+    POKEMON_NORMAL,
+    CARD_TRAINER,
+    TRAINER_ITEM,
+    ENERGY_LIGHTNING,
+    ENERGY_DARKNESS,
+    ENERGY_FIGHT,
+    POKEMON_ASLEEP,
+    POKEMON_PARALYZED
 } from "../constants";
 
 test('Pokemon() initial a basic pokemon', () => {
@@ -33,11 +40,11 @@ test('Pokemon() can not be initialized by a stage-one pokemon', () => {
 
 });
 
-test('_attachedAbility() :generate ablility list from a pokemon', () => {
+test('_getAttachedAbilities() : ability list of a pokemon card', () => {
 
     const pokemoncard = Card.getCardInstants(11);
 
-    const abilities = Pokemon._attachedAbility(pokemoncard);
+    const abilities = Pokemon._getAttachedAbilities(pokemoncard);
 
     expect(abilities.length).toBe(2);
     expect(abilities[0].skill).toEqual(abilityList[17]);
@@ -97,7 +104,7 @@ test('attachEnergy() : add repeated key energycard', () => {
 
     const pokemon = new Pokemon(pokemoncard);
 
-    const cardNumber = pokemon.cardList.size;
+    const cardNumber = pokemon._manifest.size;
 
     const energyNumber = pokemon.attachedEnergy.size;
 
@@ -112,7 +119,7 @@ test('attachEnergy() : add repeated key energycard', () => {
 
     expect(pokemon.attachedEnergy.get(key1)).not.toBeNull();
     expect(pokemon.attachedEnergy.size).toBe(energyNumber + 1);
-    expect(pokemon.cardList.size).toBe(cardNumber + 2);    //there is a pokemon card in the front of cardlist
+    expect(pokemon._manifest.size).toBe(cardNumber + 2);    //there is a pokemon card in the front of cardlist
 });
 
 test('attachEnergy() : add a energy card to after evolve Pokemon', () => {
@@ -127,7 +134,7 @@ test('attachEnergy() : add a energy card to after evolve Pokemon', () => {
 
     const pokemon = new Pokemon(pokemoncard);
 
-    const cardNumber = pokemon.cardList.size;
+    const cardNumber = pokemon._manifest.size;
 
     const energyNumber = pokemon.attachedEnergy.size;
 
@@ -143,7 +150,7 @@ test('attachEnergy() : add a energy card to after evolve Pokemon', () => {
     expect(pokemon.attachedEnergy.has(`${CARD_ENERGY}_${key1}`)).toBeTruthy();
     expect(pokemon.attachedEnergy.has(`${CARD_ENERGY}_${key2}`)).toBeTruthy();
     expect(pokemon.attachedEnergy.size).toBe(energyNumber + 2);
-    expect(pokemon.cardList.size).toBe(cardNumber + 3);    //there is a pokemon card in the front of cardlist
+    expect(pokemon._manifest.size).toBe(cardNumber + 3);    //there is a pokemon card in the front of cardlist
 });
 
 
@@ -155,7 +162,7 @@ test('detachEnergy() : remove a energy card to Pokemon', () => {
     const pokemon = new Pokemon(pokemoncard);
 
     const energyNumber = pokemon.attachedEnergy.size;
-    const cardNumber = pokemon.cardList.size;
+    const cardNumber = pokemon._manifest.size;
 
     pokemon.attachEnergy(energy);
 
@@ -163,12 +170,13 @@ test('detachEnergy() : remove a energy card to Pokemon', () => {
     pokemon.attachEnergy(energy);
 
     expect(pokemon.attachedEnergy.size).toBe(energyNumber + 2);
-    expect(pokemon.cardList.size).toBe(cardNumber + 2);
+    expect(pokemon._manifest.size).toBe(cardNumber + 2);
+
 
     const removedEnergy = pokemon.detachEnergy();
 
     expect(pokemon.attachedEnergy.size).toBe(energyNumber + 1);
-    expect(pokemon.cardList.size).toBe(cardNumber + 1);
+    expect(pokemon._manifest.size).toBe(cardNumber + 1);
 
 
     energy = randomCard(CARD_ENERGY, ENERGY_WATER);
@@ -176,8 +184,9 @@ test('detachEnergy() : remove a energy card to Pokemon', () => {
 
     pokemon.detachEnergy(ENERGY_WATER, 2);
 
+
     expect(pokemon.attachedEnergy.size).toBe(energyNumber);
-    expect(pokemon.cardList.size).toBe(cardNumber);
+    expect(pokemon._manifest.size).toBe(cardNumber);
 
 });
 
@@ -193,8 +202,18 @@ test('attachItem() : attach itemcard this pokemon', () => {
     if (itemcard.attachable) pokemon.attachItem(itemcard);
 
     expect(pokemon.attachedItem).toBeInstanceOf(TrainerCard);
-    expect(pokemon.cardList.size).toBe(2);
-    expect(pokemon.cardList.get(`${pokemon.attachedItem.category}_${pokemon.attachedItem.key}`)).toEqual(pokemon.attachedItem);
+    expect(pokemon._manifest.size).toBe(2);
+    expect(pokemon._manifest.get(`${pokemon.attachedItem.category}`)).toEqual(pokemon.attachedItem);
+
+
+    const t = () => {
+
+        pokemon.attachItem(itemcard);
+        
+    };
+
+    expect(pokemon._manifest.get(`${pokemon.attachedItem.category}`)).toEqual(pokemon.attachedItem);
+
 
 });
 
@@ -209,11 +228,11 @@ test('detachItem() : detach itemcard from pokemon', () => {
     if (itemcard.attachable) pokemon.attachItem(itemcard);
 
     expect(pokemon.attachedItem).toBeInstanceOf(TrainerCard);
-    expect(pokemon.cardList.size).toBe(2);
+    expect(pokemon._manifest.size).toBe(2);
 
     const removedItem = pokemon.detachItem();
 
-    expect(pokemon.cardList.size).toBe(1);
+    expect(pokemon._manifest.size).toBe(1);
     expect(removedItem).toBeInstanceOf(TrainerCard);
 
 });
@@ -234,6 +253,7 @@ test('hurt(hp) : attack this pokemon', () => {
 
     pokemon.hurt(pokemon.hp + 20);
 
+
     expect(pokemon.damage).toBe(pokemon.hp);
     expect(pokemon.status).toBe(POKEMON_DEAD);
 
@@ -244,8 +264,6 @@ test('heal(hp) : heal this pokemon', () => {
     const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
 
     const pokemon = new Pokemon(pokemoncard);
-
-    const damageBeforeAttack = pokemon.damage;
 
     pokemon.hurt(20);
 
@@ -265,7 +283,7 @@ test('heal(hp) : heal this pokemon', () => {
 
 test('getAvailableSills() : find available skill list', () => {
 
-    const stageone = Card.getCardInstants(6);
+    const stageone = Card.getCardInstants(12);
 
 
     const pokemoncard = findBasicCard(stageone);
@@ -275,25 +293,28 @@ test('getAvailableSills() : find available skill list', () => {
     pokemon.evolve(stageone);
 
     pokemon.attachEnergy(randomCard(CARD_ENERGY, ENERGY_FIGHT));
-
-    expect(pokemon.attachedEnergy.size).toBe(1);
+    pokemon.attachEnergy(randomCard(CARD_ENERGY, ENERGY_FIGHT));
+    expect(pokemon.attachedEnergy.size).toBe(2);
     expect(pokemon.getAvailableSills().length).toBe(1);
 
 
     pokemon.attachEnergy(randomCard(CARD_ENERGY, ENERGY_WATER));
 
+    expect(pokemon.attachedEnergy.size).toBe(3);
 
-    expect(pokemon.attachedEnergy.size).toBe(2);
+    pokemon.attachEnergy(randomCard(CARD_ENERGY));
+
+    expect(pokemon.attachedEnergy.size).toBe(4);
     const skills = pokemon.getAvailableSills();
     expect(skills.length).toBe(2);
-    expect(skills[1].skill.id).toBe(11);
+    expect(skills[0].skill.id).toBe(19);
 
 
 });
 
 test('isRetreatable() ', () => {
 
-    const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
+    const pokemoncard = Card.getCardInstants(47);
 
     const pokemon = new Pokemon(pokemoncard);
 
@@ -307,6 +328,80 @@ test('isRetreatable() ', () => {
 
 
 });
+
+test('retreat() ', () => {
+
+    const pokemoncard = Card.getCardInstants(18);
+
+    const pokemon = new Pokemon(pokemoncard);
+
+    pokemon.attachEnergy(randomCard(CARD_ENERGY));
+    pokemon.attachEnergy(randomCard(CARD_ENERGY));
+    pokemon.setStatus(POKEMON_PARALYZED);
+
+    //expect(pokemon.isRetreatable()).toBeTruthy();
+
+    pokemon.retreat();
+
+    expect(pokemon.attachedEnergy.size).toBe(0);
+    expect(pokemon.status).toBe(POKEMON_NORMAL);
+
+
+});
+
+test('toJson()', () => {
+
+    const stageonecard = randomCard(CARD_POKEMON, POKEMON_STAGE_ONE);
+
+    const pokemoncard = findBasicCard(stageonecard);
+
+
+    const pokemon = new Pokemon(pokemoncard);
+
+
+    pokemon.attachEnergy(randomCard(CARD_ENERGY));
+
+    pokemon.evolve(stageonecard);
+
+    pokemon.attachEnergy(randomCard(CARD_ENERGY));
+
+    pokemon.attachItem(randomCard(CARD_TRAINER, TRAINER_ITEM, true));
+
+    pokemon.hurt(10);
+
+    pokemon.setStatus(POKEMON_ASLEEP);
+
+    const obj = JSON.parse(pokemon.toJson());
+
+    expect(obj.cardIds.length).toBe(5);
+
+});
+
+test('restore()', () => {
+
+
+    const pokemon = Pokemon.restore({damage:10,status:POKEMON_ASLEEP,cardIds:[34,49,58,35,57,58]});
+
+
+    expect(pokemon.status).toBe(POKEMON_ASLEEP);
+    expect(pokemon.category).toBe(POKEMON_STAGE_ONE);
+    expect(pokemon._manifest.size).toBe(6);
+    
+
+});
+
+
+test('restoreFromJson()',()=>{
+
+
+    const json = JSON.stringify({damage:10,status:POKEMON_ASLEEP,cardIds:[19,49,58,57,58]});
+
+    const pokemon = Pokemon.restoreFromJson(json);
+
+    expect(pokemon.status).toBe(POKEMON_ASLEEP);
+    expect(pokemon.name).toBe('Helioptile');
+
+})
 
 
 

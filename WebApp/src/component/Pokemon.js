@@ -1,36 +1,42 @@
-import {abilityList} from "./mockData/data";
+import {abilityList} from "../mockData/data";
 import {
     CARD_POKEMON,
     ENERGY_COLORLESS,
     POKEMON_BASIC,
     POKEMON_NORMAL,
-    POKEMON_DEAD, CARD_ENERGY, POKEMON_STAGE_ONE, CARD_TRAINER, TRAINER_ITEM
+    POKEMON_DEAD, CARD_ENERGY,
 } from "./constants";
 import {Card, CardTypeError} from "./model/Card";
 
 
 export default class Pokemon {
 
+
     constructor(card) {
-        if (!card) throw new CardTypeError("No card to be used to initial a pokemon");
-        if (card.type !== CARD_POKEMON || card.category !== POKEMON_BASIC) throw new CardTypeError("Stage-one card can not be used to initialize a pokemon");
+        if (!card) throw new CardTypeError("We need a pokemon card to initial a pokemon");
+        if (card.type !== CARD_POKEMON || card.category !== POKEMON_BASIC) throw new CardTypeError("Non basic card can not be used to initialize a pokemon");
+        this.pic_id = card.id;
         this.name = card.name;
         this.type = CARD_POKEMON;
         this.category = card.category;
         this.hp = card.hp.value;
         this.energyCategory = card.hp.cat;
-        this.retreat = card.retreat;
-        this.abilities = Pokemon._attachedAbility(card);
-        this.cardList = new Map();
+        this.retreatCost = card.retreat? card.retreat:[];
+        this.abilities = Pokemon._getAttachedAbilities(card);
+        this._manifest = new Map();            //the list all the cards the related to the current pokemon object
         this.attachedEnergy = new Map();
         this.attachedItem = null;
+        this.effect = null;
 
-        this.cardList.set(POKEMON_BASIC, card);
+        //These three properties below have the total information about a pokemon,
+        // could be used to serialize this pokemon object
+        this._manifest.set(POKEMON_BASIC, card);
         this.damage = 0;
         this.status = POKEMON_NORMAL;
 
-        this._abilityAvailable = this._abilityAvailable.bind(this);
 
+        this.setStatus = this.setStatus.bind(this);
+        this._abilityAvailable = this._abilityAvailable.bind(this);
         this.evolve = this.evolve.bind(this);
         this.evolvableFrom = this.evolvableFrom.bind(this);
         this.getAvailableSills = this.getAvailableSills.bind(this);
@@ -41,27 +47,37 @@ export default class Pokemon {
         this.detachEnergy = this.detachEnergy.bind(this);
         this.attachItem = this.attachItem.bind(this);
         this.detachItem = this.detachItem.bind(this);
+        this.retreat = this.retreat.bind(this);
 
         this.toJson = this.toJson.bind(this);
     }
 
-    static restore(cardIdList, damage, status) {
-        const pokemon = new Pokemon(Card.getCardInstants(cardIdList[0]));
+    static restore({cardIds, damage, status}) {
+        let pokemon = null;
+
+        for (const cardId of cardIds) {
+            const card = Card.getCardInstants(cardId);
+            pokemon = card.attachTo(pokemon);
+            
+        }
 
         pokemon.damage = damage;
         pokemon.status = status;
 
-        for (let i = 1; i < cardIdList.length; i++) {
-            const card = Card.getCardInstants(cardIdList[i]);
-            if (card.type === CARD_ENERGY) pokemon.attachEnergy(card);
-            if (card.type === CARD_POKEMON && card.category === POKEMON_STAGE_ONE) pokemon.evolve(card);
-            if (card.type === CARD_TRAINER && card.category === TRAINER_ITEM) pokemon.attachItem();
-        }
+        return pokemon;
+    }
+
+    static restoreFromJson(jsonString){
+        
+       const pokeData = JSON.parse(jsonString);
+
+       return Pokemon.restore(pokeData);
+
     }
 
 
-    static _attachedAbility(card) {
-        let abilities = Array();
+    static _getAttachedAbilities(card) {
+        let abilities = [];
         card.attacks.forEach(
             attack => {
                 abilities.push({
@@ -75,14 +91,16 @@ export default class Pokemon {
     evolve(upgradeCard) {
 
         if (this.evolvableFrom(upgradeCard)) {
+            this.pic_id = upgradeCard.id;
             this.name = upgradeCard.name;
 
             this.category = upgradeCard.category;
 
             this.hp = upgradeCard.hp.value;
             this.energyCategory = upgradeCard.hp.cat;
-            this.abilities = Pokemon._attachedAbility(upgradeCard);
-            this.cardList.set(upgradeCard.category, upgradeCard);
+            this.abilities = Pokemon._getAttachedAbilities(upgradeCard);
+            this._manifest.set(upgradeCard.category, upgradeCard);
+            this.retreatCost = upgradeCard.retreat? upgradeCard.retreat:[];
 
             return true;
         }
@@ -119,52 +137,61 @@ export default class Pokemon {
 
     _abilityAvailable(cost) {
 
-        let energyCounters = new Map();
-        energyCounters[ENERGY_COLORLESS]=0;
+        let existEnergyCounters = new Map();
+        existEnergyCounters[ENERGY_COLORLESS] = 0;
 
         for (const [key, energyCard] of this.attachedEnergy) {
 
-           energyCounters.colorless++;
+            existEnergyCounters[ENERGY_COLORLESS]++;       //the colorless amount is actually the whole amount of attached energy cards
 
-            if (energyCounters.has(energyCard.category))
-                energyCounters[energyCard.category]=energyCounters[energyCard.category] +1;
-            else
-                energyCounters[energyCard.category]=1;
-
+            (existEnergyCounters[energyCard.category]) ?
+                existEnergyCounters[energyCard.category]++ :
+                existEnergyCounters[energyCard.category] = 1;
 
         }
 
         let available = true;
         let costOfcolorless = 0;
 
-        for (let i = 0; i < cost.length; i++) {
-            let energy = cost[i];
-            if (energy.cat !== ENERGY_COLORLESS) {
-                if (energyCounters[energy.cat]) {
-                    if ( energyCounters[energy.cat] < energy.value) {
+        for (const requiredEnergy of cost) {
+            if (requiredEnergy.cat !== ENERGY_COLORLESS) {     //calculation all the specific energy type requirement first
+                if (existEnergyCounters[requiredEnergy.cat]) {
+                    if (existEnergyCounters[requiredEnergy.cat] < requiredEnergy.value) {
                         available = false;
-                        break;
+                        break;                              //if the amount of the specific energy the pokemon has is less than the requirement ,fail again
                     } else {
-                        energyCounters.colorless -= energy.value;
+                        existEnergyCounters[ENERGY_COLORLESS] -= requiredEnergy.value;        //deduct the number of the specific one from the total energy amount
                     }
                 } else {
-                    available = false;
+                    available = false;                   //if the pokemon does not have the specific energy at all,fail directly
                     break;
                 }
 
-            } else {
-                costOfcolorless = energy.value ; //save the colorless require for the end
+            } else {                               //leave the colorless require for the final judgment
+                costOfcolorless = requiredEnergy.value;
             }
         }
 
-
-        return (available && energyCounters.colorless >= costOfcolorless);
+        return (available && existEnergyCounters.colorless >= costOfcolorless);
     }
 
     isRetreatable() {
 
-        if (!this.retreat) return false;
-        return this._abilityAvailable(this.retreat);
+        if (!this.retreatCost.length) return true;
+        return this._abilityAvailable(this.retreatCost);
+
+    }
+
+    retreat(){
+
+        if (!this.isRetreatable()) return;
+
+        for (const cost of this.retreatCost){
+
+            this.detachEnergy(cost.cat,cost.value);
+        }
+
+        this.setStatus(POKEMON_NORMAL);
 
     }
 
@@ -181,7 +208,7 @@ export default class Pokemon {
         }
 
         this.attachedEnergy.push(energyCard);
-        this.cardList.push(energyCard);
+        this._manifest.push(energyCard);
 
         if (properties.length && typeof properties[0]['onAfter'] === "function") {
 
@@ -199,13 +226,15 @@ export default class Pokemon {
     attachEnergy(energyCard) {
 
         this.attachedEnergy.set(`${CARD_ENERGY}_${energyCard.key}`, energyCard);
-        this.cardList.set(`${CARD_ENERGY}_${energyCard.key}`, energyCard);
+        this._manifest.set(`${CARD_ENERGY}_${energyCard.key}`, energyCard);
 
     }
 
     detachEnergy(energyCategory, n = 1) {
 
         let i = 0;
+
+        if (this.attachedEnergy.size===0) return;
 
         let deletedCard = [];
 
@@ -232,7 +261,7 @@ export default class Pokemon {
 
         for (let j = 0; j < n; j++) {
             this.attachedEnergy.delete(`${CARD_ENERGY}_${deletedCard[j].key}`);
-            this.cardList.delete(`${CARD_ENERGY}_${deletedCard[j].key}`);
+            this._manifest.delete(`${CARD_ENERGY}_${deletedCard[j].key}`);
         }
 
         return deletedCard;
@@ -241,8 +270,14 @@ export default class Pokemon {
 
     attachItem(itemCard) {
 
+        if (this.attachedItem!=null) {
+            this.detachItem();
+        }
+
+        this.effect = itemCard.effect;
         this.attachedItem = itemCard;
-        this.cardList.set(`${itemCard.category}_${itemCard.key}`, itemCard);
+        this._manifest.set(`${itemCard.category}`, itemCard);
+        
 
     }
 
@@ -250,9 +285,10 @@ export default class Pokemon {
 
         let itemCard = this.attachedItem;
 
-        this.cardList.delete(`${itemCard.category}_${itemCard.key}`);
+        this._manifest.delete(`${itemCard.category}`);
 
         this.attachedItem = null;
+        this.effect = null;
 
         return itemCard;
     }
@@ -263,7 +299,7 @@ export default class Pokemon {
         this.damage += amount;
         if (this.damage >= this.hp) {
             this.damage = this.hp;
-            this.status = POKEMON_DEAD;
+            this.setStatus(POKEMON_DEAD);
         }
 
     }
@@ -274,9 +310,22 @@ export default class Pokemon {
 
     }
 
-    toJson() {
+    setStatus(status) {
+
+        this.status = status;
 
     }
+
+    toJson() {
+        const pokemonData = {
+            cardIds: [...this._manifest.values()].map((card)=>(card.id)),
+            damage: this.damage,
+            status: this.status
+        };
+
+        return JSON.stringify(pokemonData);
+    }
+
 
 }
 

@@ -119,7 +119,7 @@ export const cardList=[{},
         "from":"Pikachu",
         "hp":
             {
-                "cat":"water",
+                "cat":"lightning",
                 "value":60
             },
         "attacks":[
@@ -1658,7 +1658,7 @@ export const abilityList =[{},
             "id": 10,
             "name": "Soaking Horn",
             "damage":10,
-            "plus": "x",
+            "plus": "+",
             "desc": "This attack does 10 damage to opponent-active pokemon.If this Pokémon was healed during this turn, this attack does 80 more damage.",
             "actions": [
                 {
@@ -1770,8 +1770,8 @@ export const abilityList =[{},
             "id": 16,
             "name": "Spike Cannon",
             "damage":30,
-            "plus":"x",
-            "desc": "Flip 5 coins. This attack does 30 damage times the number of heads.",
+            "plus":"+",
+            "desc": "This attack does 30 damage and then,flip 5 coins.It does 30 more damage times the number of heads.",
             "act": "target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30,cond:flip:dam:target:opponent-active:30",
             "actions": [
                 {
@@ -1781,7 +1781,7 @@ export const abilityList =[{},
                 {
                     "act":"dam",
                     "target":"opponent-active",
-                    "value":[30,60,90,120,150],
+                    "value":[30,60,90,120,150,180],
                 }
             ]
         },
@@ -1922,6 +1922,7 @@ export const abilityList =[{},
         {
             "id": 25,
             "name": "Bite",
+            "damage":40,
             "act": "target:opponent-active:40",
             "actions": [
                 {
@@ -2098,7 +2099,7 @@ export const abilityList =[{},
         {
             "id": 37,
             "damage": 60,
-            "plus":"x",
+            "plus":"+",
             "name": "Psychic",
             "desc": "This attack does 10 more damage for each Energy attached to your opponent's Active Pokémon.",
             "act": "target:opponent-active:60,dam:target:opponent-active:count(target:opponent-active:energy)*10",
@@ -2248,7 +2249,7 @@ export const abilityList =[{},
             "id": 46,
             "name": "Fury Attack",
             "damage":40,
-            "plus":"x",
+            "plus":"+",
             "desc": "This attack does 40 damage and then, flip 3 coins. This attack also does 40 damage times the number of heads.",
             "act": "target:opponent-active:40,cond:flip:dam:target:opponent-active:40,cond:flip:dam:target:opponent-active:40,cond:flip:dam:target:opponent-active:40",
             "actions": [

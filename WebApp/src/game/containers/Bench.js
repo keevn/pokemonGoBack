@@ -10,7 +10,8 @@ import {
     CARD_TRAINER,
     POKEMON_BASIC,
     POKEMON_STAGE_ONE,
-    TRAINER_ITEM
+    TRAINER_ITEM,
+    POKEMON_PARALYZED, POKEMON_ASLEEP, POKEMON_STUCK, POKEMON_POISONED
 } from "../../component/constants";
 import PokemonView from "../views/PokemonView";
 import Pokemon from "../../component/Pokemon";
@@ -54,10 +55,14 @@ export default class Bench extends React.Component {
 
             const pokemon = new Pokemon(pokemoncard);
 
-            if (i) pokemon.attachItem(attachable_item_pokemonCard);
 
-            //pokemon.evolve(stageone);
+            pokemon.evolve(stageone);
 
+            if (i) {
+                pokemon.attachItem(attachable_item_pokemonCard);
+                pokemon.setStatus(POKEMON_POISONED);
+            }
+            
             return pokemon;
 
         });
@@ -227,7 +232,7 @@ export default class Bench extends React.Component {
                                             WebkitTransform: `translate3d(${x}px,${y}px,0) scale(${scale})`,
                                             zIndex: originalPosOfLastPressed === i && isPressed ? 99 : order.indexOf(i),
                                         }}>
-                                        <PokemonView pokemon={pokemons[i]} active={order.indexOf(i)===itemsCount-1}/>
+                                        <PokemonView pokemon={pokemons[i]} attack={order.indexOf(i)===itemsCount-1}/>
 
                                     </div>
                                 }

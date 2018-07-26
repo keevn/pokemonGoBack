@@ -14,14 +14,14 @@ const AbilityList = (props) => {
     };
 
     return abilities.length ? <div className='abilityList'>
-        <div style={{position:'relative'}}>
             {abilities.map((ability,k) => {
                 return (
-                    <div className="ability-container" style={{position:'relative',marginTop:'5px'}} key={k} onClick={(e) => handleOnClick(e, ability)}>
+                    <div className='ability-container' key={k} onClick={(e) => handleOnClick(e, ability)}>
                         <div className="ability-content" >
                             <div className='ability-name'>{ability.skill.name} {ability.skill.id}
                             {ability.skill.damage? <span style={{float: 'right',
-                                marginRight: '5px'}}>{ability.skill.damage}{ability.skill.plus? ability.skill.plus:''}</span>:null}
+                                marginRight: '5px'}}>{ability.skill.damage}{ability.skill.plus? ability.skill.plus.replace('x','×'):''}</span>:null}
+                                <div style={{float:'left'}}>
                             {ability.cost.map((cost) => {
                                 return range(cost.value).map((i) => {
                                     const name = `energyIcon icon-${cost.cat}`;
@@ -29,10 +29,11 @@ const AbilityList = (props) => {
                                         <div className={name} style={{
                                             transform: 'scale(0.6)',
                                             margin: '-4px',
+                                            float:'right',
                                         }} key={i}/>
                                     );
                                 });
-                            })}
+                            })} </div>
                             </div>
                             <div className='ability-desc'>{ability.skill.desc}</div>
                         </div>
@@ -41,7 +42,7 @@ const AbilityList = (props) => {
             })
 
             }
-        </div> </div>: null;
+            </div>: null;
 };
 
 export default AbilityList;

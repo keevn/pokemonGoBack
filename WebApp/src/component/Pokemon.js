@@ -4,7 +4,7 @@ import {
     ENERGY_COLORLESS,
     POKEMON_BASIC,
     POKEMON_NORMAL,
-    POKEMON_DEAD, CARD_ENERGY,
+    POKEMON_DEAD, CARD_ENERGY, POKEMON_POISONED, POKEMON_PARALYZED, POKEMON_ASLEEP,
 } from "./constants";
 import {Card, CardTypeError} from "./model/Card";
 
@@ -102,6 +102,8 @@ export default class Pokemon {
             this._manifest.set(upgradeCard.category, upgradeCard);
             this.retreatCost = upgradeCard.retreat? upgradeCard.retreat:[];
 
+            this.setStatus(POKEMON_NORMAL);
+            
             return true;
         }
 
@@ -125,11 +127,14 @@ export default class Pokemon {
 
         let availableSills = [];
 
-        this.abilities.forEach((ability) => {
+        if (this.status!==POKEMON_PARALYZED&&this.status!==POKEMON_ASLEEP) {
 
-            if (this._abilityAvailable(ability.cost)) availableSills.push(ability);
+            this.abilities.forEach((ability) => {
 
-        });
+                if (this._abilityAvailable(ability.cost)) availableSills.push(ability);
+
+            });
+        }
 
         return availableSills;
 
@@ -177,8 +182,12 @@ export default class Pokemon {
 
     isRetreatable() {
 
-        if (!this.retreatCost.length) return true;
-        return this._abilityAvailable(this.retreatCost);
+        if (this.status===POKEMON_NORMAL||this.status===POKEMON_POISONED) {
+
+            if (!this.retreatCost.length) return true;
+            return this._abilityAvailable(this.retreatCost);
+
+        }else return false;
 
     }
 

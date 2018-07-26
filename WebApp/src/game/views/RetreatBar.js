@@ -6,7 +6,7 @@ const RetreatBar = (props) => {
 
     const handleOnClick=(e,pokemon)=>{
          e.preventDefault();
-         e.stopPropagation();
+         e.stopPropagation(); 
          pokemon.retreat();
     }
 

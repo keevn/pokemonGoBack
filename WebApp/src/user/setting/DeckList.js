@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {getUserDecks, getUserDefaultDeck, uploadDeckFile} from '../../util/APIUtils';
-import LoadingIndicator from '../../common/LoadingIndicator';
+import LoadingIndicator from '../../layouts/common/LoadingIndicator';
 import {Button, Icon,Upload, notification, Form} from 'antd';
 import {ACCESS_TOKEN, LIST_SIZE, API_BASE_URL} from '../../constants';
 import {withRouter} from 'react-router-dom';

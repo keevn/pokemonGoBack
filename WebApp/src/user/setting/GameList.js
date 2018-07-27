@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {getUserGames} from '../../util/APIUtils';
 import {castVote} from '../../util/APIUtils';
-import LoadingIndicator from '../../common/LoadingIndicator';
+import LoadingIndicator from '../../layouts/common/LoadingIndicator';
 import {Button, Icon, notification} from 'antd';
 import {LIST_SIZE} from '../../constants';
 import {withRouter} from 'react-router-dom';

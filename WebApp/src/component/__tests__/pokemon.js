@@ -1,4 +1,4 @@
-import Pokemon from "../Pokemon";
+import Pokemon from "../model/Pokemon";
 import {Card, CardTypeError, EnergyCard, findBasicCard, randomCard, TrainerCard} from "../model/Card";
 import {abilityList} from "../../mockData/data";
 import {
@@ -337,9 +337,9 @@ test('retreat() ', () => {
 
     pokemon.attachEnergy(randomCard(CARD_ENERGY));
     pokemon.attachEnergy(randomCard(CARD_ENERGY));
-    pokemon.setStatus(POKEMON_PARALYZED);
+    //pokemon.setStatus(POKEMON_PARALYZED);
 
-    //expect(pokemon.isRetreatable()).toBeTruthy();
+    expect(pokemon.isRetreatable()).toBeTruthy();
 
     pokemon.retreat();
 

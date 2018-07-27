@@ -9,7 +9,7 @@ import {
 } from "../constants";
 import Random from "random-id";
 import {randomInteger} from '../../util/Helpers';
-import Pokemon from "../Pokemon";
+import Pokemon from "./Pokemon";
 
 export class Card {
     constructor(id) {

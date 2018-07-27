@@ -6,14 +6,14 @@ import {
     Redirect
 } from 'react-router-dom';
 
-import AuthorizedRoute from '../common/AuthorizedRoute';
+import AuthorizedRoute from '../layouts/common/AuthorizedRoute';
 
 // Layouts
 import UnauthorizedLayout from '../layouts/UnauthorizedLayout';
 import DefaultLayout from '../layouts/DefaultLayout';
 
 
-import AppHeader from '../common/AppHeader';
+import AppHeader from '../layouts/common/AppHeader';
 
 import {Layout, notification} from 'antd';
 

@@ -122,7 +122,7 @@ class Board extends React.Component{
         return  (
             <div className="welcome-content" ref={this.Board}>
 
-                    <Bench BenchSize='3' pokemons={this.pokemons} id={1}/>
+                    <Bench BenchSize='5' pokemons={this.pokemons} id={1}/>
                     <p/>
                     <button onClick={this.flipCoin} >Click to flip a coin.</button>
                     {this.state.flipCoin? <Coin afterFlip={this.coin_callback} size='100'/>:null}

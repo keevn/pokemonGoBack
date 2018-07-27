@@ -10,6 +10,9 @@ import {
     POKEMON_STAGE_ONE,
     CARD_TRAINER, TRAINER_ITEM, TRAINER_SUPPORTER, ENERGY_DARKNESS
 } from "../constants";
+import Pokemon from "../model/Pokemon";
+
+
 
 test('randomCard() get random cards from specific type and category', ()=> {
 

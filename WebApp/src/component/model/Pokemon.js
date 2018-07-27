@@ -196,10 +196,10 @@ export default class Pokemon {
 
         if (!this.isRetreatable()) return;
 
-        for (const cost of this.retreatCost){
+        //for (const cost of this.retreatCost){
 
-            this.detachEnergy(cost.cat,cost.value);
-        }
+          //  this.detachEnergy(cost.cat,cost.value);
+        //}
 
         this.setStatus(POKEMON_NORMAL);
 

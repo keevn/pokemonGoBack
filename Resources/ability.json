@@ -1061,42 +1061,130 @@
             "name": "Poké Ball",
             "desc": "(Trainer card) Flip a coin. If heads, search your deck for a Pokémon, reveal it, and put it into your hand. Then, shuffle your deck.",
             "act": "flip:search:target:your:source:deck:filter:pokemon:1",
-            "actions": "cond"
+            "actions": [
+                     {
+                    "act":"flip-coin",
+                    "times":1,
+                     },
+                    {
+                    "act":"filter",
+                    "target":"your-deck:pokemon",
+                    },
+                    {
+                        "act":"pick",
+                        "target":"your-deck",
+                        "from":"your-deck-pokemon:top",
+                        "amount":1,
+                        "to":"your-hand",
+                    },
+            ]
         },
         {
             "id": 69,
             "name": "Shauna",
             "desc": "(Trainer card) Shuffle your hand into your deck. Then, draw 5 cards.",
             "act": "target:your:destination:deck:count(your-hand),shuffle:target:your,draw:5",
-            "actions": "deck"
+            "actions": [
+                {
+                    "act":"move",
+                    "target":"your-hand",
+                    "from":"your-hand",
+                    "amount":"all",
+                    "to":"your-deck",
+                },
+                       {
+                    "act":"shuffle",
+                    "target":"your-deck",
+                },
+                {
+                    "act":"draw",
+                    "target":"your-deck",
+                    "from":"your-deck:top",
+                    "amount":5,
+                    "to":"your-hand",
+                }
+         
+            ]
         },
         {
             "id": 70,
             "name": "Pokémon Fan Club",
             "desc": "(Trainer card) Search your deck for up to 2 Basic Pokémon, reveal them, and put them into your hand. Shuffle your deck afterward.",
             "act": "target:your:source:deck:filter:pokemon:cat:basic:2,shuffle:target:your",
-            "actions": "search"
+            "actions": [
+                    {
+                        "act":"filter",
+                        "target":"your-deck:basic pokemon",
+                    },
+                    {
+                        "act":"pick",
+                        "target":"your-deck",
+                        "from":"your-deck-basic-pokemon:top",
+                        "amount":2,
+                        "to":"your-hand",
+                    },
+            ]
         },
         {
             "id": 71,
             "name": "Switch",
             "desc": "Switch your Active Pokémon with 1 of your Benched Pokémon.",
             "act": "source:your-active:destination:choice:your-bench",
-            "actions": "swap"
+            "actions": [
+                    {
+                        "act":"swap",
+                        "target":"your-active",
+                        "between":"your-active",
+                        "amount":1,
+                        "and":"your-bench",
+                    }
+            ]
         },
         {
             "id": 72,
             "name": "Energy Switch",
             "desc": "(Trainer card) Move a basic Energy from 1 of your Pokémon to another of your Pokémon.",
             "act": "target:choice:your:1:target:choice:your:1",
-            "actions": "reenergize"
+            "actions": [
+
+                {
+                    "act":"deenergize",
+                    "target":"your-pick-pokemon",
+                    "value":"1",
+                },
+                {
+                    "act":"reenergize",
+                    "target":"your-pick-pokemon",
+                    "value":"1",
+                },
+            ]
         },
         {
             "id": 73,
             "name": "Red Card",
             "desc": "Your opponent shuffles his or her hand into his or her deck and draws 4 cards.",
             "act": "target:opponent:destination:deck:count(opponent-hand),shuffle:target:opponent,draw:opponent:4",
-            "actions": "deck"
+            "actions": [
+                {
+                    "act":"move",
+                    "target":"opponent-hand",
+                    "from":"opponent-hand",
+                    "amount":"all",
+                    "to":"opponent-deck",
+                },
+                       {
+                    "act":"shuffle",
+                    "target":"opponent-deck",
+                },
+                {
+                    "act":"draw",
+                    "target":"opponent-deck",
+                    "from":"opponent-deck:top",
+                    "amount":4,
+                    "to":"opponent-hand",
+                }
+         
+            ]
         },
         {
             "id": 74,

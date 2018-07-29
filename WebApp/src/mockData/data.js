@@ -1514,14 +1514,14 @@ export const abilityList =[{},
         {
             "id": 1,
             "name": "Act Cute",
-            "desc": "Your opponent puts a card from his or her hand on the bottom of his or her deck.",
+            "desc": "Your opponent puts a card from his or her hand on the bottom of his or her container.",
             "actions": [
                 {
                     "act":"pick",
                     "target":"opponent",
                     "from":"opponent-hand",
                     "amount":1,
-                    "to":"opponent-deck:bottom",
+                    "to":"opponent-container:bottom",
                 }
             ]
         },
@@ -2034,8 +2034,8 @@ export const abilityList =[{},
         {
             "id": 33,
             "name": "Misty's Determination",
-            "desc": "(Trainer card) Discard a card from your hand. If you do, look at the top 8 cards of your deck and put 1 of them into your hand. Shuffle the other cards back into your deck.",
-            "act": "ability:deck:target:your:destination:discard:choice:you:1:(search:target:your:source:deck:filter:top:8:1,shuffle:target:your)",
+            "desc": "(Trainer card) Discard a card from your hand. If you do, look at the top 8 cards of your container and put 1 of them into your hand. Shuffle the other cards back into your container.",
+            "act": "ability:container:target:your:destination:discard:choice:you:1:(search:target:your:source:container:filter:top:8:1,shuffle:target:your)",
             "actions": [
                 {
                     "act":"discard",
@@ -2050,14 +2050,14 @@ export const abilityList =[{},
                 },
                 {
                     "act":"pick",
-                    "target":"your-deck",
-                    "from":"your-deck:top",
+                    "target":"your-container",
+                    "from":"your-container:top",
                     "amount":1,
                     "to":"your-hand",
                 },
                 {
                     "act":"shuffle",
-                    "target":"your-deck",
+                    "target":"your-container",
                 }
             ]
         },
@@ -2083,8 +2083,8 @@ export const abilityList =[{},
         {
             "id": 35,
             "name": "Clemont",
-            "desc": "Search your deck for up to 4 (electric) Energy cards, reveal them, and put them into your hand. Shuffle your deck afterward.",
-            "act": "target:your:source:deck:filter:energy:4",
+            "desc": "Search your container for up to 4 (electric) Energy cards, reveal them, and put them into your hand. Shuffle your container afterward.",
+            "act": "target:your:source:container:filter:energy:4",
             "actions": "search"
         },
         {
@@ -2134,19 +2134,19 @@ export const abilityList =[{},
         {
             "id": 39,
             "name": "Wish",
-            "desc": "Search your deck for a card and put it into your hand. Shuffle your deck afterward.",
-            "act": "target:your:source:deck:1",
+            "desc": "Search your container for a card and put it into your hand. Shuffle your container afterward.",
+            "act": "target:your:source:container:1",
             "actions": [
                 {
                     "act":"pick",
-                    "target":"your-deck",
-                    "from":"your-deck",
+                    "target":"your-container",
+                    "from":"your-container",
                     "amount":1,
                     "to":"your-hand",
                 },
                 {
                     "act":"shuffle",
-                    "target":"your-deck",
+                    "target":"your-container",
                 }
             ]
         },
@@ -2333,17 +2333,17 @@ export const abilityList =[{},
         {
             "id": 52,
             "name": "Mine",
-            "desc": "Look at the top card of your opponent's deck. Then, you may have your opponent shuffle his or her deck.",
-            "act": "target:opponent:source:deck:filter:top:1:0,cond:choice:shuffle:target:opponent",
+            "desc": "Look at the top card of your opponent's container. Then, you may have your opponent shuffle his or her container.",
+            "act": "target:opponent:source:container:filter:top:1:0,cond:choice:shuffle:target:opponent",
             "actions": [
                 {
                     "act":"look",
-                    "target":"opponent-deck:top",
+                    "target":"opponent-container:top",
                     "amount":1,
                 },
                 {
                     "act":"shuffle",
-                    "target":"opponent-deck",
+                    "target":"opponent-container",
                 }]
         },
         {
@@ -2571,22 +2571,22 @@ export const abilityList =[{},
         {
             "id": 68,
             "name": "Poké Ball",
-            "desc": "(Trainer card) Flip a coin. If heads, search your deck for a Pokémon, reveal it, and put it into your hand. Then, shuffle your deck.",
-            "act": "flip:search:target:your:source:deck:filter:pokemon:1",
+            "desc": "(Trainer card) Flip a coin. If heads, search your container for a Pokémon, reveal it, and put it into your hand. Then, shuffle your container.",
+            "act": "flip:search:target:your:source:container:filter:pokemon:1",
             "actions": "cond"
         },
         {
             "id": 69,
             "name": "Shauna",
-            "desc": "(Trainer card) Shuffle your hand into your deck. Then, draw 5 cards.",
-            "act": "target:your:destination:deck:count(your-hand),shuffle:target:your,draw:5",
-            "actions": "deck"
+            "desc": "(Trainer card) Shuffle your hand into your container. Then, draw 5 cards.",
+            "act": "target:your:destination:container:count(your-hand),shuffle:target:your,draw:5",
+            "actions": "container"
         },
         {
             "id": 70,
             "name": "Pokémon Fan Club",
-            "desc": "(Trainer card) Search your deck for up to 2 Basic Pokémon, reveal them, and put them into your hand. Shuffle your deck afterward.",
-            "act": "target:your:source:deck:filter:pokemon:cat:basic:2,shuffle:target:your",
+            "desc": "(Trainer card) Search your container for up to 2 Basic Pokémon, reveal them, and put them into your hand. Shuffle your container afterward.",
+            "act": "target:your:source:container:filter:pokemon:cat:basic:2,shuffle:target:your",
             "actions": "search"
         },
         {
@@ -2606,15 +2606,15 @@ export const abilityList =[{},
         {
             "id": 73,
             "name": "Red Card",
-            "desc": "Your opponent shuffles his or her hand into his or her deck and draws 4 cards.",
-            "act": "target:opponent:destination:deck:count(opponent-hand),shuffle:target:opponent,draw:opponent:4",
-            "actions": "deck"
+            "desc": "Your opponent shuffles his or her hand into his or her container and draws 4 cards.",
+            "act": "target:opponent:destination:container:count(opponent-hand),shuffle:target:opponent,draw:opponent:4",
+            "actions": "container"
         },
         {
             "id": 74,
             "name": "Wally",
-            "desc": "(Trainer card) Search your deck for a card that evolves from 1 of your Pokémon (excluding Pokémon-EX) and put it onto that Pokémon. (This counts as evolving that Pokémon.) Shuffle your deck afterward. You can use this card during your first turn or on a Pokémon that was put into play this turn.",
-            "act": "target:choice:your-pokemon:cat:basic:source:deck:filter:evolves-from:target:last:1,shuffle:target:your",
+            "desc": "(Trainer card) Search your container for a card that evolves from 1 of your Pokémon (excluding Pokémon-EX) and put it onto that Pokémon. (This counts as evolving that Pokémon.) Shuffle your container afterward. You can use this card during your first turn or on a Pokémon that was put into play this turn.",
+            "act": "target:choice:your-pokemon:cat:basic:source:container:filter:evolves-from:target:last:1,shuffle:target:your",
             "actions": "search"
         }
     ]

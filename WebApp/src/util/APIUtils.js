@@ -90,7 +90,7 @@ export function getUserDecks(username, page, size) {
 export function getUserDefaultDeck(username) {
 
     return request({
-        url: API_BASE_URL + "/users/" + username + "/deck",
+        url: API_BASE_URL + "/users/" + username + "/container",
         method: 'GET'
     });
 

@@ -27,14 +27,8 @@ public class UserDeck extends DateAudit {
     @Size(max = 200)
     private String content;
 
-    public UserDeck() {
+    public UserDeck(User user, String substring, String cardlist) {
 
-    }
-
-    public UserDeck(User user, String deckName, String content) {
-        this.user = user;
-        this.deckName = deckName;
-        this.content = content;
     }
 
     public Long getId() {
@@ -57,8 +51,8 @@ public class UserDeck extends DateAudit {
         return deckName;
     }
 
-    public void setDeckName(String deck_name) {
-        this.deckName = deck_name;
+    public void setDeckName(String deckName) {
+        this.deckName = deckName;
     }
 
     public String getContent() {

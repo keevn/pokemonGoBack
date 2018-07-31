@@ -8,13 +8,13 @@ import { connect } from 'react-redux' ;
 class AuthorizedRoute extends React.Component {
     
     render() {
-        const { component: Component, isLoading, isAuthenticated, ...rest } = this.props;
+        const { component: Component, isLoading, isAuthenticated, currentUser, ...rest } = this.props;
 
         return (
             <Route {...rest} render={props => {
                 if (isLoading) return <LoadingIndicator/>;
                 return isAuthenticated
-                    ? <Component {...props} />
+                    ? <Component {...props} currentUser={currentUser}/>
                     : <Redirect to="/auth/login" />;
             }} />
         ) ;
@@ -22,6 +22,7 @@ class AuthorizedRoute extends React.Component {
 }
 
 const stateToProps = ({ userReducer }) => ({
+    currentUser: userReducer.currentUser,
     isAuthenticated: userReducer.isAuthenticated,
     isLoading: userReducer.isLoading,
 });

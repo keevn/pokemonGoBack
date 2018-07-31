@@ -2,6 +2,7 @@ package comp354.team9.security;
 
 import comp354.team9.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import comp354.team9.payload.DeckInfo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,16 @@ public class UserPrincipal implements UserDetails {
 
     private String username;
 
+    private DeckInfo deck;
+
+    public DeckInfo getDeck() {
+        return deck;
+    }
+
+    public void setDeck(DeckInfo deck) {
+        this.deck = deck;
+    }
+
     @JsonIgnore
     private String email;
 
@@ -26,13 +37,14 @@ public class UserPrincipal implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String name, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String name, String username, String email, String password, Collection<? extends GrantedAuthority> authorities,  DeckInfo deck) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.deck = deck;
     }
 
     public static UserPrincipal create(User user) {
@@ -46,7 +58,7 @@ public class UserPrincipal implements UserDetails {
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities
+                authorities,new DeckInfo(user.getDefaultDeck())
         );
     }
 

@@ -14,19 +14,20 @@ import Pokemon from "./Pokemon";
 export class Card {
     constructor(id) {
         this._card = cardList[id];
-        this.key = Random(24);
-        this.id = this._card.id;
+        this.instantKey = Random(24);
+        this.cardId = id;
         this.name = this._card.name;
         this.type = this._card.type;
         this.category = this._card.cat;
         this.attachable = false;
+        this.draggable =false;
 
         this.afterAttach= this.afterAttach.bind(this);
 
     }
 
     afterAttach(){
-         // console.log("do nothing yet"); //TODO: event handler after card attach action
+         // console.log("do nothing yet"); //TODO: event handler after cardEl attach action
     }
 
     static getCardInstants(id) {
@@ -38,7 +39,7 @@ export class Card {
                 return new TrainerCard(id);
             case CARD_ENERGY:
                 return new EnergyCard(id);
-            default:throw new CardTypeError("unknown card type.");
+            default:throw new CardTypeError("unknown cardEl type.");
         }
     }
 
@@ -73,8 +74,8 @@ export class EnergyCard extends Card {
     constructor(id) {
         super(id);
         if (this.type !== CARD_ENERGY) throw new CardTypeError();
-        if (this.category === ENERGY_DARKNESS) throw new CardTypeError("darkness energy card does exist in current collection.");
-        this.attachable = true;                                    //all energy card are attachable
+        if (this.category === ENERGY_DARKNESS) throw new CardTypeError("darkness energy cardEl does exist in current collection.");
+        this.attachable = true;                                    //all energy cardEl are attachable
 
         this.attachTo = this.attachTo.bind(this);
     }
@@ -120,7 +121,7 @@ export function randomCard(type, category, attachable = false) {
     let card;
 
     if (type === CARD_ENERGY && category === ENERGY_DARKNESS)
-        throw new CardTypeError("darkness energy card does exist in current collection. ");
+        throw new CardTypeError("darkness energy cardEl does exist in current collection. ");
 
     while (!find) {
 

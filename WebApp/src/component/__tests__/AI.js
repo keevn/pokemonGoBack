@@ -3,7 +3,7 @@ import {CARD_POKEMON, POKEMON_BASIC} from "../constants";
 import {randomCard} from "../model/Card";
 import AI from '../../AI/AI';
 
-test('findThePokeomonToAttachEnergy() get random cards from specific type and category', ()=> {
+test('findThePokeomonToAttachEnergy()', ()=> {
 
     const basic_pokemonCard1= randomCard(CARD_POKEMON,POKEMON_BASIC);
     const pokemon1 = new Pokemon(basic_pokemonCard1);
@@ -17,6 +17,6 @@ test('findThePokeomonToAttachEnergy() get random cards from specific type and ca
 
     const result= AI.findThePokeomonToAttachEnergy(pokomonlist);
 
-    expect(result).toBe(pokemon2);
+    expect(result).toBe(pokemon2);                  
 
-};
+});

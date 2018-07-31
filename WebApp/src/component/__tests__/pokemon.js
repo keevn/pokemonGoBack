@@ -15,7 +15,7 @@ import {
     ENERGY_DARKNESS,
     ENERGY_FIGHT,
     POKEMON_ASLEEP,
-    POKEMON_PARALYZED
+    POKEMON_PARALYZED, POKEMON_POISONED
 } from "../constants";
 
 test('Pokemon() initial a basic pokemon', () => {
@@ -40,7 +40,7 @@ test('Pokemon() can not be initialized by a stage-one pokemon', () => {
 
 });
 
-test('_getAttachedAbilities() : ability list of a pokemon card', () => {
+test('_getAttachedAbilities() : ability list of a pokemon cardEl', () => {
 
     const pokemoncard = Card.getCardInstants(11);
 
@@ -78,7 +78,7 @@ test('evolve() : evolve from stage-one PokemonCard', () => {
 
 });
 
-test('attachEnergy() : add a energy card to a basic Pokemon', () => {
+test('attachEnergy() : add a energy cardEl to a basic Pokemon', () => {
 
     const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
     const energy = randomCard(CARD_ENERGY);
@@ -89,7 +89,7 @@ test('attachEnergy() : add a energy card to a basic Pokemon', () => {
 
     pokemon.attachEnergy(energy);
 
-    expect(pokemon.attachedEnergy.get(`${CARD_ENERGY}_${energy.key}`)).toEqual(energy);
+    expect(pokemon.attachedEnergy.get(`${CARD_ENERGY}_${energy.instantKey}`)).toEqual(energy);
     expect(pokemon.attachedEnergy.size).toBe(energyNumber + 1);
 
 });
@@ -114,15 +114,15 @@ test('attachEnergy() : add repeated key energycard', () => {
 
     pokemon.evolve(stageonecard);
 
-    // energy= randomCard(CARD_ENERGY);                        //if energy card's key is the same ,only attach once
+    // energy= randomCard(CARD_ENERGY);                        //if energy cardEl's key is the same ,only attach once
     pokemon.attachEnergy(energy);
 
     expect(pokemon.attachedEnergy.get(key1)).not.toBeNull();
     expect(pokemon.attachedEnergy.size).toBe(energyNumber + 1);
-    expect(pokemon._manifest.size).toBe(cardNumber + 2);    //there is a pokemon card in the front of cardlist
+    expect(pokemon._manifest.size).toBe(cardNumber + 2);    //there is a pokemon cardEl in the front of cardlist
 });
 
-test('attachEnergy() : add a energy card to after evolve Pokemon', () => {
+test('attachEnergy() : add a energy cardEl to after evolve Pokemon', () => {
 
     const stageonecard = randomCard(CARD_POKEMON, POKEMON_STAGE_ONE);
 
@@ -130,7 +130,7 @@ test('attachEnergy() : add a energy card to after evolve Pokemon', () => {
 
     let energy = randomCard(CARD_ENERGY);
 
-    const key1 = energy.key;
+    const key1 = energy.instantKey;
 
     const pokemon = new Pokemon(pokemoncard);
 
@@ -143,14 +143,14 @@ test('attachEnergy() : add a energy card to after evolve Pokemon', () => {
     pokemon.evolve(stageonecard);
 
     energy = randomCard(CARD_ENERGY);
-    const key2 = energy.key;
+    const key2 = energy.instantKey;
 
     pokemon.attachEnergy(energy);
 
     expect(pokemon.attachedEnergy.has(`${CARD_ENERGY}_${key1}`)).toBeTruthy();
     expect(pokemon.attachedEnergy.has(`${CARD_ENERGY}_${key2}`)).toBeTruthy();
     expect(pokemon.attachedEnergy.size).toBe(energyNumber + 2);
-    expect(pokemon._manifest.size).toBe(cardNumber + 3);    //there is a pokemon card in the front of cardlist
+    expect(pokemon._manifest.size).toBe(cardNumber + 3);    //there is a pokemon cardEl in the front of cardlist
 });
 
 
@@ -158,6 +158,7 @@ test('detachEnergy() : remove a energy card to Pokemon', () => {
 
     const pokemoncard = randomCard(CARD_POKEMON, POKEMON_BASIC);
     let energy = randomCard(CARD_ENERGY, ENERGY_WATER);
+    const key1=energy.instantKey;
 
     const pokemon = new Pokemon(pokemoncard);
 
@@ -167,6 +168,7 @@ test('detachEnergy() : remove a energy card to Pokemon', () => {
     pokemon.attachEnergy(energy);
 
     energy = randomCard(CARD_ENERGY, ENERGY_WATER);
+    const key2=energy.instantKey;
     pokemon.attachEnergy(energy);
 
     expect(pokemon.attachedEnergy.size).toBe(energyNumber + 2);
@@ -175,16 +177,36 @@ test('detachEnergy() : remove a energy card to Pokemon', () => {
 
     const removedEnergy = pokemon.detachEnergy();
 
+    expect(removedEnergy[0].instantKey).toBe(key1);
+
     expect(pokemon.attachedEnergy.size).toBe(energyNumber + 1);
     expect(pokemon._manifest.size).toBe(cardNumber + 1);
 
 
     energy = randomCard(CARD_ENERGY, ENERGY_WATER);
+    const key3=energy.instantKey;
     pokemon.attachEnergy(energy);
 
-    pokemon.detachEnergy(ENERGY_WATER, 2);
+    energy = randomCard(CARD_ENERGY, ENERGY_FIGHT);
+    pokemon.attachEnergy(energy);
 
+    let removedEnergys = pokemon.detachEnergy(ENERGY_WATER, 2);
 
+    expect(removedEnergys[0].instantKey).toBe(key2);
+    expect(removedEnergys[1].instantKey).toBe(key3);
+    expect(pokemon.attachedEnergy.size).toBe(energyNumber+1);
+    expect(pokemon._manifest.size).toBe(cardNumber+1);
+
+    energy = randomCard(CARD_ENERGY, ENERGY_WATER);
+    const key4=energy.instantKey;
+    pokemon.attachEnergy(energy);
+
+    removedEnergys = pokemon.detachEnergy(ENERGY_WATER, 2);
+    expect(removedEnergys.length).toBe(1);
+    expect(pokemon.attachedEnergy.size).toBe(energyNumber+1);
+    expect(pokemon._manifest.size).toBe(cardNumber+1);
+
+    pokemon.detachEnergy();
     expect(pokemon.attachedEnergy.size).toBe(energyNumber);
     expect(pokemon._manifest.size).toBe(cardNumber);
 
@@ -337,13 +359,14 @@ test('retreat() ', () => {
 
     pokemon.attachEnergy(randomCard(CARD_ENERGY));
     pokemon.attachEnergy(randomCard(CARD_ENERGY));
-    //pokemon.setStatus(POKEMON_PARALYZED);
+    pokemon.setStatus(POKEMON_PARALYZED);
 
-    expect(pokemon.isRetreatable()).toBeTruthy();
+    expect(pokemon.isRetreatable()).not.toBeTruthy();
 
+    pokemon.setStatus(POKEMON_POISONED);
     pokemon.retreat();
 
-    expect(pokemon.attachedEnergy.size).toBe(0);
+    expect(pokemon.attachedEnergy.size).toBe(2);
     expect(pokemon.status).toBe(POKEMON_NORMAL);
 
 

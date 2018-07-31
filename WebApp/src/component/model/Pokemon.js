@@ -13,10 +13,11 @@ export default class Pokemon {
 
 
     constructor(card) {
-        if (!card) throw new CardTypeError("We need a pokemon card to initial a pokemon");
-        if (card.type !== CARD_POKEMON || card.category !== POKEMON_BASIC) throw new CardTypeError("Non basic card can not be used to initialize a pokemon");
-        this.pic_id = card.id;
-        this.key = card.key;
+        if (!card) throw new CardTypeError("We need a pokemon cardEl to initial a pokemon");
+        if (card.type !== CARD_POKEMON || card.category !== POKEMON_BASIC) throw new CardTypeError("Non basic cardEl can not be used to initialize a pokemon");
+        this.pic_id = card.cardId;
+        this.cardId = card.cardId;
+        this.instantKey = card.instantKey;
         this.name = card.name;
         this.type = CARD_POKEMON;
         this.category = card.category;
@@ -28,6 +29,7 @@ export default class Pokemon {
         this.attachedEnergy = new Map();
         this.attachedItem = null;
         this.effect = null;
+        this.draggable = card.draggable;
 
         //These three properties below have the total information about a pokemon,
         // could be used to serialize this pokemon object
@@ -92,7 +94,7 @@ export default class Pokemon {
     evolve(upgradeCard) {
 
         if (this.evolvableFrom(upgradeCard)) {
-            this.pic_id = upgradeCard.id;
+            this.pic_id = upgradeCard.cardId;
             this.name = upgradeCard.name;
 
             this.category = upgradeCard.category;
@@ -146,7 +148,7 @@ export default class Pokemon {
         let existEnergyCounters = new Map();
         existEnergyCounters[ENERGY_COLORLESS] = 0;
 
-        for (const [key, energyCard] of this.attachedEnergy) {
+        for (const [instantKey, energyCard] of this.attachedEnergy) {
 
             existEnergyCounters[ENERGY_COLORLESS]++;       //the colorless amount is actually the whole amount of attached energy cards
 
@@ -212,7 +214,7 @@ export default class Pokemon {
             let resultBefore = properties[0]['onBefore'](this);
 
             if (!resultBefore) {
-                throw new Error("Error occurred before attach energy card");
+                throw new Error("Error occurred before attach energy cardEl");
                 return false;
             }
         }
@@ -225,7 +227,7 @@ export default class Pokemon {
             let resultBefore = properties[0]['onAfter'](this);
 
             if (!resultBefore) {
-                throw new Error("Error occurred after attach energy card");
+                throw new Error("Error occurred after attach energy cardEl");
             }
         }
 
@@ -235,8 +237,8 @@ export default class Pokemon {
 
     attachEnergy(energyCard) {
 
-        this.attachedEnergy.set(`${CARD_ENERGY}_${energyCard.key}`, energyCard);
-        this._manifest.set(`${CARD_ENERGY}_${energyCard.key}`, energyCard);
+        this.attachedEnergy.set(`${CARD_ENERGY}_${energyCard.instantKey}`, energyCard);
+        this._manifest.set(`${CARD_ENERGY}_${energyCard.instantKey}`, energyCard);
 
     }
 
@@ -251,7 +253,7 @@ export default class Pokemon {
         if (energyCategory && energyCategory !== ENERGY_COLORLESS) {
 
 
-            for (const [key, energyCard] of this.attachedEnergy) {
+            for (const [instantKey, energyCard] of this.attachedEnergy) {
                 if (energyCard.category === energyCategory) {
                     deletedCard[i] = energyCard;
                     i++;
@@ -262,17 +264,19 @@ export default class Pokemon {
 
         } else {
 
-            for (const [key, energyCard] of this.attachedEnergy) {
+            for (const [instantKey, energyCard] of this.attachedEnergy) {
                 deletedCard[i] = energyCard;
                 i++;
                 if (i === n) break;
             }
         }
 
-        for (let j = 0; j < n; j++) {
-            this.attachedEnergy.delete(`${CARD_ENERGY}_${deletedCard[j].key}`);
-            this._manifest.delete(`${CARD_ENERGY}_${deletedCard[j].key}`);
-        }
+        deletedCard.forEach(energyCard=>{
+
+            this.attachedEnergy.delete(`${CARD_ENERGY}_${energyCard.instantKey}`);
+            this._manifest.delete(`${CARD_ENERGY}_${energyCard.instantKey}`);
+
+        })
 
         return deletedCard;
 

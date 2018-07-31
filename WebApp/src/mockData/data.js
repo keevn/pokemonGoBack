@@ -1514,7 +1514,7 @@ export const abilityList =[{},
         {
             "id": 1,
             "name": "Act Cute",
-            "desc": "Your opponent puts a card from his or her hand on the bottom of his or her deck.",
+            "desc": "Your opponent puts a cardEl from his or her hand on the bottom of his or her deck.",
             "actions": [
                 {
                     "act":"pick",
@@ -2020,7 +2020,7 @@ export const abilityList =[{},
         {
             "id": 32,
             "name": "Potion",
-            "desc": "(Trainer card) Heal 30 damage from 1 of your Pokémon.",
+            "desc": "(Trainer cardEl) Heal 30 damage from 1 of your Pokémon.",
             "act": "target:choice:your:30",
             "actions": [
                 {
@@ -2034,7 +2034,7 @@ export const abilityList =[{},
         {
             "id": 33,
             "name": "Misty's Determination",
-            "desc": "(Trainer card) Discard a card from your hand. If you do, look at the top 8 cards of your deck and put 1 of them into your hand. Shuffle the other cards back into your deck.",
+            "desc": "(Trainer cardEl) Discard a cardEl from your hand. If you do, look at the top 8 cards of your deck and put 1 of them into your hand. Shuffle the other cards back into your deck.",
             "act": "ability:deck:target:your:destination:discard:choice:you:1:(search:target:your:source:deck:filter:top:8:1,shuffle:target:your)",
             "actions": [
                 {
@@ -2064,7 +2064,7 @@ export const abilityList =[{},
         {
             "id": 34,
             "name": "Pokémon Center Lady",
-            "desc": "(Trainer card) Heal 60 damage and remove all Special Conditions from 1 of your Pokémon.",
+            "desc": "(Trainer cardEl) Heal 60 damage and remove all Special Conditions from 1 of your Pokémon.",
             "act": "target:choice:your:60,destat:target:last",
             "actions": [
                 {
@@ -2134,7 +2134,7 @@ export const abilityList =[{},
         {
             "id": 39,
             "name": "Wish",
-            "desc": "Search your deck for a card and put it into your hand. Shuffle your deck afterward.",
+            "desc": "Search your deck for a cardEl and put it into your hand. Shuffle your deck afterward.",
             "act": "target:your:source:deck:1",
             "actions": [
                 {
@@ -2333,7 +2333,7 @@ export const abilityList =[{},
         {
             "id": 52,
             "name": "Mine",
-            "desc": "Look at the top card of your opponent's deck. Then, you may have your opponent shuffle his or her deck.",
+            "desc": "Look at the top cardEl of your opponent's deck. Then, you may have your opponent shuffle his or her deck.",
             "act": "target:opponent:source:deck:filter:top:1:0,cond:choice:shuffle:target:opponent",
             "actions": [
                 {
@@ -2421,7 +2421,7 @@ export const abilityList =[{},
         {
             "id": 58,
             "name": "Scavenge",
-            "desc": "Discard a Energy attached to this Pokemon,if you do,put an Item card from your discard pile into your hand.",
+            "desc": "Discard a Energy attached to this Pokemon,if you do,put an Item cardEl from your discard pile into your hand.",
             "act": "ability:deenergize:target:your-active:1:(search:target:your:source:discard:filter:cat:item:1)",
             "actions": [
                 {
@@ -2558,7 +2558,7 @@ export const abilityList =[{},
         {
             "id": 67,
             "name": "Floral Crown",
-            "desc": "At the end of your opponent's turn, heal 20 damage from the Basic Pokémon this card is attached to.",
+            "desc": "At the end of your opponent's turn, heal 20 damage from the Basic Pokémon this cardEl is attached to.",
             "act": "target:your:trigger:opponent:turn-end:(heal:target:self:20)",
             "effect":'pos',
             "actions": [
@@ -2571,21 +2571,21 @@ export const abilityList =[{},
         {
             "id": 68,
             "name": "Poké Ball",
-            "desc": "(Trainer card) Flip a coin. If heads, search your deck for a Pokémon, reveal it, and put it into your hand. Then, shuffle your deck.",
+            "desc": "(Trainer cardEl) Flip a coin. If heads, search your deck for a Pokémon, reveal it, and put it into your hand. Then, shuffle your deck.",
             "act": "flip:search:target:your:source:deck:filter:pokemon:1",
             "actions": "cond"
         },
         {
             "id": 69,
             "name": "Shauna",
-            "desc": "(Trainer card) Shuffle your hand into your deck. Then, draw 5 cards.",
+            "desc": "(Trainer cardEl) Shuffle your hand into your deck. Then, draw 5 cards.",
             "act": "target:your:destination:deck:count(your-hand),shuffle:target:your,draw:5",
             "actions": "deck"
         },
         {
             "id": 70,
             "name": "Pokémon Fan Club",
-            "desc": "(Trainer card) Search your deck for up to 2 Basic Pokémon, reveal them, and put them into your hand. Shuffle your deck afterward.",
+            "desc": "(Trainer cardEl) Search your deck for up to 2 Basic Pokémon, reveal them, and put them into your hand. Shuffle your deck afterward.",
             "act": "target:your:source:deck:filter:pokemon:cat:basic:2,shuffle:target:your",
             "actions": "search"
         },
@@ -2599,7 +2599,7 @@ export const abilityList =[{},
         {
             "id": 72,
             "name": "Energy Switch",
-            "desc": "(Trainer card) Move a basic Energy from 1 of your Pokémon to another of your Pokémon.",
+            "desc": "(Trainer cardEl) Move a basic Energy from 1 of your Pokémon to another of your Pokémon.",
             "act": "target:choice:your:1:target:choice:your:1",
             "actions": "reenergize"
         },
@@ -2613,7 +2613,7 @@ export const abilityList =[{},
         {
             "id": 74,
             "name": "Wally",
-            "desc": "(Trainer card) Search your deck for a card that evolves from 1 of your Pokémon (excluding Pokémon-EX) and put it onto that Pokémon. (This counts as evolving that Pokémon.) Shuffle your deck afterward. You can use this card during your first turn or on a Pokémon that was put into play this turn.",
+            "desc": "(Trainer cardEl) Search your deck for a cardEl that evolves from 1 of your Pokémon (excluding Pokémon-EX) and put it onto that Pokémon. (This counts as evolving that Pokémon.) Shuffle your deck afterward. You can use this cardEl during your first turn or on a Pokémon that was put into play this turn.",
             "act": "target:choice:your-pokemon:cat:basic:source:deck:filter:evolves-from:target:last:1,shuffle:target:your",
             "actions": "search"
         }

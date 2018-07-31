@@ -4,11 +4,21 @@ public class UserSummary {
     private Long id;
     private String username;
     private String name;
+    private DeckInfo deck;
 
-    public UserSummary(Long id, String username, String name) {
+    public DeckInfo getDeck() {
+        return deck;
+    }
+
+    public void setDeck(DeckInfo deck) {
+        this.deck = deck;
+    }
+
+    public UserSummary(Long id, String username, String name , DeckInfo deck) {
         this.id = id;
         this.username = username;
         this.name = name;
+        this.deck =  deck;
     }
 
     public Long getId() {

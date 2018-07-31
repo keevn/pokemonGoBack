@@ -1,21 +1,25 @@
 import React from 'react';
+import {Spring, animated} from 'react-spring';
 import './CardView.css';
 
 class CardView extends React.Component {
 
+    hidden = {
+        transform: 'rotateY(180deg)',
+    };
+
+    baseStyle = {
+        transformOrigin: '0 0 0',
+        transition: 'transform 1s',
+    };
+
+
     constructor(props) {
         super(props);
 
-        const {card} = props;
+        this.instantKey=props.instantKey;
 
-        let {pic_id} = props;
-
-        if (!pic_id) pic_id = card.id;
-
-        this.faceUp = {
-            zIndex: 1,
-            backgroundImage: 'url(' + require(`./images/cards/${pic_id}.png`) + ')'
-        };
+        this.cardEl = React.createRef();
 
         this.faceDown = {
             border: 0,
@@ -23,28 +27,67 @@ class CardView extends React.Component {
             transform: 'rotateY(180deg)',
         };
 
-        this.hidden={
-            transform: 'rotateY(180deg)',
-        };
     };
+
+    componentDidMount() {
+        this.node = this.cardEl.current.node;
+    }
+
+    callback = () => {
+        console.log("Card movement finished!");
+    }
+    
 
     render() {
 
-
-        const {face_down, glow} = this.props;
-        
-
-        const isFlippingStyle=face_down? this.hidden:{};
+        const {face_down = false, glow = false, width = 250, x = 0, y = 0, afterMove = this.callback, immediate = false,card} = this.props;
 
 
-        const className = `cardView${glow? ' glow':''}`;
+        let {pic_id} = this.props;
+
+        if (!pic_id) pic_id = card.cardId;
+
+        this.faceUp = {
+            zIndex: 1,
+            backgroundImage: 'url(' + require(`./images/cards/${pic_id}.png`) + ')'
+        };
+
+
+        const scale = width ? (width / 250) : 1;
+
+
+        const style = Object.assign({}, this.baseStyle, {
+            transform: `scale(${scale})`,
+            WebkitTransform: `scale(${scale})`,
+        })
+
+        const isFlippingStyle = Object.assign({}, face_down ? this.hidden : {});
+
+
+        const className = `cardView${glow ? ' glow' : ''}`;
 
         return (
-            <div className={className} style={isFlippingStyle}>
-                <div className='card__face' style={this.faceUp} >{this.props.children}</div>
-                <div className='card__face' style={this.faceDown}/>
-            </div>
-
+            <Spring native immediate={immediate} to={{ x, y}} >
+                {({x, y}) => (
+                    <animated.div className='card-box' style=
+                        {
+                            {
+                                width: width,
+                                height: 345 * scale,
+                                top: y,
+                                left: x,
+                                position: 'absolute',
+                            }
+                        } ref={this.cardEl} >
+                        <div style={style}>
+                            <div className={className} style={isFlippingStyle}>
+                                <div className='card__face' style={this.faceUp}>{this.props.children}</div>
+                                <div className='card__face' style={this.faceDown}/>
+                            </div>
+                        </div>
+                    </animated.div>
+                )}
+            </Spring>
         );
 
     }

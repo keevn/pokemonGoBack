@@ -12,7 +12,7 @@ import Board from "../game/Board";
 
 const {Content, Sider} = Layout;
 
-const BoardLayout = ({match,history}) => (
+const BoardLayout = ({match,history,currentUser}) => (
 
     <Layout  style={{height:"100vh",position: "fixed",
         top:70,
@@ -29,7 +29,11 @@ const BoardLayout = ({match,history}) => (
         <Content >
             <Switch>
                 <Route path={`${match.path}/newGame`} component={Welcome}/>
-                <Route path={`${match.path}/test`} component={Board}/>
+                <Route path={`${match.path}/test`} render={(props) =>{
+
+                    console.log(props);
+                    return <Board {...props} currentUser={currentUser}/>;
+                } } />
                 <Redirect to={`${match.path}/test`} />
             </Switch>
         </Content>

@@ -9,7 +9,7 @@ class Coin extends React.Component {
 
         const {afterFlip, style, size} = props;
 
-        this.callback= afterFlip;
+        this.callback = afterFlip;
 
         this.style = style;
 
@@ -30,9 +30,7 @@ class Coin extends React.Component {
 
         const new_value=random(0,1);
 
-        if (this.callback) setTimeout(()=>this.callback(new_value),2000);
-
-        let new_time = random(1, 4)
+        let new_time = random(1, 4);
 
         while (new_time===this.lastTime){
             new_time = random(1, 4);
@@ -54,7 +52,11 @@ class Coin extends React.Component {
                     transform: `scale(${this.scale})`,
                     transformOrigin: '0 0',
                 }}>
-                    <div className='coin' style={flipStyle}>
+                    <div className='coin' style={flipStyle}
+                         onAnimationEnd={()=>{
+                             if (typeof this.callback === 'function') this.callback(new_value);
+                         }}
+                    >
                         <div className='coin-face'
                              style={new_value ? this.hidden : {transform: 'rotateX(180deg) translateZ(-4px)'}}/>
                         <div className='coin-back'

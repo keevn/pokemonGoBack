@@ -4,7 +4,8 @@
     width: 250px;
     color: #ffffff;
     border-radius: 14px;
-    transition: transform 1s;
+    transition: transform 0.5s, box-shadow 1s;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0;
     transform-style: preserve-3d;
     cursor: pointer;
     -moz-user-select: none;
@@ -12,6 +13,13 @@
     -ms-user-select:none;
     user-select:none;
 }
+
+
+.cardView:hover{
+    transform: scale(1.1);
+    box-shadow: rgba(0, 0, 0, 0.2) 0 16px 32px 0;
+}
+
 
 .card__face {
     position: absolute;
@@ -26,22 +34,20 @@
 .glow {
     border-radius: 15px;
     border: #35a5e5 1px solid;
-    animation: glowing 0.5s infinite alternate;
+    animation: glowing 1s infinite alternate;
 }
 
 @keyframes glowing {
     from {
-        box-shadow: rgba(41, 148, 238, 1) 0 0 10px 0;
+        box-shadow: rgb(30, 102, 238) 0 0 32px 0;
     }
     to {
-        box-shadow: rgba(41, 148, 238, 1) 0 0 2px 0;
+        box-shadow: rgb(30, 102, 238) 0 0 4px 0;
     }
 }
 
 .card-container {
     position: absolute;
-    height: 345px;
-    width: 250px;
     overflow: visible;
     pointer-events: auto;
     transform-origin: 50% 50% 0;

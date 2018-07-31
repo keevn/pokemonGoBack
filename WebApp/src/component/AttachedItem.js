@@ -7,7 +7,7 @@ const AttachedItem = (props) => {
     if (item)  {
         const style={
             backgroundColor:'#ffffff',
-            backgroundImage: 'url(' + require(`./images/cards/${item.id}.png`) + ')',
+            backgroundImage: 'url(' + require(`./images/cards/${item.cardId}.png`) + ')',
             backgroundPosition: '-10px -25px',
             backgroundSize: '93px 153px',
             backgroundRepeat:'no-repeat',
@@ -16,11 +16,9 @@ const AttachedItem = (props) => {
         
 
         return (
-            <div>
                 <Tooltip placement="bottomLeft" title={item.ability.desc} overlayClassName='pokemon'>
                     <div className='attachedItem' style={style}/>
                 </Tooltip>
-            </div>
         );
 
     }else {

@@ -38,6 +38,7 @@ export default (state = initialState, action) => {
 
 
     if (action.type === GET_CURRENT_USER ) {
+            //console.log(action.payload.currentUser);
         return Object.assign({}, state, {
             currentUser:action.payload.currentUser,
             isAuthenticated:true,

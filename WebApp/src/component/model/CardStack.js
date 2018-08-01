@@ -37,7 +37,7 @@ export default class CardStack {
 
         let Origin = {left: x, top: y};
 
-        let CardWidth = 120;
+        let CardWidth = 110;
         let Capacity = 8;
         let Margin = 5;
         return new CardStack({Origin, CardWidth, Capacity, Margin, face_down});

@@ -10,7 +10,7 @@ import CardView from "../component/CardView";
 import PokemonView from "../component/PokemonView";
 import Bench from "../component/Bench";
 import Pokemon from "../component/model/Pokemon";
-import {CARD_ENERGY, POKEMON_BASIC} from "../component/constants";
+import {CARD_ENERGY, POKEMON_BASIC,POKEMON_POISONED} from "../component/constants";
 
 
 
@@ -336,7 +336,7 @@ class Board extends React.Component {
     onContextMenu = (i, event) => {
         event.preventDefault();
 
-        if (this.player1.cards[i] instanceof Pokemon) {
+        if (false && this.player1.cards[i] instanceof Pokemon) {
 
             const energycards = this.player1.cards[i].detachEnergy();
 
@@ -351,6 +351,8 @@ class Board extends React.Component {
 
             //this.player1.cards[i].heal(10);
         }
+        this.player1.cards[i].setStatus(POKEMON_POISONED);
+
     };
 
 
@@ -410,7 +412,7 @@ class Board extends React.Component {
                         onContextMenu={this.onContextMenu.bind(null, i)}
                         //onClick={this.handleOnClick.bind(null,i)}
                         className="card-container player"
-                        key={card.instantKey} style={{zIndex: active ? 99 : offset.zIndex + 1}}>
+                        key={card.instantKey} style={{zIndex: active ||stack===this.player1.active? 99 : offset.zIndex + 1}}>
                         {card instanceof Pokemon ? <PokemonView pokemon={card} width={stack.CardWidth}
                                                                 x={offset.left}
                                                                 y={offset.top}  attack={stack===this.player1.active}

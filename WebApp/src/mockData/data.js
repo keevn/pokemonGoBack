@@ -1742,7 +1742,7 @@ export const abilityList =[{},
             "id": 15,
             "name": "Clamp Crush",
             "damage": 30,
-            "desc": "Then, flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed and discard an Energy attached to that Pokémon.",
+            "desc": "Flip a coin. If heads, your opponent's Active Pokémon is now Paralyzed and discard an Energy attached to that Pokémon.",
             "act": "dam:target:opponent-active:30,cond:flip:deenergize:target:opponent-active:1,applystat:status:paralyzed:opponent-active",
             "actions": [
                 {

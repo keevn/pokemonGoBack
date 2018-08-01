@@ -1,8 +1,10 @@
 import React from 'react';
+import {Affix, Button, notification} from 'antd';
 import './Welcome.css';
 import {Card, EnergyCard, PokemonCard, randomCard, TrainerCard} from "../component/model/Card";
 import Deck from '../component/Deck';
 import Hand from '../component/Hand';
+import Active from '../component/Active';
 import CardStack from "../component/model/CardStack";
 import CardView from "../component/CardView";
 import PokemonView from "../component/PokemonView";
@@ -18,7 +20,9 @@ class Board extends React.Component {
         super(props);
 
 
-        const userDeckCards = props.currentUser.deck.cardList.slice(0, 20);
+        const userDeckCards = props.currentUser.deck.cardList;//.slice(0, 20);
+
+        const aiDeckCards =  userDeckCards.map((card)=>card);
 
         //console.log(userDeckCards);
 
@@ -32,40 +36,75 @@ class Board extends React.Component {
         };
 
 
-        //initial all the deck cards
-        const user_cards = userDeckCards.map(cardId => Card.getCardInstants(cardId));
-
-
         //create card stacks,include hand, bench, deck, prize card, discard pile, active spot, and pit stop;
-        const user_hand = CardStack.getHand({x: 0, y: 500});
-        const user_bench = CardStack.getBench({x: 150, y: 300});
-        const user_deck = CardStack.getDeck({x: 0, y: 0, Cards: user_cards});
+        const user_hand = CardStack.getHand({x: 0, y: 550});
+        const user_bench = CardStack.getBench({x: 0, y: 370});
+        const user_deck = CardStack.getDeck({x: 270, y: 190});
+        const user_active = CardStack.getActive({x: 0, y: 0});
 
 
-        user_cards.forEach(card => {
-            card.stack = user_deck;
-            card.zIndex = user_deck.Offsets.get(card.instantKey).zIndex;
-        });
-
+        const ai_hand = CardStack.getHand({x: 270, y: 0},true);
+        const ai_bench = CardStack.getBench({x: 640, y: 190});
+        const ai_deck = CardStack.getDeck({x: 880, y: 380});
 
         this.player1 = {
 
             deck: user_deck,
             hand: user_hand,
             bench: user_bench,
-            cards: user_cards,
-
+            active: user_active,
+            opponent:null,
+            cards:null,
         };
+
+        this.player2={
+
+            deck: ai_deck,
+            hand: ai_hand,
+            bench: ai_bench,
+            cards: null,
+            opponent:this.player1,
+            
+        };
+
+        this.player1.opponent = this.player2;
+
+
+
+        //initial all the deck cards
+        const user_cards = userDeckCards.map(cardId => Card.getCardInstants(cardId));
+
+        const ai_cards = aiDeckCards.map(cardId => Card.getCardInstants(cardId));
+
+        if (true) {
+
+            user_deck.calculate({Cards:user_cards});
+
+            user_cards.forEach(card => {
+                card.stack = user_deck;
+                card.zIndex = user_deck.Offsets.get(card.instantKey).zIndex;
+            });
+
+
+            this.player1.cards=user_cards;
+
+            ai_deck.calculate({Cards:ai_cards});
+
+            ai_cards.forEach(card => {
+                card.stack = ai_deck;
+                card.zIndex = ai_deck.Offsets.get(card.instantKey).zIndex;
+            });
+
+
+            this.player2.cards=ai_cards;
+
+        }
+
 
 
         //setting up for draggable feature
         this.state = Object.assign({}, this.state, {
-            topDeltaX: 0,
-            mouseX: 0,
-            topDeltaY: 0,
-            mouseY: 0,
             isPressed: false,
-            isOver: false,
             selectedIndex: null,
             dragTarget: null,
         });
@@ -187,18 +226,20 @@ class Board extends React.Component {
 
     };
 
-    handleMouseUp = () => {
+    handleMouseUp = ({pageX, pageY}) => {
 
-        const {selectedIndex} = this.state;
+        console.log("mouse released", {pageX, pageY});
+        const {selectedIndex,dragTarget} = this.state;
 
+        //only  'if (selectedIndex)' is not enough ,since the index could be 0
         if (typeof selectedIndex === 'number'&& this.state.dragTarget) {
-
             let card = this.player1.cards[selectedIndex];
 
-            if (card.stack !== this.state.dragTarget) {
+            if (card.stack !== dragTarget) {
 
-                if (this.state.dragTarget instanceof Pokemon) {
-                    const pokemon = this.state.dragTarget;
+
+                if (dragTarget instanceof Pokemon) {     //attach card onto a pokemon
+                    const pokemon = dragTarget;
 
                     let used = false;
                     if (card instanceof EnergyCard) {
@@ -232,22 +273,34 @@ class Board extends React.Component {
 
                     console.log("upgrade pokemon");
 
-                } else {
+                } else {           // move card to different stack
 
                     card.stack.removeCard(card.instantKey);
                     console.log(card.stack.Offsets.size);
-                    this.state.dragTarget.addCard(card.instantKey);
+                    dragTarget.addCard(card.instantKey);
 
-                    if (this.state.dragTarget === this.player1.bench) card = new Pokemon(card);
+                    if (dragTarget === this.player1.bench) {
+                        
+                        card = new Pokemon(card);
+                        
+                        card.draggable=true;
 
-                    card.zIndex = this.state.dragTarget.Offsets.get(card.instantKey).zIndex;
-                    card.stack = this.state.dragTarget;
+                        this.player1.cards[selectedIndex] = card;
+                        
+                    }
 
-                    this.player1.cards[selectedIndex] = card;
+                    if (dragTarget === this.player1.active){
 
+                        card.draggable=false;
+                    }
+
+
+
+                    card.zIndex = dragTarget.Offsets.get(card.instantKey).zIndex;
+                    card.stack = dragTarget;
+
+                    
                 }
-
-
             }
 
         }
@@ -260,13 +313,23 @@ class Board extends React.Component {
 
     };
 
-    handleMouseOver = (index) => {
+    handleMouseOverOfPokemon = (index) => {
+        const {isPressed,selectedIndex} = this.state;
+        const pokemon = this.player1.cards[index];
+        if (isPressed && index !==selectedIndex && pokemon instanceof Pokemon) {
+
+            this.state.dragTarget = pokemon;
+            console.log("on Pokemon");
+        }
+    };
+
+    handleMouseOut = (index) => {
         const {isPressed} = this.state;
         const pokemon = this.player1.cards[index];
         if (isPressed && pokemon instanceof Pokemon) {
 
-            this.state.dragTarget = pokemon;
-            console.log("on Pokemon");
+            this.state.dragTarget = null;
+            console.log("out of  Pokemon");
         }
     };
 
@@ -286,7 +349,7 @@ class Board extends React.Component {
                 card.zIndex = this.player1.hand.Offsets.get(card.instantKey).zIndex;
             }
 
-            this.player1.cards[i].heal(10);
+            //this.player1.cards[i].heal(10);
         }
     };
 
@@ -305,18 +368,18 @@ class Board extends React.Component {
 
 
 
-    drawCards() {
+    drawCards(player) {
 
-        if (this.player1.deck.Offsets.size === 0) return;
-        const topCardKey = this.player1.deck.popCard();
-        this.player1.hand.addCard(topCardKey);
+        if (player.deck.Offsets.size === 0) return;
+        const topCardKey = player.deck.popCard();
+        player.hand.addCard(topCardKey);
 
-        for (let card of this.player1.cards) {
+        for (let card of player.cards) {
 
             if (card.instantKey === topCardKey) {
-                card.stack = this.player1.hand;
-                card.zIndex = this.player1.hand.Offsets.get(topCardKey).zIndex;
-                card.draggable = true;
+                card.stack = player.hand;
+                card.zIndex = player.hand.Offsets.get(topCardKey).zIndex;
+                if (player===this.player1) card.draggable = true;
             }
         }
 
@@ -327,7 +390,7 @@ class Board extends React.Component {
     render() {
         const {isPressed, selectedIndex} = this.state;
 
-        const userCardList = this.player1.cards.map((card, i) => {
+        const userCardList = this.player1.cards? this.player1.cards.map((card, i) => {
 
             const active = selectedIndex === i && isPressed;
 
@@ -342,16 +405,15 @@ class Board extends React.Component {
                     <div
                         onMouseDown={this.handleMouseDown.bind(null, i)}
                         //onMouseUp={this.handleMouseUp}
-                        //onClick={this.handleOnClick.bind(null,i)}
-                        //onContextMenu={this.onContextMenu.bind(null, i)}
-                        onMouseOver={this.handleMouseOver.bind(null, i)}
+                        onMouseOver={this.handleMouseOverOfPokemon.bind(null, i)}
+                        //onMouseOut={this.handleMouseOut.bind(null, i)}
                         onContextMenu={this.onContextMenu.bind(null, i)}
-                        onClick={this.handleOnClick.bind(null,i)}
-                        className="card-container"
+                        //onClick={this.handleOnClick.bind(null,i)}
+                        className="card-container player"
                         key={card.instantKey} style={{zIndex: active ? 99 : offset.zIndex + 1}}>
                         {card instanceof Pokemon ? <PokemonView pokemon={card} width={stack.CardWidth}
                                                                 x={offset.left}
-                                                                y={offset.top}  attack={active}
+                                                                y={offset.top}  attack={stack===this.player1.active}
 
                         /> : <CardView card={card} face_down={face_down} width={stack.CardWidth}
                                        x={offset.left}
@@ -363,36 +425,91 @@ class Board extends React.Component {
             } else {
                 return null;
             }
-        });
+        }):null;
 
-        return (
-            <div className="welcome-content" ref={this.Board}>
+        const aiCardList = this.player2.cards? this.player2.cards.map((card, i) => {
 
-                {userCardList}
-                <Deck deck={this.player1.deck} onMouseOver={() => {
-                    console.log('inDeck');
-                }}/>
+            const active = false;
 
-                <Bench bench={this.player1.bench} onMouseOver={() => {
-                    const state = this.state;
-                    const bench = this.player1.bench;
-                    if (state.isPressed && state.dragTarget !== bench) {
+            const stack = card.stack;
 
-                        const card = this.player1.cards[state.selectedIndex];
+            if (stack) {
+                const offset = card.stack.Offsets.get(card.instantKey);
+                card.zIndex = offset.zIndex;
+                const face_down = stack.face_down;
 
-                        if (bench.Offsets.size < bench.Capacity && card instanceof PokemonCard && card.category === POKEMON_BASIC)
-                            state.dragTarget = bench;
+                return (                                 //do not show attached cards
+                    <div
+                        className="card-container"
+                        key={card.instantKey} style={{zIndex: active ? 99 : offset.zIndex + 1}}>
+                        {card instanceof Pokemon ? <PokemonView pokemon={card} width={stack.CardWidth}
+                                                                x={offset.left}
+                                                                y={offset.top}  attack={active}
 
-                        console.log('inBench');
-                    }
-                }}/>
+                        /> : <CardView card={card} face_down={face_down} width={stack.CardWidth}
+                                       x={offset.left}
+                                       y={offset.top}     immediate={active}
 
-                <Hand hand={this.player1.hand}/>
+                        />}
+                    </div>
+                );
+            } else {
+                return null;
+            }
+        }):null;
 
-                <button onClick={() => this.drawCards()} style={{position: 'absolute', top: 700,}}>click</button>
 
-            </div>
-        );
+        const state = this.state;
+
+        return <div className="welcome-content" ref={this.Board}>
+            {userCardList}
+            {aiCardList}
+
+            <Active active={this.player1.active}
+                    onMouseOver={() => {
+
+                        const active = this.player1.active;
+                        if (state.isPressed && state.dragTarget !== active) {
+
+                            const card = this.player1.cards[state.selectedIndex];
+
+                            if (active.Offsets.size < 1 && card instanceof Pokemon)
+                                state.dragTarget = active;
+
+                            console.log('inActive');
+                        }
+                    }}
+            />
+
+            <Deck deck={this.player1.deck}/>
+
+            <Bench bench={this.player1.bench} onMouseOver={() => {
+                const bench = this.player1.bench;
+                if (state.isPressed && state.dragTarget !== bench) {
+
+                    const card = this.player1.cards[state.selectedIndex];
+
+                    if (bench.Offsets.size < bench.Capacity && card instanceof PokemonCard && card.category === POKEMON_BASIC)
+                        state.dragTarget = bench;
+
+                    console.log('inBench');
+                }
+            }}/>
+
+            <Hand hand={this.player1.hand}/>
+
+            <Deck deck={this.player2.deck}/>
+
+            <Bench bench={this.player2.bench}/>
+
+            <Hand hand={this.player2.hand}/>
+
+            <Affix offsetBottom={200} style={{position: 'absolute', bottom: 100, right: 10}}>
+                <Button onClick={() => this.drawCards(this.player1)}>click</Button>
+
+                <Button onClick={() => this.drawCards(this.player2)}>AI click</Button>
+            </Affix>
+        </div>;
     }
 }
 

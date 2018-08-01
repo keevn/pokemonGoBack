@@ -1,21 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-export default class Deck extends React.Component {
+export default class Active extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.deckEl = React.createRef();
-        this.top = props.deck.Origin.top;
-        this.left = props.deck.Origin.left;
-        this.width =props.deck.Width;
-        this.height=props.deck.Height;
+        this.activeEl = React.createRef();
+        this.top = props.active.Origin.top;
+        this.left = props.active.Origin.left;
+        this.width =props.active.Width;
+        this.height=props.active.Height;
 
     }
 
     componentDidMount() {
-        const node = this.deckEl.current;
+        const node = this.activeEl.current;
 
         const domNode = ReactDOM.findDOMNode(node);
         this.screenPositon = domNode.getBoundingClientRect();
@@ -27,7 +27,7 @@ export default class Deck extends React.Component {
 
     render() {
         return (
-            <div className="user-deck" style={{
+            <div className="user-active" style={{
                 top: this.top,
                 left: this.left,
                 position: 'absolute',
@@ -39,8 +39,8 @@ export default class Deck extends React.Component {
                 fontSize:50,
                 color: '#2f2f2f',
             }}
-                 ref={this.deckEl}>
-                Deck
+                 ref={this.activeEl}  onMouseOver={this.props.onMouseOver}>
+                Active
             </div>
         );
     }

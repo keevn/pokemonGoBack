@@ -7,11 +7,15 @@
     transition: transform 0.5s, box-shadow 1s;
     box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px 0;
     transform-style: preserve-3d;
-    cursor: pointer;
     -moz-user-select: none;
     -webkit-user-select:none;
     -ms-user-select:none;
     user-select:none;
+}
+
+.player .cardView{
+
+    cursor: pointer;
 }
 
 
@@ -219,6 +223,18 @@
     left: 0;
     top: 60px;
     background-image: url('./images/upArrow.png');
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.poisonedAffect {
+    position: absolute;
+    margin-right: -25px;
+    right: 0;
+    top: 80px;
+    background-image: url('./images/poisoned.png');
     background-size: cover;
     width: 50px;
     height: 50px;

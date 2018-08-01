@@ -81,15 +81,15 @@ function ProfileDropdownMenu(props) {
                     {props.currentUser.name}
                 </div>
                 <div className="username-info">
-                    @{props.currentUser.username}
+                    <Icon type="idcard" /> @{props.currentUser.username}
                 </div>
             </Menu.Item>
             <Menu.Divider/>
             <Menu.Item key="profile" className="dropdown-item">
-                <Link to={`/app/users/${props.currentUser.username}`}>Profile</Link>
+                <Link to={`/app/users/${props.currentUser.username}`}><Icon type="profile" />Profile</Link>
             </Menu.Item>
             <Menu.Item key="logout" className="dropdown-item">
-                Logout
+                <Icon type="logout" /> Logout
             </Menu.Item>
         </Menu>
     );

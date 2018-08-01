@@ -17,12 +17,12 @@ export default class CardStack {
         this.Width = 0;
         this.Height = 0;
         this.face_down = face_down;
-        this.Offsets = null;
+        this.Offsets = new Map();
 
         this.calculate({Cards});
     }
 
-    static getDeck = ({x, y, Cards}) => {
+    static getDeck = ({x, y},Cards=null) => {
 
         let Origin = {left: x, top: y};
 
@@ -33,14 +33,13 @@ export default class CardStack {
 
     };
 
-    static getHand = ({x, y}) => {
+    static getHand = ({x, y},face_down=false) => {
 
         let Origin = {left: x, top: y};
 
         let CardWidth = 120;
         let Capacity = 8;
         let Margin = 5;
-        let face_down = false;
         return new CardStack({Origin, CardWidth, Capacity, Margin, face_down});
 
     };
@@ -62,7 +61,7 @@ export default class CardStack {
 
         let Origin = {left: x, top: y};
 
-        let CardWidth = 200;
+        let CardWidth = 250;
         let Capacity = 1;
         let Margin = 5;
         let face_down = false;
@@ -112,7 +111,6 @@ export default class CardStack {
 
         if (Cards) {                                    //initial card stack with give card info
 
-            this.Offsets = new Map();
             if (this.Capacity === 1) {
                 Cards.forEach((card, i) => {
                     this.Offsets.set(card.instantKey, {
@@ -192,30 +190,43 @@ export default class CardStack {
 
     };
 
-    removeCard = (key) => {
-        if (!this.Offsets.has(key)) return null;
-        this.Offsets.delete(key);
-        this.calculate({del: true});
-        return key;
+    removeCard = (keys) => {
+
+        if (!Array.isArray(keys)) keys= [keys];
+
+        let deleted=false;
+        keys = keys.map(key=>{
+            if (!this.Offsets.has(key)) return null;
+            this.Offsets.delete(key);
+            deleted=true;
+            return key;
+        });
+
+        if (deleted) {
+            
+            this.calculate({del: true});
+            return keys.length===1? keys[0]:keys;
+
+        } else return null;
     };
 
     popCard=()=>{
 
         if (this.Offsets.size<1) return null;
         
-        let maxZIndex = -1;
+        let minZIndex = 99 ;
         let findKey = null;
 
         for (let [key, offset] of this.Offsets.entries()) {
 
-            if (offset.zIndex >= maxZIndex) {
-                maxZIndex = offset.zIndex;
+            if (offset.zIndex < minZIndex  ) {
+                minZIndex = offset.zIndex;
                 findKey=key;
             }
 
         }
 
-        if (maxZIndex>0) return this.removeCard(findKey);
+        if (minZIndex>0) return this.removeCard(findKey);
 
     }
 

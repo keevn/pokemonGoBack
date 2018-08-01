@@ -7,7 +7,7 @@ import DamageCycle from './DamageCycle';
 import AttachedItem from './AttachedItem';
 import RetreatBar from './RetreatBar';
 import AbilityList from './AbilityList';
-import {EFFECT_POSITIVE, EFFECT_NEGITIVE} from "./constants";
+import {EFFECT_POSITIVE, EFFECT_NEGITIVE, POKEMON_POISONED} from "./constants";
 
 const PokemonView = ({pokemon, attack , ...rest}) =>  {
 
@@ -19,6 +19,7 @@ const PokemonView = ({pokemon, attack , ...rest}) =>  {
                         <DamageCycle damage={pokemon.damage} critical={pokemon.hp - pokemon.damage <= 20}/>
                         <AttachedItem item={pokemon.attachedItem}/>
                         {pokemon.effect === EFFECT_POSITIVE ? <div className='posAffect'/> : null}
+                        {pokemon.status === POKEMON_POISONED ? <div className='poisonedAffect'/> : null}
                         {pokemon.effect === EFFECT_NEGITIVE ? <div className='negAffect'/> : null}
                         <div className={pokemon.energyCategory}>
                         {attack ? <AbilityList pokemon={pokemon}/> : null}

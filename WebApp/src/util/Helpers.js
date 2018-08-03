@@ -1,4 +1,5 @@
-import {cardList} from '../../mockData/data';
+import {cardList} from '../mockData/data';
+import {Card} from "../component/model/Card";
 
 export function formatDate(dateString) {
     const date = new Date(dateString);

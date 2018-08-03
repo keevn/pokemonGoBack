@@ -92,3 +92,4 @@ typings/
 /Server/Server.iml
 /WebApp/WebApp.iml
 /WebApp/package-lock.json
+/WebApp/build/

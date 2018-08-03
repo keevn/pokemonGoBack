@@ -1,0 +1,13 @@
+.deck span{
+    position: absolute;
+    bottom: 0;
+    font-size: 25px;
+    writing-mode: horizontal-tb;
+}
+
+.ai.deck span{
+    position: absolute;
+    bottom: 0;
+    font-size: 25px;
+    writing-mode: horizontal-tb;
+}

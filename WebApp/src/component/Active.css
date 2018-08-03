@@ -1,0 +1,9 @@
+.active{
+    border: #aaaaaa 1px solid;
+}
+
+.active.glow{
+    border-radius: 0;
+    animation: glowing 1s infinite alternate;
+    border: #aaaaaa 1px solid;
+}

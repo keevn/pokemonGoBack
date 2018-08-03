@@ -1,0 +1,15 @@
+.discard span{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    font-size: 25px;
+    writing-mode: horizontal-tb;
+}
+
+.ai.discard span{
+    position: absolute;
+    left: -30px;
+    bottom: 0;
+    font-size: 25px;
+    writing-mode: horizontal-tb;
+}

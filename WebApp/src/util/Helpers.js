@@ -54,7 +54,7 @@ export function isValidatedDeck(cardIds){
 
     let validated= false;
     for (const id of cardIds) {
-        const card = Card.getCardInstants(cardList[id]);
+       // const card = Card.getCardInstants(cardList[id]);
     }
 
 

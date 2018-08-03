@@ -2,21 +2,20 @@ import React from 'react';
 import range from 'lodash.range';
 
 const AbilityList = (props) => {
-    const {pokemon} = props;
+    const {pokemon,onAttack} = props;
 
     const abilities=pokemon.getAvailableSills();
 
-    const handleOnClick = (e, ability) => {
-
-        console.log(ability.skill.id);
+    const handleOnClick = (e, pokemon,ability) => {
         e.preventDefault();
         e.stopPropagation();
+        onAttack(pokemon,ability);
     };
 
     return abilities.length ? <div className='abilityList'>
             {abilities.map((ability) => {
                 return (
-                    <div className='ability-container' key={ability.skill.id} onClick={(e) => handleOnClick(e, ability)}>
+                    <div className='ability-container' key={ability.skill.id} onClick={(e) => handleOnClick(e, pokemon,ability)}>
                         <div className="ability-content" >
                             <div className='ability-name'>{ability.skill.name} {ability.skill.id}
                             {ability.skill.damage? <span style={{float: 'right',

@@ -2,12 +2,12 @@ import React from 'react';
 import range from 'lodash.range';
 
 const RetreatBar = (props) => {
-    const {pokemon} = props;
+    const {pokemon,onRetreat} = props;
 
     const handleOnClick=(e,pokemon)=>{
          e.preventDefault();
-         e.stopPropagation(); 
-         pokemon.retreat();
+         e.stopPropagation();
+        onRetreat(pokemon);
     }
 
     return pokemon.isRetreatable() ? <div className='retreat-bar'>

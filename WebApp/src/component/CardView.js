@@ -57,8 +57,8 @@ class CardView extends React.Component {
 
 
         const style = Object.assign({}, this.baseStyle, {
-            transform: `scale(${scale})`,
-            WebkitTransform: `scale(${scale})`,
+            transform: `scale3d(${scale},${scale},1)`,
+            WebkitTransform: `scale3d(${scale},${scale},1)`,
         })
 
         const isFlippingStyle = Object.assign({}, face_down ? this.hidden : {});

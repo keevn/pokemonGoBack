@@ -35,7 +35,7 @@ export default class Hand extends React.Component {
                 height: this.height,
                 backgroundColor: '#aaaaaa',
                 zIndex:0,
-                fontSize:150,
+                fontSize:140,
                 color: '#fff',
             }}
                  ref={this.handEl}>

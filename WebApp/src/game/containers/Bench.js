@@ -122,7 +122,7 @@ export default class Bench extends React.Component {
 
     handleMouseOver = (index) => {
         const {isPressed} = this.state;
-          if (isPressed && )
+          //if (isPressed && )
 
     };
 
@@ -212,13 +212,13 @@ export default class Bench extends React.Component {
 
     aftermoveCallback =(key)=>{        //the key of cardEl that just finished animation,
 
-        const curretnCard = this.pokemons[this.state.originalPosOfLastPressed]
+        const curretnCard = this.pokemons[this.state.originalPosOfLastPressed];
 
         if (curretnCard && curretnCard.instantKey===key) {
             console.log('Card do something ',curretnCard.type,curretnCard.name);
         }
 
-    }
+    } ;
 
     render() {
         //console.log(this.id,"111");

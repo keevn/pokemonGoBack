@@ -20,7 +20,7 @@
 
 
 .cardView:hover{
-    transform: scale(1.1);
+    transform: scale3d(1.1,1.1,1);
     box-shadow: rgba(0, 0, 0, 0.2) 0 16px 32px 0;
     z-index: 99;
 }
@@ -36,20 +36,6 @@
     backface-visibility: hidden;
 }
 
-.glow {
-    border-radius: 15px;
-    border: #35a5e5 1px solid;
-    animation: glowing 1s infinite alternate;
-}
-
-@keyframes glowing {
-    from {
-        box-shadow: rgb(30, 102, 238) 0 0 32px 0;
-    }
-    to {
-        box-shadow: rgb(30, 102, 238) 0 0 4px 0;
-    }
-}
 
 .card-container {
     position: absolute;

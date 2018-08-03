@@ -34,9 +34,7 @@ export default class Bench extends React.Component {
                 width: this.width,
                 height: this.height,
                 backgroundColor: '#aaaaaa',
-                zIndex:0,
-                fontSize:140,
-                color: '#2f2f2f',
+                zIndex:1,
             }}
                  ref={this.benchEl}  onMouseOver={this.props.onMouseOver}>
                 Bench

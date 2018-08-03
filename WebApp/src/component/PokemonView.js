@@ -9,7 +9,7 @@ import RetreatBar from './RetreatBar';
 import AbilityList from './AbilityList';
 import {EFFECT_POSITIVE, EFFECT_NEGITIVE, POKEMON_POISONED} from "./constants";
 
-const PokemonView = ({pokemon, attack , ...rest}) =>  {
+const PokemonView = ({pokemon, attack,onAttack,onRetreat,retreatalbe=true, ...rest}) =>  {
 
         return (
             pokemon instanceof Pokemon ?
@@ -22,8 +22,8 @@ const PokemonView = ({pokemon, attack , ...rest}) =>  {
                         {pokemon.status === POKEMON_POISONED ? <div className='poisonedAffect'/> : null}
                         {pokemon.effect === EFFECT_NEGITIVE ? <div className='negAffect'/> : null}
                         <div className={pokemon.energyCategory}>
-                        {attack ? <AbilityList pokemon={pokemon}/> : null}
-                        {attack ? <RetreatBar pokemon={pokemon}/> : null}
+                        {attack ? <AbilityList pokemon={pokemon} onAttack={onAttack}/> : null}
+                        {attack&&retreatalbe ? <RetreatBar pokemon={pokemon} onRetreat={onRetreat}/> : null}
                         </div>
                     </CardView>
                 :

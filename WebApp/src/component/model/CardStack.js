@@ -6,7 +6,7 @@ export default class CardStack {
             Origin = {
                 top: 0,
                 left: 0
-            }, CardWidth = 250, Capacity = 1, Margin = 5, face_down = true, Cards = []
+            }, CardWidth = 250, Capacity = 1, Margin = 5, face_down = true, Cards 
         } = parameters;
 
         this.Origin = {top: Origin.top, left: Origin.left};
@@ -37,8 +37,8 @@ export default class CardStack {
 
         let Origin = {left: x, top: y};
 
-        let CardWidth = 110;
-        let Capacity = 8;
+        let CardWidth = 105;
+        let Capacity = 7;
         let Margin = 5;
         return new CardStack({Origin, CardWidth, Capacity, Margin, face_down});
 
@@ -61,9 +61,9 @@ export default class CardStack {
 
         let Origin = {left: x, top: y};
 
-        let CardWidth = 250;
+        let CardWidth = 230;
         let Capacity = 1;
-        let Margin = 5;
+        let Margin = 10;
         let face_down = false;
         return new CardStack({Origin, CardWidth, Capacity, Margin, face_down});
 
@@ -73,7 +73,7 @@ export default class CardStack {
 
         let Origin = {left: x, top: y};
 
-        let CardWidth = 150;
+        let CardWidth = 120;
         let Capacity = 1;
         let Margin = 5;
         return new CardStack({Origin, CardWidth, Capacity, Margin});
@@ -84,9 +84,9 @@ export default class CardStack {
 
         let Origin = {left: x, top: y};
 
-        let CardWidth = 150;
+        let CardWidth = 120;
         let Capacity = 1;
-        let Margin = 5;
+        let Margin = 0;
         let face_down = false;
         return new CardStack({Origin, CardWidth, Capacity, Margin, face_down});
 
@@ -159,7 +159,7 @@ export default class CardStack {
                 for (let [key, offset] of this.Offsets.entries()) {
 
                     const zIndex = del ? i + 1 : offset.zIndex;               //keep the order of cards in stack
-                    this.Offsets.set(key, {top: offsetY, left: offsetX + step * (i), zIndex: zIndex});
+                    this.Offsets.set(key, {top: offsetY, left: offsetX + step * (zIndex-1), zIndex: zIndex});
 
                     i++;
                 }
@@ -170,6 +170,10 @@ export default class CardStack {
 
     };
 
+    reset = ({Cards})=>{
+        this.Offsets = new Map();
+        this.calculate({Cards});
+    }
 
     addCard = (key, zIndex ) => {
 
@@ -187,6 +191,16 @@ export default class CardStack {
             this.Offsets.set(key, {zIndex: zIndex});
             this.calculate({});
         }
+
+    };
+
+    addAttachCard =(key,offset)=>{
+
+        this.Offsets.set(key, offset);
+
+        setTimeout(()=>{
+            this.Offsets.delete(key);
+        },2000);
 
     };
 

@@ -1,8 +1,11 @@
 import React from 'react';
-import {Affix, Button, notification} from 'antd';
+import {Affix, Button, message} from 'antd';
 import './Welcome.css';
+import './Board.css';
+import {shuffle} from '../util/Helpers';
 import {Card, EnergyCard, PokemonCard, randomCard, TrainerCard} from "../component/model/Card";
 import Deck from '../component/Deck';
+import Discard from '../component/Discard';
 import Hand from '../component/Hand';
 import Active from '../component/Active';
 import CardStack from "../component/model/CardStack";
@@ -10,7 +13,7 @@ import CardView from "../component/CardView";
 import PokemonView from "../component/PokemonView";
 import Bench from "../component/Bench";
 import Pokemon from "../component/model/Pokemon";
-import {CARD_ENERGY, POKEMON_BASIC,POKEMON_POISONED} from "../component/constants";
+import {CARD_ENERGY, POKEMON_ASLEEP, POKEMON_BASIC, POKEMON_POISONED} from "../component/constants";
 
 
 
@@ -20,9 +23,9 @@ class Board extends React.Component {
         super(props);
 
 
-        const userDeckCards = props.currentUser.deck.cardList;//.slice(0, 20);
+        this.userDeckCards = props.currentUser.deck.cardList.slice(0, 20);     //list of card id;
 
-        const aiDeckCards =  userDeckCards.map((card)=>card);
+        this.aiDeckCards =  shuffle(this.userDeckCards.map((cardId)=>cardId));
 
         //console.log(userDeckCards);
 
@@ -37,14 +40,15 @@ class Board extends React.Component {
 
 
         //create card stacks,include hand, bench, deck, prize card, discard pile, active spot, and pit stop;
-        const user_hand = CardStack.getHand({x: 0, y: 550});
-        const user_bench = CardStack.getBench({x: 0, y: 370});
-        const user_deck = CardStack.getDeck({x: 270, y: 190});
-        const user_active = CardStack.getActive({x: 0, y: 0});
+        const user_hand = CardStack.getHand({x: 0, y: 570});
+        const user_bench = CardStack.getBench({x: 0, y: 385});
+        const user_deck = CardStack.getDeck({x: 260, y: 208});
+        const user_active = CardStack.getActive({x: 0, y: 36});
+        const user_discard = CardStack.getDiscard({x:260,y:35});
 
 
-        const ai_hand = CardStack.getHand({x: 270, y: 0},true);
-        const ai_bench = CardStack.getBench({x: 640, y: 190});
+        const ai_hand = CardStack.getHand({x: 495, y: 5});
+        const ai_bench = CardStack.getBench({x: 640, y: 170});
         const ai_deck = CardStack.getDeck({x: 880, y: 380});
 
         this.player1 = {
@@ -53,6 +57,7 @@ class Board extends React.Component {
             hand: user_hand,
             bench: user_bench,
             active: user_active,
+            discard:user_discard,
             opponent:null,
             cards:null,
         };
@@ -72,9 +77,9 @@ class Board extends React.Component {
 
 
         //initial all the deck cards
-        const user_cards = userDeckCards.map(cardId => Card.getCardInstants(cardId));
+        const user_cards = this.userDeckCards.map(cardId => Card.getCardInstants(cardId));
 
-        const ai_cards = aiDeckCards.map(cardId => Card.getCardInstants(cardId));
+        const ai_cards = this.aiDeckCards.map(cardId => Card.getCardInstants(cardId));
 
         if (true) {
 
@@ -195,10 +200,10 @@ class Board extends React.Component {
             const card = this.player1.cards[selectedIndex];
             const offset = card.stack.Offsets.get(card.instantKey);
 
-            const mouseX = pageX - topDeltaX;
-            const mouseY = pageY - topDeltaY;
+            const cardX = pageX - topDeltaX;
+            const cardY = pageY - topDeltaY;
 
-            card.stack.Offsets.set(card.instantKey, {top: mouseY, left: mouseX, zIndex: offset.zIndex});
+            card.stack.Offsets.set(card.instantKey, {top: cardY, left: cardX, zIndex: offset.zIndex});
 
             this.setState({changed: true});
         }
@@ -231,9 +236,16 @@ class Board extends React.Component {
         console.log("mouse released", {pageX, pageY});
         const {selectedIndex,dragTarget} = this.state;
 
+        let newPokemon=null;
+
+
+        console.log("selectedIndex:",selectedIndex);
+
         //only  'if (selectedIndex)' is not enough ,since the index could be 0
         if (typeof selectedIndex === 'number'&& this.state.dragTarget) {
             let card = this.player1.cards[selectedIndex];
+
+
 
             if (card.stack !== dragTarget) {
 
@@ -243,7 +255,9 @@ class Board extends React.Component {
 
                     let used = false;
                     if (card instanceof EnergyCard) {
+                        
                         pokemon.attachEnergy(card);
+                        //energyCounter++;
                         used = true;
                     }
 
@@ -257,10 +271,11 @@ class Board extends React.Component {
                         
                         if (pokemon.evolvableFrom(card)) {
 
-                            console.log(pokemon.name);
+                            const oldName= pokemon.name;
                             pokemon.evolve(card);
-                            console.log(pokemon.name);
                             used=true;
+
+                            message.success(`${oldName} just evolved to ${pokemon.name}!`);
                         }
                         
                     }
@@ -276,20 +291,29 @@ class Board extends React.Component {
                 } else {           // move card to different stack
 
                     card.stack.removeCard(card.instantKey);
-                    console.log(card.stack.Offsets.size);
+                    //console.log(card.stack.Offsets.size);
                     dragTarget.addCard(card.instantKey);
 
                     if (dragTarget === this.player1.bench) {
                         
-                        card = new Pokemon(card);
-                        
-                        card.draggable=true;
+                        newPokemon = new Pokemon(card);
 
-                        this.player1.cards[selectedIndex] = card;
+                        newPokemon.draggable=true;
+
                         
                     }
 
                     if (dragTarget === this.player1.active){
+
+                        console.log(card);
+                        if (card instanceof PokemonCard) {
+                            newPokemon = new Pokemon(card);
+                        }
+
+                        card.draggable=false;
+                    }
+
+                    if (dragTarget === this.player1.pitstop){
 
                         card.draggable=false;
                     }
@@ -310,6 +334,15 @@ class Board extends React.Component {
 
 
         this.setState({isPressed: false, selectedIndex: null, dragTarget: null});
+
+        if (newPokemon)  {
+            //replace the card object with pokemon object after the card move animation
+
+            newPokemon.zIndex = dragTarget.Offsets.get(newPokemon.instantKey).zIndex;
+            newPokemon.stack = dragTarget;
+            this.player1.cards[selectedIndex] = newPokemon;
+            
+        }
 
     };
 
@@ -336,22 +369,22 @@ class Board extends React.Component {
     onContextMenu = (i, event) => {
         event.preventDefault();
 
-        if (false && this.player1.cards[i] instanceof Pokemon) {
+        if ( this.player1.cards[i] instanceof Pokemon) {
 
-            const energycards = this.player1.cards[i].detachEnergy();
+           // const energycards = this.player1.cards[i].detachEnergy();
 
-            if (energycards&& energycards.length>0) {
+            /*if (false && energycards && energycards.length > 0) {
 
                 const card = energycards[0];
 
                 this.player1.hand.addCard(card.instantKey);
-                card.stack =  this.player1.hand;
+                card.stack = this.player1.hand;
                 card.zIndex = this.player1.hand.Offsets.get(card.instantKey).zIndex;
-            }
+            }*/
 
-            //this.player1.cards[i].heal(10);
+            this.player1.cards[i].setStatus(POKEMON_POISONED);
         }
-        this.player1.cards[i].setStatus(POKEMON_POISONED);
+
 
     };
 
@@ -370,8 +403,8 @@ class Board extends React.Component {
 
 
 
-    drawCards(player) {
-
+    drawCards =(player,event)=> {
+        if (event) event.preventDefault();
         if (player.deck.Offsets.size === 0) return;
         const topCardKey = player.deck.popCard();
         player.hand.addCard(topCardKey);
@@ -388,6 +421,81 @@ class Board extends React.Component {
         this.setState({changed: true});
     }
 
+    reset =()=>{
+        const user_cards = this.userDeckCards.map(cardId => Card.getCardInstants(cardId));
+
+        this.player1.deck.reset({Cards:user_cards});
+
+        user_cards.forEach(card => {
+            card.stack = this.player1.deck;
+            card.zIndex = this.player1.deck.Offsets.get(card.instantKey).zIndex;
+        });
+
+        this.player1.cards=user_cards;
+
+        this.player1.bench.reset({});
+
+        this.player1.active.reset({});
+        
+        this.player1.hand.reset({});
+        this.player1.discard.reset({});
+
+        this.setState({changed: true});
+    };
+
+    onAttack =(pokemon,ability)=>{
+        console.log(pokemon.name,"do",ability.skill.id);
+    };
+
+    onRetreat =(pokemon)=>{
+        console.log(pokemon.name,"retreat");
+
+
+
+        const detachedCards = pokemon.retreat();
+
+
+
+        for (const card of detachedCards) {
+
+            this.player1.active.addCard(card.instantKey);
+            card.stack = this.player1.active;
+            card.zIndex = pokemon.zIndex-1;
+            card.draggable=false;
+        }
+
+
+        this.forceUpdate();
+
+
+        let i=0;
+        for (const card of detachedCards) {
+
+            setTimeout(()=>{
+                this.player1.active.removeCard(card.instantKey);
+                this.player1.discard.addCard(card.instantKey);
+                card.stack = this.player1.discard;
+                card.zIndex = this.player1.discard.Offsets.get(card.instantKey).zIndex;
+
+                this.forceUpdate();
+            },i*500);
+
+            i++;
+        }
+
+        setTimeout(()=>{
+            pokemon.stack.removeCard(pokemon.instantKey);
+
+            this.player1.bench.addCard(pokemon.instantKey);
+            pokemon.stack = this.player1.bench;
+            pokemon.zIndex = this.player1.bench.Offsets.get(pokemon.instantKey).zIndex;
+
+            this.forceUpdate();
+        },i*500);
+
+
+    }
+
 
     render() {
         const {isPressed, selectedIndex} = this.state;
@@ -399,9 +507,10 @@ class Board extends React.Component {
             const stack = card.stack;
 
             if (stack) {
-                const offset = card.stack.Offsets.get(card.instantKey);
-                card.zIndex = offset.zIndex;
-                const face_down = stack.face_down;
+                const offset = {...stack.Offsets.get(card.instantKey)};
+                let zIndex = offset.zIndex + 1;
+                if (active) zIndex=100;
+                if (stack===this.player1.active) zIndex= 99;
 
                 return (                                 //do not show attached cards
                     <div
@@ -412,12 +521,14 @@ class Board extends React.Component {
                         onContextMenu={this.onContextMenu.bind(null, i)}
                         //onClick={this.handleOnClick.bind(null,i)}
                         className="card-container player"
-                        key={card.instantKey} style={{zIndex: active ||stack===this.player1.active? 99 : offset.zIndex + 1}}>
+                        key={card.instantKey} style={{zIndex: zIndex}}>
                         {card instanceof Pokemon ? <PokemonView pokemon={card} width={stack.CardWidth}
                                                                 x={offset.left}
                                                                 y={offset.top}  attack={stack===this.player1.active}
+                                                                onAttack={this.onAttack}
+                                                                onRetreat={this.onRetreat}  retreatalbe={this.player1.bench.Offsets.size}
 
-                        /> : <CardView card={card} face_down={face_down} width={stack.CardWidth}
+                        /> : <CardView card={card} face_down={stack.face_down} width={stack.CardWidth}
                                        x={offset.left}
                                        y={offset.top}
 
@@ -437,20 +548,18 @@ class Board extends React.Component {
 
             if (stack) {
                 const offset = card.stack.Offsets.get(card.instantKey);
-                card.zIndex = offset.zIndex;
-                const face_down = stack.face_down;
 
                 return (                                 //do not show attached cards
                     <div
                         className="card-container"
-                        key={card.instantKey} style={{zIndex: active ? 99 : offset.zIndex + 1}}>
+                        key={card.instantKey} style={{zIndex: offset.zIndex + 1}}>
                         {card instanceof Pokemon ? <PokemonView pokemon={card} width={stack.CardWidth}
                                                                 x={offset.left}
                                                                 y={offset.top}  attack={active}
 
-                        /> : <CardView card={card} face_down={face_down} width={stack.CardWidth}
+                        /> : <CardView card={card} face_down={stack.face_down} width={stack.CardWidth}
                                        x={offset.left}
-                                       y={offset.top}     immediate={active}
+                                       y={offset.top}   immediate={active}
 
                         />}
                     </div>
@@ -463,7 +572,7 @@ class Board extends React.Component {
 
         const state = this.state;
 
-        return <div className="welcome-content" ref={this.Board}>
+        return <div className="welcome-content" ref={this.Board} >
             {userCardList}
             {aiCardList}
 
@@ -475,7 +584,7 @@ class Board extends React.Component {
 
                             const card = this.player1.cards[state.selectedIndex];
 
-                            if (active.Offsets.size < 1 && card instanceof Pokemon)
+                            if (active.Offsets.size < 1 && (card instanceof Pokemon||(card instanceof PokemonCard && card.category===POKEMON_BASIC)))
                                 state.dragTarget = active;
 
                             console.log('inActive');
@@ -484,6 +593,7 @@ class Board extends React.Component {
             />
 
             <Deck deck={this.player1.deck}/>
+            <Discard discard={this.player1.discard}/>
 
             <Bench bench={this.player1.bench} onMouseOver={() => {
                 const bench = this.player1.bench;
@@ -500,19 +610,23 @@ class Board extends React.Component {
 
             <Hand hand={this.player1.hand}/>
 
-            <Deck deck={this.player2.deck}/>
+            <Deck deck={this.player2.deck} className="ai"/>
 
             <Bench bench={this.player2.bench}/>
 
             <Hand hand={this.player2.hand}/>
 
             <Affix offsetBottom={200} style={{position: 'absolute', bottom: 100, right: 10}}>
-                <Button onClick={() => this.drawCards(this.player1)}>click</Button>
+                <Button onClick={(e) => this.drawCards(this.player1,e)}>click</Button>
 
-                <Button onClick={() => this.drawCards(this.player2)}>AI click</Button>
+                <Button onClick={(e) => this.drawCards(this.player2,e)}>AI click</Button>
+
+                <Button onClick={(e) => this.reset()}>Reset</Button>
             </Affix>
         </div>;
     }
 }
+
+
 
 export default Board;

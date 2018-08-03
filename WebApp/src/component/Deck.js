@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './Deck.css';
 
 export default class Deck extends React.Component {
 
@@ -12,6 +13,17 @@ export default class Deck extends React.Component {
         this.width =props.deck.Width;
         this.height=props.deck.Height;
 
+
+        this.className = this.props.className ? this.props.className + " deck" : "deck";
+
+        this.spanStyle = {
+            fontSize: this.width / 4.8,
+        };
+        
+        this.spanStyle = Object.assign({},this.spanStyle,this.props.className ? {
+            right:0,marginRight: this.width+2,}:{
+            left: 0,marginLeft: this.width+2,});
+
     }
 
     componentDidMount() {
@@ -22,12 +34,15 @@ export default class Deck extends React.Component {
 
         console.log(this.screenPositon);
 
-    };
+
+
+
+    }
 
 
     render() {
         return (
-            <div className="user-deck" style={{
+            <div className={this.className} style={{
                 top: this.top,
                 left: this.left,
                 position: 'absolute',
@@ -41,6 +56,7 @@ export default class Deck extends React.Component {
             }}
                  ref={this.deckEl}>
                 Deck
+                <span style={this.spanStyle}>{this.props.deck.Offsets.size}</span>
             </div>
         );
     }

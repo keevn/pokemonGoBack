@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './Active.css';
 
 export default class Active extends React.Component {
 
@@ -26,8 +27,13 @@ export default class Active extends React.Component {
 
 
     render() {
+
+        const {active} = this.props;
+
+        const className = `active${active.Offsets.size ? '' : ' glow'}`;
+
         return (
-            <div className="user-active" style={{
+            <div className={className} style={{
                 top: this.top,
                 left: this.left,
                 position: 'absolute',
@@ -36,8 +42,8 @@ export default class Active extends React.Component {
                 backgroundColor: '#aaaaaa',
                 zIndex:1,
                 writingMode: 'vertical-rl',
-                fontSize:50,
-                color: '#2f2f2f',
+                fontSize:100,
+                color: '#5a3030',
             }}
                  ref={this.activeEl}  onMouseOver={this.props.onMouseOver}>
                 Active

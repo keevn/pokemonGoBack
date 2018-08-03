@@ -360,14 +360,16 @@ test('retreat() ', () => {
     pokemon.attachEnergy(randomCard(CARD_ENERGY));
     pokemon.attachEnergy(randomCard(CARD_ENERGY));
     pokemon.setStatus(POKEMON_PARALYZED);
+    pokemon.isPoisoned=true;
 
     expect(pokemon.isRetreatable()).not.toBeTruthy();
 
     pokemon.setStatus(POKEMON_POISONED);
     pokemon.retreat();
 
-    expect(pokemon.attachedEnergy.size).toBe(2);
+    expect(pokemon.attachedEnergy.size).toBe(0);
     expect(pokemon.status).toBe(POKEMON_NORMAL);
+    expect(pokemon.isPoisoned).not.toBeTruthy();
 
 
 });
@@ -403,10 +405,11 @@ test('toJson()', () => {
 test('restore()', () => {
 
 
-    const pokemon = Pokemon.restore({damage:10,status:POKEMON_ASLEEP,cardIds:[34,49,58,35,57,58]});
+    const pokemon = Pokemon.restore({damage:10,status:POKEMON_ASLEEP,cardIds:[34,49,58,35,57,58],isPoisoned:false});
 
 
     expect(pokemon.status).toBe(POKEMON_ASLEEP);
+    expect(pokemon.isPoisoned).not.toBeTruthy();
     expect(pokemon.category).toBe(POKEMON_STAGE_ONE);
     expect(pokemon._manifest.size).toBe(6);
     
@@ -417,11 +420,12 @@ test('restore()', () => {
 test('restoreFromJson()',()=>{
 
 
-    const json = JSON.stringify({damage:10,status:POKEMON_ASLEEP,cardIds:[19,49,58,57,58]});
+    const json = JSON.stringify({damage:10,status:POKEMON_ASLEEP,cardIds:[19,49,58,57,58],isPoisoned:true});
 
     const pokemon = Pokemon.restoreFromJson(json);
 
     expect(pokemon.status).toBe(POKEMON_ASLEEP);
+    expect(pokemon.isPoisoned).toBeTruthy();
     expect(pokemon.name).toBe('Helioptile');
 
 })

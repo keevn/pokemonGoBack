@@ -77,10 +77,10 @@ public class FileController {
 
         userDeckRepository.save(deck);
         
-        if (user.getDefaultDeck() == null) {
+        //if (user.getDefaultDeck() == null) {
             user.setDefaultDeck(deck);
             userRepository.save(user);
-        }  
+        //}
 
 
         return response;

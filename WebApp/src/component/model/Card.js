@@ -27,7 +27,7 @@ export class Card {
     }
 
     afterAttach(){
-         // console.log("do nothing yet"); //TODO: event handler after cardEl attach action
+         // console.log("do nothing yet"); //TODO: event handler after card attach action
     }
 
     static getCardInstants(id) {
@@ -114,6 +114,7 @@ export class TrainerCard extends Card {
         return pokemon;
     }
 }
+
 
 export function randomCard(type, category, attachable = false) {
 

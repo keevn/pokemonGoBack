@@ -26,7 +26,7 @@ const BoardLayout = ({match,history,currentUser}) => (
         >
             <Menu.Item key="/app/newGame"><Link to='/app/newGame'><Icon type="chrome" /><span>New Game</span></Link></Menu.Item>
             <Menu.Item key={`/app/users/${currentUser.username}`}><Link to={`/app/users/${currentUser.username}`}><Icon type="user" /><span>User Info</span></Link></Menu.Item>
-            <Divider />
+            <Menu.Divider />
             <Menu.Item key="/app/test"><Link to='/app/test'><Icon type="solution" /><span>Test Area</span></Link></Menu.Item>
         </Menu>
         </Sider>

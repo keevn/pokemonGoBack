@@ -36,6 +36,7 @@ export default class Pokemon {
         this._manifest.set(POKEMON_BASIC, card);
         this.damage = 0;
         this.status = POKEMON_NORMAL;
+        this.isPoisoned= false;
 
 
         this.setStatus = this.setStatus.bind(this);
@@ -55,7 +56,7 @@ export default class Pokemon {
         this.toJson = this.toJson.bind(this);
     }
 
-    static restore({cardIds, damage, status}) {
+    static restore({cardIds, damage, status ,isPoisoned}) {
         let pokemon = null;
 
         for (const cardId of cardIds) {
@@ -66,6 +67,7 @@ export default class Pokemon {
 
         pokemon.damage = damage;
         pokemon.status = status;
+        pokemon.isPoisoned = isPoisoned;
 
         return pokemon;
     }
@@ -106,6 +108,7 @@ export default class Pokemon {
             this.retreatCost = upgradeCard.retreat? upgradeCard.retreat:[];
 
             this.setStatus(POKEMON_NORMAL);
+            this.isPoisoned=false;
             
             return true;
         }
@@ -148,7 +151,7 @@ export default class Pokemon {
         let existEnergyCounters = new Map();
         existEnergyCounters[ENERGY_COLORLESS] = 0;
 
-        for (const [instantKey, energyCard] of this.attachedEnergy) {
+        for (const energyCard of this.attachedEnergy.values()) {
 
             existEnergyCounters[ENERGY_COLORLESS]++;       //the colorless amount is actually the whole amount of attached energy cards
 
@@ -198,12 +201,19 @@ export default class Pokemon {
 
         if (!this.isRetreatable()) return;
 
+        let detachedCards =[];
+
         for (const cost of this.retreatCost){
 
-            this.detachEnergy(cost.cat,cost.value);
+            detachedCards=[...detachedCards,...this.detachEnergy(cost.cat,cost.value)];
+
+
         }
 
         this.setStatus(POKEMON_NORMAL);
+        this.isPoisoned=false;
+
+        return detachedCards;
 
     }
 
@@ -253,7 +263,7 @@ export default class Pokemon {
         if (energyCategory && energyCategory !== ENERGY_COLORLESS) {
 
 
-            for (const [instantKey, energyCard] of this.attachedEnergy) {
+            for (const energyCard of this.attachedEnergy.values()) {
                 if (energyCard.category === energyCategory) {
                     deletedCard[i] = energyCard;
                     i++;
@@ -264,7 +274,7 @@ export default class Pokemon {
 
         } else {
 
-            for (const [instantKey, energyCard] of this.attachedEnergy) {
+            for (const energyCard of this.attachedEnergy.values()) {
                 deletedCard[i] = energyCard;
                 i++;
                 if (i === n) break;
@@ -276,7 +286,7 @@ export default class Pokemon {
             this.attachedEnergy.delete(`${CARD_ENERGY}_${energyCard.instantKey}`);
             this._manifest.delete(`${CARD_ENERGY}_${energyCard.instantKey}`);
 
-        })
+        });
 
         return deletedCard;
 
@@ -334,7 +344,8 @@ export default class Pokemon {
         const pokemonData = {
             cardIds: [...this._manifest.values()].map((card)=>(card.id)),
             damage: this.damage,
-            status: this.status
+            status: this.status,
+            isPoisoned: this.isPoisoned,
         };
 
         return JSON.stringify(pokemonData);

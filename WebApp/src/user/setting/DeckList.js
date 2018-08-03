@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {getUserDecks, getUserDefaultDeck, uploadDeckFile} from '../../util/APIUtils';
+import {getUserDecks, getUserDefaultDeck} from '../../util/APIUtils';
+import {isValidatedDeck} from '../../util/Helpers';
 import LoadingIndicator from '../../layouts/common/LoadingIndicator';
-import {Button, Icon,Upload, notification, Form} from 'antd';
+import {Button, Icon, Upload, notification, Form} from 'antd';
 import {ACCESS_TOKEN, LIST_SIZE, API_BASE_URL} from '../../constants';
 import {withRouter} from 'react-router-dom';
 import './DeckList.css';
@@ -103,7 +104,7 @@ class DeckList extends Component {
     handleLoadMore() {
         this.loadDeckList(this.state.page + 1);
     }
-    
+
     render() {
 
         const props = {
@@ -112,6 +113,48 @@ class DeckList extends Component {
             headers: {
                 authorization: 'Bearer ' + localStorage.getItem(ACCESS_TOKEN)
             },
+            beforeUpload:(file)=>{
+
+                //Todo need to add the invalidated deck file error handler.
+
+                const promise = new Promise(function (resolve, reject) {
+
+                    const reader = new FileReader();
+                    
+                    reader.onloadend = function (evt) {
+                        if (evt.target.readyState === FileReader.DONE) { // DONE == 2
+
+                            const result= evt.target.result.split(/(?:\r\n|\r|\n)/g);
+                            //console.log(result);
+
+                            const cardIds = result.map((id)=>parseInt(id,10));
+                            //console.log(cardIds);
+                            
+                            if (isValidatedDeck(cardIds)) {
+                                
+                                resolve();
+
+                            } else{
+
+                                notification.error({
+                                    message: 'PokemonGoBack',
+                                    description: file.name + ' file is invalidated, check your file.'
+                                });
+
+                                reject(new Error(file.name + ' file is invalidated, check your file.'));
+
+                            }
+
+                        }
+                    };
+
+                    reader.readAsText(file);
+
+                });
+
+                return promise;
+            },
+            showUploadList:false,
             onChange(info) {
                 if (info.file.status !== 'uploading') {
                     console.log(info.file, info.fileList);
@@ -136,9 +179,9 @@ class DeckList extends Component {
                 <Form>
                     <FormItem>
                         <Upload {...props}>
-                    <Button>
-                        <Icon type="upload"/> Click to choice deck file
-                    </Button>
+                            <Button>
+                                <Icon type="upload"/> Click to choice deck file
+                            </Button>
                         </Upload>
                     </FormItem>
                 </Form>

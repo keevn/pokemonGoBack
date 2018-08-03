@@ -12,6 +12,6 @@ const DefaultLayout = ({ match,currentUser }) => (
                 <Redirect to={`${match.url}`} />
             </Switch>
     </div>
-)
+);
 
 export default DefaultLayout ;

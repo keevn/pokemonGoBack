@@ -15,20 +15,27 @@ import DefaultLayout from '../layouts/DefaultLayout';
 
 import AppHeader from '../layouts/common/AppHeader';
 
-import {Layout, notification} from 'antd';
+import {Layout, notification,message} from 'antd';
 
 const {Content} = Layout;
 
 class App extends Component {
     constructor(props) {
         super(props);
-
+        
         notification.config({
             placement: 'bottomRight',
             bottom: 10,
             duration: 1,
         });
+
+        message.config({
+            top: 70,
+            duration: 2,
+            maxCount: 3
+        });
     }
+    
 
     render() {
 
@@ -37,7 +44,7 @@ class App extends Component {
                 <AppHeader/>
 
                 <Content className="app-content">
-                    <div className="container">
+                    <div className="container" >
                         <Switch>
                             <Route path="/auth" component={UnauthorizedLayout} />
                             <AuthorizedRoute path="/app" component={DefaultLayout} />

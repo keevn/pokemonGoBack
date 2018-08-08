@@ -1,6 +1,7 @@
 import CardStack from "../model/CardStack";
 import {randomCard} from "../model/Card";
 import range from 'lodash.range';
+import {DIRECTION_FROM_BOTTOM, DIRECTION_FROM_TOP} from "../constants";
 
 
 let deckCards;
@@ -15,7 +16,7 @@ beforeEach(() => {
     let CardWidth = 200;
     let Capacity = 1;
     let Margin = 5;
-    let Size = 10;
+    let Size = 60;
     deckCards = range(Size).map(() => randomCard());
 
     deck = new CardStack({Origin, CardWidth, Capacity, Margin, Cards:deckCards});
@@ -36,10 +37,10 @@ beforeEach(() => {
 test('CardStack() initial a basic CardStack', () => {
 
 
-    expect(deck.Offsets.size).toBe(10);
-    expect(deck.Offsets.get(deckCards[0].instantKey)).toEqual({left: 155, top: 105, zIndex: 1});
-    expect(deck.Offsets.get(deckCards[1].instantKey)).toEqual({left: 155, top: 105, zIndex: 2});
-    expect(deck.Offsets.get(deckCards[9].instantKey)).toEqual({left: 155, top: 105, zIndex: 10});
+    expect(deck.Cards.size).toBe(10);
+    expect(deck.Cards.get(0)).toEqual({left: 155, top: 105, zIndex: 1});
+    expect(deck.Cards.get(1)).toEqual({left: 155, top: 105, zIndex: 2});
+    expect(deck.Cards.get(9)).toEqual({left: 155, top: 105, zIndex: 10});
 
 });
 
@@ -47,11 +48,12 @@ test('addCard() test add cards function', () => {
 
 
     const newCard = randomCard();
-    const key = newCard.instantKey;
+    deckCards.push(newCard);
+    const key = deckCards.indexOf(newCard);
 
     deck.addCard(key);
-    expect(deck.Offsets.get(key)).toEqual({left: 155, top: 105, zIndex: 11});
-    expect(deck.Offsets.size).toBe(11);
+    expect(deck.Cards.get(key)).toEqual({left: 155, top: 105, zIndex: 11});
+    expect(deck.Cards.size).toBe(11);
 
    // deck.removeCard(key);
 
@@ -61,11 +63,12 @@ test('addCard(key,index) test insert cards function', () => {
 
 
     const newCard = randomCard();
-    const key = newCard.instantKey;
+    deckCards.push(newCard);
+    const key = deckCards.indexOf(newCard);
 
     deck.addCard(key,5);
-    expect(deck.Offsets.get(key)).toEqual({left: 155, top: 105, zIndex: 5});
-    expect(deck.Offsets.size).toBe(11);
+    expect(deck.Cards.get(key)).toEqual({left: 155, top: 105, zIndex: 5});
+    expect(deck.Cards.size).toBe(11);
 
 
 });
@@ -74,19 +77,20 @@ test('addCard(key,index) test insert cards function', () => {
 test('removeCard() test remove cards function', () => {
 
     const newCard = randomCard();
-    const key = newCard.instantKey;
+    deckCards.push(newCard);
+    const key = deckCards.indexOf(newCard);
 
     deck.addCard(key);
-    expect(deck.Offsets.get(key)).toEqual({left: 155, top: 105, zIndex: 11});
-    expect(deck.Offsets.size).toBe(11);
+    expect(deck.Cards.get(key)).toEqual({left: 155, top: 105, zIndex: 11});
+    expect(deck.Cards.size).toBe(11);
 
 
-    deck.removeCard(deckCards[5].instantKey);
-    expect(deck.Offsets.get(deckCards[4].instantKey)).toEqual({left: 155, top: 105, zIndex: 5});
-    expect(deck.Offsets.get(deckCards[5].instantKey)).toBeUndefined();
-    expect(deck.Offsets.get(deckCards[6].instantKey).zIndex).toBe(6);
-    deck.removeCard(deckCards[1].instantKey);
-    expect(deck.Offsets.size).toBe(9);
+    deck.removeCard(5);
+    expect(deck.Cards.get(4)).toEqual({left: 155, top: 105, zIndex: 5});
+    expect(deck.Cards.get(5)).toBeUndefined();
+    expect(deck.Cards.get(6).zIndex).toBe(6);
+    deck.removeCard(1);
+    expect(deck.Cards.size).toBe(9);
 
 
 });
@@ -95,25 +99,30 @@ test('removeCard() test remove cards function', () => {
 test('calculate() test calculate function', () => {
 
 
-    expect(bench.Offsets.get(benchCards[0].instantKey)).toEqual({left: 255, top: 155, zIndex: 1});
-    expect(bench.Offsets.get(benchCards[1].instantKey)).toEqual({left: 255 + 255, top: 155, zIndex: 2});
+    expect(bench.Cards.get(0)).toEqual({left: 255, top: 155, zIndex: 1});
+    expect(bench.Cards.get(1)).toEqual({left: 255 + 255, top: 155, zIndex: 2});
 
     let newCard = randomCard();
-    const key1 = newCard.instantKey;
+    benchCards.push(newCard);
+    const key1 = benchCards.indexOf(newCard);
 
     bench.addCard(key1);
-    expect(bench.Offsets.get(key1)).toEqual({left: 255 + 255*3, top: 155, zIndex: 4});
+    expect(bench.Cards.get(key1)).toEqual({left: 255 + 255*3, top: 155, zIndex: 4});
 
     newCard = randomCard();
-    const key2 = newCard.instantKey;
+
+    benchCards.push(newCard);
+    const key2 = benchCards.indexOf(newCard);
 
     newCard = randomCard();
-    const key3 = newCard.instantKey;
+
+    benchCards.push(newCard);
+    const key3 = benchCards.indexOf(newCard);
 
     bench.addCard(key2);
     bench.addCard(key3);
-    expect(bench.Offsets.get(key2)).toEqual({left: 1071, top: 155, zIndex: 5});
-    expect(bench.Offsets.get(key3)).toEqual({left: 1275, top: 155, zIndex: 6});
+    expect(bench.Cards.get(key2)).toEqual({left: 1071, top: 155, zIndex: 5});
+    expect(bench.Cards.get(key3)).toEqual({left: 1275, top: 155, zIndex: 6});
 });
 
 test('isInside() test isInside function', () => {
@@ -133,6 +142,61 @@ test('isInside() test isInside function', () => {
 
 });
 
+test('shuffle() test shuffle card stack function', () => {
+
+    const order = [];
+
+    for (let key of deck.Cards.keys()) {
+
+        order.push(deck.Cards.get(key).zIndex);
+    }
+
+
+    deck.shuffle();
+
+    const newOrder = [];
+
+    for (let key of deck.Cards.keys()) {
+
+        newOrder.push(deck.Cards.get(key).zIndex);
+    }
+
+    expect(order).not.toEqual(newOrder);
+
+
+
+});
+
+
+test('popCardIds() test pop n card ids out from the top or bottom of the stack', () => {
+
+
+    let id = deck.popCardIds(1,DIRECTION_FROM_TOP);
+
+    expect(id).toEqual([9]);
+
+     id = deck.popCardIds(1,DIRECTION_FROM_BOTTOM);
+
+    expect(id).toEqual([0]);
+
+    let ids= deck.popCardIds(2);
+
+    expect(ids).toEqual([9,8]);
+
+    ids= deck.popCardIds(2,DIRECTION_FROM_BOTTOM);
+
+    expect(ids).toEqual([0,1]);
+
+    deck.shuffle();
+
+    ids= deck.popCardIds(5);
+
+    console.log(deck,ids);
+
+});
+
+
+
 
 test('getCardIndex() test getCardIndex function', () => {
 
@@ -144,24 +208,26 @@ test('getCardIndex() test getCardIndex function', () => {
     const bench = new CardStack({Origin, CardWidth, Capacity, Margin, Cards:benchCards});
 
     let newCard = randomCard();
-    const key1 = newCard.instantKey;
-
+    benchCards.push(newCard);
+    const key1 = benchCards.indexOf(newCard);
     bench.addCard(key1);
 
     newCard = randomCard();
-    const key2 = newCard.instantKey;
+
+    benchCards.push(newCard);
+    const key2 = benchCards.indexOf(newCard);
     bench.addCard(key2);
 
-    console.log(bench.Offsets);
-    expect(bench.getKeyOfMouseOverCard({x: 198, y: 195})).toBe(benchCards[0].instantKey);
+    console.log(bench.Cards);
+    expect(bench.getKeyOfMouseOverCard({x: 198, y: 195})).toBe(0);
 
-    expect(bench.getKeyOfMouseOverCard({x: 266, y: 253})).toBe(benchCards[1].instantKey);
-    expect(bench.getKeyOfMouseOverCard({x: 319, y: 222})).toBe(benchCards[1].instantKey);
+    expect(bench.getKeyOfMouseOverCard({x: 266, y: 253})).toBe(1);
+    expect(bench.getKeyOfMouseOverCard({x: 319, y: 222})).toBe(1);
 
-    expect(bench.getKeyOfMouseOverCard({x: 320, y: 222})).toBe(benchCards[2].instantKey);
-    expect(bench.getKeyOfMouseOverCard({x: 320, y: 296})).toBe(benchCards[2].instantKey);
+    expect(bench.getKeyOfMouseOverCard({x: 320, y: 222})).toBe(2);
+    expect(bench.getKeyOfMouseOverCard({x: 320, y: 296})).toBe(2);
 
-    expect(bench.getKeyOfMouseOverCard({x: 394, y: 260})).toBe(benchCards[2].instantKey);
+    expect(bench.getKeyOfMouseOverCard({x: 394, y: 260})).toBe(2);
     expect(bench.getKeyOfMouseOverCard({x: 395, y: 260})).toBe(key1);
 
     expect(bench.getKeyOfMouseOverCard({x: 496, y: 260})).toBe(key2);

@@ -4,12 +4,13 @@
     bottom: 0;
     font-size: 25px;
     writing-mode: horizontal-tb;
+    margin-bottom: 25px;
 }
 
 .ai.discard span{
     position: absolute;
-    left: -30px;
-    bottom: 0;
+    left: -16px;
+    top: 25px;
     font-size: 25px;
     writing-mode: horizontal-tb;
 }

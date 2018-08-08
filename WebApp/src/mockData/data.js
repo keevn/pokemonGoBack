@@ -1,3 +1,5 @@
+import Pokemon from '../component/model/Pokemon';
+import {POKEMON_BASIC} from "../component/constants";
 export const cardList=[{},
     {
         "id":1,
@@ -1626,11 +1628,6 @@ export const abilityList =[{},
             "desc": "Discard all Energy attached to this Pokémon.",
             "actions": [
                 {
-                    "act":"dam",
-                    "target":"opponent-active",
-                    "value":[100],
-                },
-                {
                     "act":"count",
                     "target":"your-active:energy"
                 },
@@ -1638,6 +1635,11 @@ export const abilityList =[{},
                     "act":"deenergize",
                     "target":"your-active",
                     "value":"all",
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[100],
                 }
             ]
         },
@@ -1746,11 +1748,6 @@ export const abilityList =[{},
             "act": "dam:target:opponent-active:30,cond:flip:deenergize:target:opponent-active:1,applystat:status:paralyzed:opponent-active",
             "actions": [
                 {
-                    "act":"dam",
-                    "target":"opponent-active",
-                    "value":[30],
-                },
-                {
                     "act":"flip-coin",
                     "times":1
                 },
@@ -1763,6 +1760,11 @@ export const abilityList =[{},
                     "act":"deenergize",
                     "target":"opponent-active",
                     "value":1,
+                },
+                {
+                    "act":"dam",
+                    "target":"opponent-active",
+                    "value":[30],
                 }
             ]
         },
@@ -1844,7 +1846,7 @@ export const abilityList =[{},
                     "value":[80],
                 },
                 {
-                    "act":"heal",
+                    "act":"dam",
                     "target":"your-active",
                     "value":[20],
                 }
@@ -2685,10 +2687,12 @@ export const abilityList =[{},
             "name": "Red Card",
             "desc": "Your opponent shuffles his or her hand into his or her deck and draws 4 cards.",
             "act": "target:opponent:destination:deck:count(opponent-hand),shuffle:target:opponent,draw:opponent:4",
-            "actions": [
+            "actions": [{
+                "act":"count",
+                "target":"opponent-hand",
+            },
                 {
                     "act":"move",
-                    "target":"opponent-hand",
                     "from":"opponent-hand",
                     "amount":"all",
                     "to":"opponent-deck",
@@ -2700,9 +2704,7 @@ export const abilityList =[{},
                 {
                     "act":"draw",
                     "target":"opponent-deck",
-                    "from":"opponent-deck:top",
                     "amount":4,
-                    "to":"opponent-hand",
                 }
 
             ]
@@ -2710,9 +2712,18 @@ export const abilityList =[{},
         {
             "id": 74,
             "name": "Wally",
-            "desc": "Search your deck for a card that evolves from 1 of your Pokémon (excluding Pokémon-EX) and put it onto that Pokémon. (This counts as evolving that Pokémon.) Shuffle your deck afterward. You can use this cardEl during your first turn or on a Pokémon that was put into play this turn.",
+            "desc": "Search your deck for a card that evolves from 1 of your Pokémon (excluding Pokémon-EX) and put it onto that Pokémon. (This counts as evolving that Pokémon.) Shuffle your deck afterward. You can use this card during your first turn or on a Pokémon that was put into play this turn.",
             "act": "target:choice:your-pokemon:cat:basic:source:deck:filter:evolves-from:target:last:1,shuffle:target:your",
-            "actions": "search"
+            "actions": [{
+                "act":"pick",
+                "amount":"1",
+                "filter":(yourDeck,yourCards)=>{
+                    const pokemons= yourCards.filter(card=> (card instanceof Pokemon && card.category === POKEMON_BASIC));
+                    //const allStageOnes = yourCards.filter(card=> (card instanceof Pokemon && card.category === POKEMON_BASIC))
+
+                    //const stageOnes = pokemons.map((pokemon)=>{})
+                },
+            }]
         }
     ]
 ;

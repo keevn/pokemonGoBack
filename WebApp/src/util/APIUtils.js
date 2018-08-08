@@ -96,6 +96,13 @@ export function getUserDefaultDeck(username) {
 
 }
 
+export function getDeckList(username) {
+    return request({
+        url: API_BASE_URL + "/users/" + username + "/all_decks",
+        method: 'GET'
+    });
+}
+
 export function uploadDeckFile(formData, onSuccess, onError) {
 
 
@@ -142,9 +149,11 @@ export function joinGame(username) {
 
 }
 
-export function handleLogout({redirectTo = "/login", notificationType = "success",
+export function handleLogout({
+                                 redirectTo = "/login", notificationType = "success",
                                  description = "You're successfully logged out.",
-                                 history}) {
+                                 history
+                             }) {
 
     localStorage.removeItem(ACCESS_TOKEN);
 
@@ -156,5 +165,13 @@ export function handleLogout({redirectTo = "/login", notificationType = "success
         message: 'PokemonGoBack',
         description: description,
     });
-    
+
 };
+
+export function saveStep(step) {
+    return request({
+        url: API_BASE_URL + "/game/saveStep",
+        method: 'POST',
+        body: JSON.stringify(step)
+    });
+}

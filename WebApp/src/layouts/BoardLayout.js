@@ -8,9 +8,10 @@ import {
 
 import Profile from '../user/profile/Profile';
 
-import {Layout, Menu,Divider,Icon} from 'antd';
+import {Layout, Menu,Icon} from 'antd';
 import Welcome from "../game/Welcome";
 import Board from "../game/Board";
+import Loop from "../game/Game";
 
 const {Content, Sider} = Layout;
 
@@ -28,6 +29,7 @@ const BoardLayout = ({match,history,currentUser}) => (
             <Menu.Item key={`/app/users/${currentUser.username}`}><Link to={`/app/users/${currentUser.username}`}><Icon type="user" /><span>User Info</span></Link></Menu.Item>
             <Menu.Divider />
             <Menu.Item key="/app/test"><Link to='/app/test'><Icon type="solution" /><span>Test Area</span></Link></Menu.Item>
+            <Menu.Item key="/app/testLoop"><Link to='/app/testLoop'><Icon type="solution" /><span>Test Loop</span></Link></Menu.Item>
         </Menu>
         </Sider>
         <Content >
@@ -39,6 +41,12 @@ const BoardLayout = ({match,history,currentUser}) => (
                     console.log(props);
                     return <Board {...props} currentUser={currentUser}/>;
                 } } />
+                <Route path={`${match.path}/testLoop`} render={(props) =>{
+
+                    //console.log(props);
+                    return <Loop {...props} currentUser={currentUser}/>;
+                } } />
+
                 <Redirect to={`${match.path}/test`} />
             </Switch>
         </Content>

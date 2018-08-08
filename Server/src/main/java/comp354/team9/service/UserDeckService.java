@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class UserDeckService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDeckService.class);
 
-    public PagedResponse<DeckInfo> getAllDecks(UserPrincipal currentUser, int page, int size) {
+    public PagedResponse<DeckInfo> getAllPageDecks(UserPrincipal currentUser, int page, int size) {
         validatePageNumberAndSize(page, size);
 
         // Retrieve Polls
@@ -45,6 +46,21 @@ public class UserDeckService {
 
         return new PagedResponse<>(userDeckResponses, userDecks.getNumber(),
                 userDecks.getSize(), userDecks.getTotalElements(), userDecks.getTotalPages(), userDecks.isLast());
+    }
+
+    public List<DeckInfo> getAllDecks(UserPrincipal currentUser) {
+
+        List<UserDeck> userDecks = userDeckRepository.findByUserId(currentUser.getId());
+
+      
+        List<DeckInfo> userDeckResponses = new ArrayList<>();
+
+
+        for (UserDeck deck : userDecks) {
+            userDeckResponses.add(new DeckInfo(deck));
+        }
+
+        return userDeckResponses;
     }
 
     private void validatePageNumberAndSize(int page, int size) {

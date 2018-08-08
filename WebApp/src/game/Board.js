@@ -13,7 +13,13 @@ import CardView from "../component/CardView";
 import PokemonView from "../component/PokemonView";
 import Bench from "../component/Bench";
 import Pokemon from "../component/model/Pokemon";
+// eslint-disable-next-line
+import Worker from 'worker-loader!../AI/AI.worker.js';
 import {CARD_ENERGY, POKEMON_ASLEEP, POKEMON_BASIC, POKEMON_POISONED} from "../component/constants";
+import {Modal} from "antd/lib/index";
+
+import Coin from '../component/Coin';
+import FlipCoinModal from "../component/FlipCoinModal";
 
 
 
@@ -85,9 +91,9 @@ class Board extends React.Component {
 
             user_deck.calculate({Cards:user_cards});
 
-            user_cards.forEach(card => {
+            user_cards.forEach((card,i) => {
                 card.stack = user_deck;
-                card.zIndex = user_deck.Offsets.get(card.instantKey).zIndex;
+                card.zIndex = user_deck.Cards.get(i).zIndex;
             });
 
 
@@ -95,9 +101,9 @@ class Board extends React.Component {
 
             ai_deck.calculate({Cards:ai_cards});
 
-            ai_cards.forEach(card => {
+            ai_cards.forEach((card,i) => {
                 card.stack = ai_deck;
-                card.zIndex = ai_deck.Offsets.get(card.instantKey).zIndex;
+                card.zIndex = ai_deck.Cards.get(i).zIndex;
             });
 
 
@@ -170,9 +176,6 @@ class Board extends React.Component {
 
         //this.muteAllOperation();
 
-
-        //this.timerId = setTimeout(this.resetAllOperation,5000);
-        //this.autoFlip = setInterval(()=>{ this.setState({usersTurn : true});}, 10000);
     }
 
     componentWillUnmount() {
@@ -185,8 +188,6 @@ class Board extends React.Component {
 
         //this.resetAllOperation();
 
-        //clearInterval(this.autoFlip);
-        //clearTimeout(this.timerId);
     }
 
     handleMouseMove = ({pageX, pageY}) => {
@@ -198,12 +199,12 @@ class Board extends React.Component {
         if (isPressed && typeof selectedIndex === 'number' && this.player1.cards[selectedIndex].draggable) {
 
             const card = this.player1.cards[selectedIndex];
-            const offset = card.stack.Offsets.get(card.instantKey);
+            const offset = card.stack.Cards.get(selectedIndex);
 
             const cardX = pageX - topDeltaX;
             const cardY = pageY - topDeltaY;
 
-            card.stack.Offsets.set(card.instantKey, {top: cardY, left: cardX, zIndex: offset.zIndex});
+            card.stack.Cards.set(selectedIndex, {top: cardY, left: cardX, zIndex: offset.zIndex});
 
             this.setState({changed: true});
         }
@@ -213,7 +214,9 @@ class Board extends React.Component {
 
         this.findTarget(index);
         const card = this.player1.cards[index];
-        const {top, left} = card.stack.Offsets.get(card.instantKey);
+
+        if (!card.draggable)  return;
+        const {top, left} = card.stack.Cards.get(index);
         console.log(index, {top,left}, {pageX, pageY});          //pressX:
         this.setState({
             topDeltaX: pageX - left,
@@ -243,6 +246,7 @@ class Board extends React.Component {
 
         //only  'if (selectedIndex)' is not enough ,since the index could be 0
         if (typeof selectedIndex === 'number'&& this.state.dragTarget) {
+
             let card = this.player1.cards[selectedIndex];
 
 
@@ -281,7 +285,7 @@ class Board extends React.Component {
                     }
 
                     if (used) {
-                        card.stack.removeCard(card.instantKey);
+                        card.stack.removeCard(selectedIndex);
                         card.stack = null;
                         card.zIndex = -1;
                     }
@@ -290,9 +294,9 @@ class Board extends React.Component {
 
                 } else {           // move card to different stack
 
-                    card.stack.removeCard(card.instantKey);
-                    //console.log(card.stack.Offsets.size);
-                    dragTarget.addCard(card.instantKey);
+                    card.stack.removeCard(selectedIndex);
+                    //console.log(card.stack.Cards.size);
+                    dragTarget.addCard(selectedIndex);
 
                     if (dragTarget === this.player1.bench) {
                         
@@ -320,7 +324,7 @@ class Board extends React.Component {
 
 
 
-                    card.zIndex = dragTarget.Offsets.get(card.instantKey).zIndex;
+                    card.zIndex = dragTarget.Cards.get(selectedIndex).zIndex;
                     card.stack = dragTarget;
 
                     
@@ -338,7 +342,7 @@ class Board extends React.Component {
         if (newPokemon)  {
             //replace the card object with pokemon object after the card move animation
 
-            newPokemon.zIndex = dragTarget.Offsets.get(newPokemon.instantKey).zIndex;
+            newPokemon.zIndex = dragTarget.Cards.get(selectedIndex).zIndex;
             newPokemon.stack = dragTarget;
             this.player1.cards[selectedIndex] = newPokemon;
             
@@ -379,7 +383,7 @@ class Board extends React.Component {
 
                 this.player1.hand.addCard(card.instantKey);
                 card.stack = this.player1.hand;
-                card.zIndex = this.player1.hand.Offsets.get(card.instantKey).zIndex;
+                card.zIndex = this.player1.hand.Cards.get(card.instantKey).zIndex;
             }*/
 
             this.player1.cards[i].setStatus(POKEMON_POISONED);
@@ -405,18 +409,15 @@ class Board extends React.Component {
 
     drawCards =(player,event)=> {
         if (event) event.preventDefault();
-        if (player.deck.Offsets.size === 0) return;
+        if (player.deck.Cards.size === 0) return;
         const topCardKey = player.deck.popCard();
         player.hand.addCard(topCardKey);
 
-        for (let card of player.cards) {
+        const card = player.cards[topCardKey];
+        card.stack = player.hand;
+        card.zIndex = player.hand.Cards.get(topCardKey).zIndex;
+        if (player===this.player1) card.draggable = true;
 
-            if (card.instantKey === topCardKey) {
-                card.stack = player.hand;
-                card.zIndex = player.hand.Offsets.get(topCardKey).zIndex;
-                if (player===this.player1) card.draggable = true;
-            }
-        }
 
         this.setState({changed: true});
     }
@@ -428,7 +429,7 @@ class Board extends React.Component {
 
         user_cards.forEach(card => {
             card.stack = this.player1.deck;
-            card.zIndex = this.player1.deck.Offsets.get(card.instantKey).zIndex;
+            card.zIndex = this.player1.deck.Cards.get(card.instantKey).zIndex;
         });
 
         this.player1.cards=user_cards;
@@ -451,6 +452,9 @@ class Board extends React.Component {
         console.log(pokemon.name,"retreat");
 
 
+        let pickActivePokemon = (player) => {
+
+        };
 
         const detachedCards = pokemon.retreat();
 
@@ -475,7 +479,7 @@ class Board extends React.Component {
                 this.player1.active.removeCard(card.instantKey);
                 this.player1.discard.addCard(card.instantKey);
                 card.stack = this.player1.discard;
-                card.zIndex = this.player1.discard.Offsets.get(card.instantKey).zIndex;
+                card.zIndex = this.player1.discard.Cards.get(card.instantKey).zIndex;
 
                 this.forceUpdate();
             },i*500);
@@ -488,11 +492,52 @@ class Board extends React.Component {
 
             this.player1.bench.addCard(pokemon.instantKey);
             pokemon.stack = this.player1.bench;
-            pokemon.zIndex = this.player1.bench.Offsets.get(pokemon.instantKey).zIndex;
+            pokemon.zIndex = this.player1.bench.Cards.get(pokemon.instantKey).zIndex;
+            pokemon.draggable=true;
 
             this.forceUpdate();
         },i*500);
 
+
+    };
+
+    endTurn=()=>{
+
+        const ai = new Worker();
+
+
+        ai.onmessage = (e)=> {
+
+            const cmd= e.data;
+
+
+            if (cmd.cmd==="move"){
+                const card =this.player2.cards[cmd.cardIndex];
+
+                const targetStack = this.player2[cmd.to];
+                const sourceStack = this.player2[cmd.from];
+
+                sourceStack.removeCard(card.instantKey);
+                targetStack.addCard(card.instantKey);
+                card.zIndex = targetStack.Cards.get(card.instantKey).zIndex;
+
+                card.stack=this.player2[cmd.to];
+                this.forceUpdate();
+
+            }
+            console.log(cmd);
+            ai.terminate();
+        };
+
+
+        ai.postMessage([JSON.stringify(this.player1.cards),JSON.stringify(this.player2.cards)]);
+        
+
+    }
+
+    flip=()=>{
+
+            this.setState(Object.assign({},this.state,{showFlipCoinModal:true}));
 
     }
 
@@ -507,7 +552,7 @@ class Board extends React.Component {
             const stack = card.stack;
 
             if (stack) {
-                const offset = {...stack.Offsets.get(card.instantKey)};
+                const offset = {...stack.Cards.get(i)};
                 let zIndex = offset.zIndex + 1;
                 if (active) zIndex=100;
                 if (stack===this.player1.active) zIndex= 99;
@@ -526,7 +571,7 @@ class Board extends React.Component {
                                                                 x={offset.left}
                                                                 y={offset.top}  attack={stack===this.player1.active}
                                                                 onAttack={this.onAttack}
-                                                                onRetreat={this.onRetreat}  retreatalbe={this.player1.bench.Offsets.size}
+                                                                onRetreat={this.onRetreat}  retreatalbe={this.player1.bench.Cards.size}
 
                         /> : <CardView card={card} face_down={stack.face_down} width={stack.CardWidth}
                                        x={offset.left}
@@ -547,7 +592,7 @@ class Board extends React.Component {
             const stack = card.stack;
 
             if (stack) {
-                const offset = card.stack.Offsets.get(card.instantKey);
+                const offset = card.stack.Cards.get(i);
 
                 return (                                 //do not show attached cards
                     <div
@@ -572,7 +617,7 @@ class Board extends React.Component {
 
         const state = this.state;
 
-        return <div className="welcome-content" ref={this.Board} >
+        return <div className="welcome-content" ref={this.Board} id="content" >
             {userCardList}
             {aiCardList}
 
@@ -584,7 +629,7 @@ class Board extends React.Component {
 
                             const card = this.player1.cards[state.selectedIndex];
 
-                            if (active.Offsets.size < 1 && (card instanceof Pokemon||(card instanceof PokemonCard && card.category===POKEMON_BASIC)))
+                            if (active.Cards.size < 1 && (card instanceof Pokemon||(card instanceof PokemonCard && card.category===POKEMON_BASIC)))
                                 state.dragTarget = active;
 
                             console.log('inActive');
@@ -601,7 +646,7 @@ class Board extends React.Component {
 
                     const card = this.player1.cards[state.selectedIndex];
 
-                    if (bench.Offsets.size < bench.Capacity && card instanceof PokemonCard && card.category === POKEMON_BASIC)
+                    if (bench.Cards.size < bench.Capacity && card instanceof PokemonCard && card.category === POKEMON_BASIC)
                         state.dragTarget = bench;
 
                     console.log('inBench');
@@ -610,11 +655,11 @@ class Board extends React.Component {
 
             <Hand hand={this.player1.hand}/>
 
-            <Deck deck={this.player2.deck} className="ai"/>
+            <Deck deck={this.player2.deck} className="ai" isOpponent/>
 
-            <Bench bench={this.player2.bench}/>
+            <Bench bench={this.player2.bench} isOpponent/>
 
-            <Hand hand={this.player2.hand}/>
+            <Hand hand={this.player2.hand} isOpponent/>
 
             <Affix offsetBottom={200} style={{position: 'absolute', bottom: 100, right: 10}}>
                 <Button onClick={(e) => this.drawCards(this.player1,e)}>click</Button>
@@ -622,7 +667,12 @@ class Board extends React.Component {
                 <Button onClick={(e) => this.drawCards(this.player2,e)}>AI click</Button>
 
                 <Button onClick={(e) => this.reset()}>Reset</Button>
+                <Button onClick={(e) => this.endTurn()}>endTurn</Button>
+                <Button onClick={(e) => this.flip()}>flipCoin</Button>
             </Affix>
+            <FlipCoinModal show={this.showFlipCoinModal} afterFlip={(result)=>{
+                console.log(result);
+            }}/>
         </div>;
     }
 }

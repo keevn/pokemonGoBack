@@ -37,6 +37,7 @@ export default class Pokemon {
         this.damage = 0;
         this.status = POKEMON_NORMAL;
         this.isPoisoned= false;
+        this.isNewInfField=true;
 
 
         this.setStatus = this.setStatus.bind(this);
@@ -109,6 +110,7 @@ export default class Pokemon {
 
             this.setStatus(POKEMON_NORMAL);
             this.isPoisoned=false;
+            this.isNewInfField=true;
             
             return true;
         }

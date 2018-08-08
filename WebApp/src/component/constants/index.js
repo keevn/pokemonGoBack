@@ -28,3 +28,16 @@ export const ENERGY_DARKNESS="darkness";
 
 export const EFFECT_POSITIVE='pos';
 export const EFFECT_NEGITIVE='neg';
+
+export const DIRECTION_FROM_TOP='top';
+export const DIRECTION_FROM_BOTTOM='bottom';
+
+export const GAME_STAGE_SETTING_UP="setting_up";
+export const GAME_STAGE_INIT_HANDS="init_hand";
+export const GAME_STAGE_INIT_ACTIVE="init_active";
+export const GAME_STAGE_INIT_BENCH="init_bench";
+export const GAME_STAGE_INIT_PRIZE="init_prize";
+export const GAME_STAGE_REGULAR_TURN="regular_turn";
+
+export const GLOW_POKEMON_IN_HAND = "pokemon_in_hand";
+export const GLOW_POKEMON_IN_BENCH = "pokemon_in_bench";

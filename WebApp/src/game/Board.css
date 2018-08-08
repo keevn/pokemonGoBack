@@ -1,14 +1,15 @@
 .glow {
     border-radius: 15px;
-    border: #35a5e5 1px solid;
-    animation: glowing 1s infinite alternate;
+    border: #5e8665 1px solid;
+    animation: glowing 2s infinite;
+
 }
 
 @keyframes glowing {
     from {
-        box-shadow: rgb(30, 102, 238) 0 0 32px 0;
+        box-shadow: rgb(15, 120, 18) 0 0 20px 0;
     }
     to {
-        box-shadow: rgb(30, 102, 238) 0 0 4px 0;
+        box-shadow: rgb(98, 128, 131) 0 0 2px 0;
     }
 }

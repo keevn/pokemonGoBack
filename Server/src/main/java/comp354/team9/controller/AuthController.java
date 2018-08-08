@@ -4,11 +4,10 @@ import comp354.team9.exception.AppException;
 import comp354.team9.model.Role;
 import comp354.team9.model.RoleName;
 import comp354.team9.model.User;
-import comp354.team9.payload.ApiResponse;
-import comp354.team9.payload.JwtAuthenticationResponse;
-import comp354.team9.payload.LoginRequest;
-import comp354.team9.payload.SignUpRequest;
+import comp354.team9.model.UserDeck;
+import comp354.team9.payload.*;
 import comp354.team9.repository.RoleRepository;
+import comp354.team9.repository.UserDeckRepository;
 import comp354.team9.repository.UserRepository;
 import comp354.team9.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +46,9 @@ public class AuthController {
 
     @Autowired
     JwtTokenProvider tokenProvider;
+
+    @Autowired
+    private UserDeckRepository userDeckRepository;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -87,7 +89,12 @@ public class AuthController {
 
         user.setRoles(Collections.singleton(userRole));
 
+        UserDeck defaultDeck= userDeckRepository.getOne(new Long(3));
+
+        user.setDefaultDeck(defaultDeck);
+
         User result = userRepository.save(user);
+
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{username}")

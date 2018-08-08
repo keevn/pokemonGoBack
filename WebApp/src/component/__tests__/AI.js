@@ -2,21 +2,36 @@ import Pokemon from "../model/Pokemon";
 import {CARD_POKEMON, POKEMON_BASIC} from "../constants";
 import {randomCard} from "../model/Card";
 import AI from '../../AI/AI';
+import range from "lodash.range";
+import CardStack from "../model/CardStack";
 
-test('findThePokeomonToAttachEnergy()', ()=> {
 
-    const basic_pokemonCard1= randomCard(CARD_POKEMON,POKEMON_BASIC);
-    const pokemon1 = new Pokemon(basic_pokemonCard1);
-    pokemon1.hurt(20);
+let cards;
+let hand;
 
-    const basic_pokemonCard2= randomCard(CARD_POKEMON,POKEMON_BASIC);
-    const pokemon2 = new Pokemon(basic_pokemonCard2);
-    pokemon2.hurt(40);
+beforeEach(() => {
+    let Origin = {left: 150, top: 100};
 
-    const pokomonlist=[pokemon1,pokemon2];
+    let CardWidth = 200;
+    let Capacity = 7;
+    let Margin = 5;
+    let Size = 20;
+    cards = [...range(5).map(() => randomCard(CARD_POKEMON, POKEMON_BASIC)),...range(15).map(() => randomCard())];
 
-    const result= AI.findThePokeomonToAttachEnergy(pokomonlist);
 
-    expect(result).toBe(pokemon2);                  
+    hand = new CardStack({Origin, CardWidth, Capacity, Margin, Cards:cards});
+
+
+});
+
+test('pickActiveFromHand()', ()=> {
+
+
+
+     const cardIndex =  AI.pickActiveFromHand(hand,cards);
+
+     console.log(cardIndex);
+
+    expect(cards[cardIndex].category).toBe(POKEMON_BASIC);
 
 });

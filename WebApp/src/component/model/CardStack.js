@@ -1,4 +1,7 @@
 import range from "lodash.range";
+import {shuffle} from '../../util/Helpers';
+import {CARD_ENERGY, CARD_POKEMON, CARD_TRAINER, DIRECTION_FROM_TOP} from "../constants";
+import {Card, CardTypeError, EnergyCard, PokemonCard, TrainerCard} from "./Card";
 
 export default class CardStack {
     constructor(parameters) {
@@ -6,7 +9,7 @@ export default class CardStack {
             Origin = {
                 top: 0,
                 left: 0
-            }, CardWidth = 250, Capacity = 1, Margin = 5, face_down = true, Cards 
+            }, CardWidth = 250, Capacity = 1, Margin = 5, face_down = true, draggable = false, clickable = false, Cards
         } = parameters;
 
         this.Origin = {top: Origin.top, left: Origin.left};
@@ -17,90 +20,54 @@ export default class CardStack {
         this.Width = 0;
         this.Height = 0;
         this.face_down = face_down;
-        this.Offsets = new Map();
+        this.draggable = draggable;
+        this.clickable = clickable;
+        this.Cards = new Map();
 
         this.calculate({Cards});
     }
 
-    static getDeck = ({x, y},Cards=null) => {
 
-        let Origin = {left: x, top: y};
+    static getDeck = ({x, y}, Cards = null) => {
 
-        let CardWidth = 120;
-        let Capacity = 1;
-        let Margin = 0;
-        return new CardStack({Origin, CardWidth, Capacity, Margin, Cards});
-
-    };
-
-    static getHand = ({x, y},face_down=false) => {
-
-        let Origin = {left: x, top: y};
-
-        let CardWidth = 105;
-        let Capacity = 7;
-        let Margin = 5;
-        return new CardStack({Origin, CardWidth, Capacity, Margin, face_down});
-
-    };
-
-    static getBench = ({x, y}) => {
-
-        let Origin = {left: x, top: y};
-
-        let CardWidth = 120;
-        let Capacity = 5;
-        let Margin = 5;
-        let face_down = false;
-        return new CardStack({Origin, CardWidth, Capacity, Margin,face_down});
+        return new Deck({x, y}, Cards);
 
     };
 
 
-    static getActive = ({x, y}) => {
+    static getHand = ({x, y}, face_down = false, draggable = false) => {
 
-        let Origin = {left: x, top: y};
+        return new Hand({x, y}, face_down, draggable);
 
-        let CardWidth = 230;
-        let Capacity = 1;
-        let Margin = 10;
-        let face_down = false;
-        return new CardStack({Origin, CardWidth, Capacity, Margin, face_down});
+    };
 
+    static getBench = ({x, y}, face_down = false, draggable = false) => {
+
+        return new Bench({x, y},face_down, draggable);
+
+    };
+
+
+    static getActive = ({x, y},face_down=false) => {
+
+        return new Active({x, y},face_down);
     };
 
     static getPrize = ({x, y}) => {
 
-        let Origin = {left: x, top: y};
-
-        let CardWidth = 120;
-        let Capacity = 1;
-        let Margin = 5;
-        return new CardStack({Origin, CardWidth, Capacity, Margin});
+        return new Prize({x, y});
 
     };
 
     static getDiscard = ({x, y}) => {
 
-        let Origin = {left: x, top: y};
-
-        let CardWidth = 120;
-        let Capacity = 1;
-        let Margin = 0;
-        let face_down = false;
-        return new CardStack({Origin, CardWidth, Capacity, Margin, face_down});
+        return new Discard({x, y});
 
     };
 
-    static getPitstop = ({x, y}) => {
+    static getPitStop = ({x, y}) => {
 
-        let Origin = {left: x, top: y};
-
-        let CardWidth = 150;
-        let Capacity = 1;
-        let Margin = 5;
-        let face_down = false;
-        return new CardStack({Origin, CardWidth, Capacity, Margin, face_down});
+        return new PitStop({x, y});
 
     };
 
@@ -113,19 +80,19 @@ export default class CardStack {
 
             if (this.Capacity === 1) {
                 Cards.forEach((card, i) => {
-                    this.Offsets.set(card.instantKey, {
+                    this.Cards.set(i, {
                         top: this.Origin.top + this.Margin,
                         left: this.Origin.left + this.Margin,
                         zIndex: i + 1
                     });
                 });
             } else {
-                const size = this.Offsets.size;
+                const size = this.Cards.size;
                 const step = (size <= this.Capacity) ? this.CardWidth + this.Margin : (this.Width - 2 * this.Margin - this.CardWidth) / (size - 1);
                 const offsetX = this.Origin.left + this.Margin;
                 const offsetY = this.Origin.top + this.Margin;
                 Cards.forEach((card, i) => {
-                    this.Offsets.set(card.instantKey, {
+                    this.Cards.set(i, {
                         top: offsetY,
                         left: offsetX + step * i,
                         zIndex: i + 1
@@ -138,11 +105,11 @@ export default class CardStack {
                 const offsetX = this.Origin.left + this.Margin;
                 const offsetY = this.Origin.top + this.Margin;
                 let i = 0;
-                for (let [key, offset] of this.Offsets.entries()) {
+                for (let [key, offset] of this.Cards.entries()) {
 
                     const zIndex = del ? i + 1 : offset.zIndex;               //keep the order of cards in stack
 
-                    this.Offsets.set(key, {
+                    this.Cards.set(key, {
                         top: offsetY,
                         left: offsetX,
                         zIndex: zIndex
@@ -151,15 +118,15 @@ export default class CardStack {
                 }
 
             } else {
-                const size = this.Offsets.size;
+                const size = this.Cards.size;
                 const step = (size <= this.Capacity) ? this.CardWidth + this.Margin : (this.Width - 2 * this.Margin - this.CardWidth) / (size - 1);
                 const offsetX = this.Origin.left + this.Margin;
                 const offsetY = this.Origin.top + this.Margin;
                 let i = 0;
-                for (let [key, offset] of this.Offsets.entries()) {
+                for (let [key, offset] of this.Cards.entries()) {
 
                     const zIndex = del ? i + 1 : offset.zIndex;               //keep the order of cards in stack
-                    this.Offsets.set(key, {top: offsetY, left: offsetX + step * (zIndex-1), zIndex: zIndex});
+                    this.Cards.set(key, {top: offsetY, left: offsetX + step * (zIndex - 1), zIndex: zIndex});
 
                     i++;
                 }
@@ -170,77 +137,131 @@ export default class CardStack {
 
     };
 
-    reset = ({Cards})=>{
-        this.Offsets = new Map();
+    reset = ({Cards}) => {
+        this.Cards = new Map();
         this.calculate({Cards});
     }
 
-    addCard = (key, zIndex ) => {
+    addCard = (key, zIndex) => {
 
-        if (!zIndex || zIndex > this.Offsets.size) {
+        if (!zIndex || zIndex > this.Cards.size) {
 
-            this.Offsets.set(key, {zIndex: this.Offsets.size + 1});
+            this.Cards.set(key, {zIndex: this.Cards.size + 1});
             this.calculate({});
         }
         else {
-            for (let [key, offset] of this.Offsets.entries()) {
+            for (let [key, offset] of this.Cards.entries()) {
 
-                if (zIndex <= offset.zIndex) this.Offsets.set(key, {zIndex: offset.zIndex + 1});
+                if (zIndex <= offset.zIndex) this.Cards.set(key, {zIndex: offset.zIndex + 1});
 
             }
-            this.Offsets.set(key, {zIndex: zIndex});
+            this.Cards.set(key, {zIndex: zIndex});
             this.calculate({});
         }
 
     };
 
-    addAttachCard =(key,offset)=>{
+    shuffle = () => {
 
-        this.Offsets.set(key, offset);
+        let oldOrder=[];
 
-        setTimeout(()=>{
-            this.Offsets.delete(key);
-        },2000);
+        for (let  offset of this.Cards.values()) {
+
+            oldOrder.push(offset.zIndex);
+
+        }
+
+        console.log(oldOrder);
+
+        let newOrder = shuffle(range(1, this.Cards.size + 1));
+
+        let i = 0;
+        for (let key of this.Cards.keys()) {
+
+            this.Cards.set(key, {zIndex: newOrder[i]});
+
+            i++;
+        }
+        this.calculate({});
+
+        console.log(newOrder);
+    };
+
+    addAttachCard = (key, offset) => {
+
+        this.Cards.set(key, offset);
+
+        setTimeout(() => {
+            this.Cards.delete(key);
+        }, 2000);
 
     };
 
     removeCard = (keys) => {
 
-        if (!Array.isArray(keys)) keys= [keys];
+        if (!Array.isArray(keys)) keys = [keys];
 
-        let deleted=false;
-        keys = keys.map(key=>{
-            if (!this.Offsets.has(key)) return null;
-            this.Offsets.delete(key);
-            deleted=true;
+        let deleted = false;
+        keys = keys.map(key => {
+            if (!this.Cards.has(key)) return null;
+            this.Cards.delete(key);
+            deleted = true;
             return key;
         });
 
         if (deleted) {
-            
+
             this.calculate({del: true});
-            return keys.length===1? keys[0]:keys;
+            return keys.length === 1 ? keys[0] : keys;
 
         } else return null;
+        
     };
 
-    popCard=()=>{
+    popCardIds = (n=1,direction = DIRECTION_FROM_TOP) => {
 
-        if (this.Offsets.size<1) return null;
-        
-        let minZIndex = 99 ;
+        if (this.Cards.size < 1) return null;
+
+        let cardsInfo=[];
+
+        for (let [key, offset] of this.Cards.entries()) {
+
+            cardsInfo.push({zIndex:offset.zIndex,key:key});
+
+        }
+
+        cardsInfo.sort((a,b)=>{
+
+            if (a.zIndex < b.zIndex) {
+                return (direction===DIRECTION_FROM_TOP)? 1:-1;
+            }
+            if (a.zIndex > b.zIndex) {
+                return (direction===DIRECTION_FROM_TOP)? -1:1;
+            }
+            return 0;
+        });
+
+        return cardsInfo.slice(0,n).map((info)=>info.key);
+
+    };
+
+    popCard = () => {
+
+        if (this.Cards.size < 1) return null;
+
+        let minZIndex = 99;
         let findKey = null;
 
-        for (let [key, offset] of this.Offsets.entries()) {
+        for (let [key, offset] of this.Cards.entries()) {
 
-            if (offset.zIndex < minZIndex  ) {
+            if (offset.zIndex < minZIndex) {
                 minZIndex = offset.zIndex;
-                findKey=key;
+                findKey = key;
             }
 
         }
 
-        if (minZIndex>0) return this.removeCard(findKey);
+        if (minZIndex > 0) return this.removeCard(findKey);
 
     }
 
@@ -256,9 +277,9 @@ export default class CardStack {
 
         if (!this.isInside({x, y})) return false;
 
-        if (x < this.Offsets.get(key).left || x >= this.Offsets.get(key).left + this.CardWidth) return false;
+        if (x < this.Cards.get(key).left || x >= this.Cards.get(key).left + this.CardWidth) return false;
 
-        return !(y < this.Offsets.get(key).top || y >= this.Offsets.get(key).top + this.CardHeight);
+        return !(y < this.Cards.get(key).top || y >= this.Cards.get(key).top + this.CardHeight);
 
 
     };
@@ -269,7 +290,7 @@ export default class CardStack {
 
         let findKey = null;
 
-        for (let [key, offset] of this.Offsets.entries()) {
+        for (let [key, offset] of this.Cards.entries()) {
             if (this._isInsideOfCard({x, y}, key) && offset.zIndex > maxZIndex) {
                 maxZIndex = offset.zIndex;
                 findKey = key;
@@ -280,6 +301,114 @@ export default class CardStack {
 
     }
 
+
+}
+
+
+export class Deck extends CardStack {
+    constructor({x, y}, Cards = null) {
+        const Origin = {left: x, top: y};
+        const CardWidth = 120;
+        const Capacity = 1;
+        const Margin = 0;
+        super({Origin, CardWidth, Capacity, Margin, Cards});
+    }
+
+}
+
+export class Hand extends CardStack {
+
+    constructor({x, y}, face_down = false, draggable = false) {
+
+        const Origin = {left: x, top: y};
+        const CardWidth = 105;
+        const Capacity = 7;
+        const Margin = 5;
+
+        super({Origin, CardWidth, Capacity, Margin, face_down, draggable});
+    }
+
+}
+
+export class Bench extends CardStack {                         
+
+    constructor({x, y},face_down = false, draggable = false) {
+
+        const Origin = {left: x, top: y};
+
+        const CardWidth = 120;
+        const Capacity = 5;
+        const Margin = 5;
+        const clickable = true;
+
+        super({Origin, CardWidth, Capacity, Margin, face_down, draggable, clickable});
+    }
+}
+
+
+export class Active extends CardStack {
+
+    constructor({x, y},face_down=false) {
+
+        const Origin = {left: x, top: y};
+
+        const CardWidth = 230;
+        const Capacity = 1;
+        const Margin = 10;
+        const clickable = true;
+
+        super({Origin, CardWidth, Capacity, Margin, face_down, clickable});
+    }
+
+
+}
+
+export class Prize extends CardStack {
+
+    constructor({x, y}) {
+
+        const Origin = {left: x, top: y};
+
+        const CardWidth = 120;
+        const Capacity = 1;
+        const Margin = 0;
+        const clickable = true;
+
+        super({Origin, CardWidth, Capacity, Margin, clickable});
+    }
+
+}
+
+export class Discard extends CardStack {
+
+    constructor({x, y}) {
+
+        const Origin = {left: x, top: y};
+
+        const CardWidth = 120;
+        const Capacity = 1;
+        const Margin = 0;
+        const face_down = false;
+        const clickable = true;
+
+        super({Origin, CardWidth, Capacity, Margin, face_down, clickable});
+    }
+
+}
+
+export class PitStop extends CardStack {
+
+    constructor({x, y}) {
+
+        const Origin = {left: x, top: y};
+
+        const CardWidth = 120;
+        const Capacity = 1;
+        const Margin = 0;
+        const face_down = false;
+
+        super({Origin, CardWidth, Capacity, Margin, face_down});
+    }
 
 }
 

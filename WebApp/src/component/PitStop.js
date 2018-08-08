@@ -1,20 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './Discard.css';
 
-export default class Discard extends React.Component {
+export default class PitStop extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.discardEl = React.createRef();
-        this.top = props.discard.Origin.top;
-        this.left = props.discard.Origin.left;
-        this.width =props.discard.Width;
-        this.height=props.discard.Height;
+        this.pitStopEl = React.createRef();
+        this.top = props.pitStop.Origin.top;
+        this.left = props.pitStop.Origin.left;
+        this.width =props.pitStop.Width;
+        this.height=props.pitStop.Height;
 
 
-        this.className = this.props.className ? this.props.className + " discard" : "discard";
+        this.className = "pitstop";
 
         this.spanStyle = {
             fontSize: this.width / 4.8,
@@ -27,7 +26,7 @@ export default class Discard extends React.Component {
     }
 
     componentDidMount() {
-        const node = this.discardEl.current;
+        const node = this.pitStopEl.current;
 
         const domNode = ReactDOM.findDOMNode(node);
         this.screenPositon = domNode.getBoundingClientRect();
@@ -48,15 +47,10 @@ export default class Discard extends React.Component {
                 position: 'absolute',
                 width: this.width,
                 height: this.height,
-                backgroundColor: '#aaaaaa',
+                backgroundColor: '#aaaaaa4d',
                 zIndex:1,
-                writingMode: 'vertical-rl',
-                fontSize:40,
-                color: '#2f2f2f',
             }}
-                 ref={this.discardEl}>
-                Discard
-                <span style={this.spanStyle}>{this.props.discard.Cards.size}</span>
+                 ref={this.pitStopEl}>
             </div>
         );
     }

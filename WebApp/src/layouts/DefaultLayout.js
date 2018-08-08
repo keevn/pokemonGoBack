@@ -5,7 +5,7 @@ import Profile from '../user/profile/Profile';
 import BoardLayout from "./BoardLayout";
 
 const DefaultLayout = ({ match,currentUser }) => (
-    <div className="primary-layout">
+    <div className="primary-layout" >
             <Switch>
                {/* <Route path={`${match.path}/users/:username`} render={(props) => <Profile {...props} />}/>*/}
                 <Route path={`${match.path}`}  render={(props) => <BoardLayout {...props} currentUser={currentUser}/>} />

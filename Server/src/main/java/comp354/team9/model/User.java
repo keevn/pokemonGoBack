@@ -43,7 +43,7 @@ public class User extends DateAudit {
     @Size(max = 100)
     private String password;
 
-    @OneToOne(targetEntity = UserDeck.class, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "default_deck_id")
     private UserDeck defaultDeck;
 

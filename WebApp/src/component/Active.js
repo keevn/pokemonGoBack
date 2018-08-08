@@ -21,8 +21,6 @@ export default class Active extends React.Component {
         const domNode = ReactDOM.findDOMNode(node);
         this.screenPositon = domNode.getBoundingClientRect();
 
-        console.log(this.screenPositon);
-
     };
 
 
@@ -30,7 +28,7 @@ export default class Active extends React.Component {
 
         const {active} = this.props;
 
-        const className = `active${active.Offsets.size ? '' : ' glow'}`;
+        const className = `active${active.Cards.size ? '' : ' glow'}`;
 
         return (
             <div className={className} style={{

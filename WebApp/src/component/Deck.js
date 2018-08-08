@@ -56,7 +56,7 @@ export default class Deck extends React.Component {
             }}
                  ref={this.deckEl}>
                 Deck
-                <span style={this.spanStyle}>{this.props.deck.Offsets.size}</span>
+                <span style={this.spanStyle}>{this.props.deck.Cards.size}</span>
             </div>
         );
     }

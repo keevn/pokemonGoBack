@@ -54,6 +54,10 @@ public class PokemonGoBackTests {
 
         user.setRoles(Collections.singleton(userRole));
 
+        UserDeck defaultDeck= userDeckRepository.getOne(new Long(3));
+
+        user.setDefaultDeck(defaultDeck);
+        
         User result = userRepository.save(user);
 
         assertThat(result.getUsername())
@@ -87,10 +91,12 @@ public class PokemonGoBackTests {
         int sizeBeforeAdd = found.getUserDecks().size();
 
         UserDeck deck = new UserDeck(found, "deck3", "25,3,16,1,25,4,5,6,6,14,25,26,25,25,7,20,8,10,25,9,3,9,11,7,26,26,12,25,26,8,14,12,13,2,1,26,25,25,26,26,17,19,15,2,20,26,17,20,18,18,26,26,22,23,24,11,21,13,21,49");
+
+        deck = userDeckRepository.save(deck);
         
         found.setDefaultDeck(deck);
 
-        User result = userRepository.save(found);
+        User result = userRepository.saveAndFlush(found);
 
         assertThat(result.getDefaultDeck().getDeckName())
                 .isEqualTo(deck.getDeckName());

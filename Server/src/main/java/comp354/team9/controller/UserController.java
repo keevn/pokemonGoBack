@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -57,7 +59,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{username}/deck")
-    public UserDeck getUserDeckList(@PathVariable(value = "username") String username) {
+    public UserDeck getUserDeck(@PathVariable(value = "username") String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
@@ -71,7 +73,13 @@ public class UserController {
     public PagedResponse<DeckInfo> getPolls(@CurrentUser UserPrincipal currentUser,
                                             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size, @PathVariable("username") String username) {
-        return userDeckService.getAllDecks(currentUser, page, size);
+        return userDeckService.getAllPageDecks(currentUser, page, size);
+    }
+
+    
+    @GetMapping("/users/{username}/all_decks")
+    public List<DeckInfo> getUserDeckList(@CurrentUser UserPrincipal currentUser, @PathVariable("username") String username) {
+        return userDeckService.getAllDecks(currentUser);
     }
 
     

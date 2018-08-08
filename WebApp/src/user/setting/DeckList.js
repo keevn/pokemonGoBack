@@ -117,7 +117,7 @@ class DeckList extends Component {
 
                 //Todo need to add the invalidated deck file error handler.
 
-                const promise = new Promise(function (resolve, reject) {
+                return new Promise(function (resolve, reject) {
 
                     const reader = new FileReader();
                     
@@ -151,8 +151,6 @@ class DeckList extends Component {
                     reader.readAsText(file);
 
                 });
-
-                return promise;
             },
             showUploadList:false,
             onChange(info) {

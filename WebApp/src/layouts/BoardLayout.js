@@ -28,8 +28,7 @@ const BoardLayout = ({match,history,currentUser}) => (
             <Menu.Item key="/app/newGame"><Link to='/app/newGame'><Icon type="chrome" /><span>New Game</span></Link></Menu.Item>
             <Menu.Item key={`/app/users/${currentUser.username}`}><Link to={`/app/users/${currentUser.username}`}><Icon type="user" /><span>User Info</span></Link></Menu.Item>
             <Menu.Divider />
-            <Menu.Item key="/app/test"><Link to='/app/test'><Icon type="solution" /><span>Test Area</span></Link></Menu.Item>
-            <Menu.Item key="/app/testLoop"><Link to='/app/testLoop'><Icon type="solution" /><span>Test Loop</span></Link></Menu.Item>
+            <Menu.Item key="/app/testLoop"><Link to='/app/testLoop'><Icon type="solution" /><span>Test Area</span></Link></Menu.Item>
         </Menu>
         </Sider>
         <Content >
@@ -47,7 +46,7 @@ const BoardLayout = ({match,history,currentUser}) => (
                     return <Loop {...props} currentUser={currentUser}/>;
                 } } />
 
-                <Redirect to={`${match.path}/test`} />
+                <Redirect to={`${match.path}/testLoop`} />
             </Switch>
         </Content>
     </Layout>

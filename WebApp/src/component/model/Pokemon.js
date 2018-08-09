@@ -38,6 +38,7 @@ export default class Pokemon {
         this.status = POKEMON_NORMAL;
         this.isPoisoned= false;
         this.isNewInfField=true;
+        this.isHealed=false;
 
 
         this.setStatus = this.setStatus.bind(this);
@@ -57,7 +58,7 @@ export default class Pokemon {
         this.toJson = this.toJson.bind(this);
     }
 
-    static restore({cardIds, damage, status ,isPoisoned}) {
+    static restore({cardIds, damage, status ,isPoisoned, isNewInfField, isHealed}) {
         let pokemon = null;
 
         for (const cardId of cardIds) {
@@ -69,6 +70,8 @@ export default class Pokemon {
         pokemon.damage = damage;
         pokemon.status = status;
         pokemon.isPoisoned = isPoisoned;
+        pokemon.isNewInfField=isNewInfField;
+        pokemon.isHealed=isHealed;
 
         return pokemon;
     }
@@ -93,6 +96,8 @@ export default class Pokemon {
             });
         return abilities;
     }
+
+    
 
     evolve(upgradeCard) {
 
@@ -348,6 +353,8 @@ export default class Pokemon {
             damage: this.damage,
             status: this.status,
             isPoisoned: this.isPoisoned,
+            isNewInfField:this.isPoisoned,
+            isHealed:this.isHealed,
         };
 
         return JSON.stringify(pokemonData);

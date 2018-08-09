@@ -91,7 +91,7 @@ export const DeckSelector =(user,onConfirm)=> {
     let result;
     const callback=(value)=>{
         result = [value.player_list,value.AI_list,value.playerShuffle,value.AI_Shuffle];
-    }
+    };
 
     Modal.info({
         title: "Select the deck you wanna play:",

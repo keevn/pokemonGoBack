@@ -3,7 +3,15 @@ import CardStack from "./CardStack";
 import random from "lodash.random";
 import Pokemon from "./Pokemon";
 import {message} from "antd";
-import {POKEMON_BASIC,GLOW_POKEMON_IN_HAND} from "../constants";
+import {
+    POKEMON_BASIC,
+    GLOW_POKEMON_IN_HAND,
+    POKEMON_NORMAL,
+    POKEMON_STUCK,
+    POKEMON_PARALYZED,
+    POKEMON_ASLEEP
+} from "../constants";
+import {FlipCoin} from "../../util/Helpers";
 
 export default class Player {
 
@@ -24,12 +32,20 @@ export default class Player {
 
         this.opponent = null;
         this.component = null;
-        this.isFirstHandPlayer = false;
-        this.hasActivePokemon = false;
         this.isBenchReady = false;
-        this.firstRound=true;
         this.mulligan = 0;
+
+        this.isFirstHandPlayer = false;
+        this.firstRound= true;
+
+        this.turnWillFinish = false;
         this.turnFinished = false;
+        this.energized = false;
+        this.attacked = false;
+        this.retreated = false;
+        this.supported =false;
+        this.cardDrawn = false;
+        this.noCardtoDraw =false;     //set to true only in the beginning of turn if there is no card in beck
 
     }
 
@@ -80,17 +96,100 @@ export default class Player {
 
     };
 
+    resetPokemonState=(afterPokemonRest)=>{
 
-    resetTurn = (firstTurn = false) => {
+        //const keys = [...Array.from(this.active.Cards.keys()),...Array.from(this.bench.Cards.keys())];
 
-        if (firstTurn) {
-            //int firstTurn the first hand player can not attack
+        let keys = Array.from(this.active.Cards.keys());
+        const activePokemon = keys.length ? this.cards[keys[0]]:null;
+
+        let callbackCounter=0;
 
 
+        if  (activePokemon) {
+
+            if (activePokemon.attachedItem)  {
+                const itemCard = activePokemon.attachedItem;
+
+                callbackCounter++;
+                console.log(`Item found! doAbility(${itemCard.ability})`);
+                callbackCounter--;
+               // doAbility(itemCard.ability,()=>{
+                //                     callbackCounter--;
+                //                 });
+            }
+
+            activePokemon.isHealed = false;
+            if (activePokemon.isPoisoned) activePokemon.hurt(10);
+
+            switch (activePokemon.status) {
+                case POKEMON_STUCK:
+                    activePokemon.setStatus(POKEMON_NORMAL);
+                    break;
+                case POKEMON_ASLEEP:
+                    callbackCounter++;
+
+                    FlipCoin(1, "If it‘s a Head,remove the asleep state",(result)=>{
+                        if (result.head) activePokemon.setStatus(POKEMON_NORMAL);
+                        callbackCounter--;
+                    });
+
+                    break;
+                case POKEMON_PARALYZED:
+                    activePokemon.setStatus(POKEMON_NORMAL);
+                    break;
+            }
         }
-        console.log(this.name, "reset turn, firstTurn:", firstTurn);
+
+        keys = [...Array.from(this.bench.Cards.keys())];
+
+        for(let key of keys){
+            const pokemon = this.cards[key];
+
+            if (pokemon.attachedItem)  {
+                const itemCard = pokemon.attachedItem;
+
+                callbackCounter++;
+                console.log(`Item found! doAbility(${itemCard.ability},pokemon)`);
+                callbackCounter--;
+                // doAbility(itemCard.ability,,()=>{
+                //                     callbackCounter--;
+                //                 });
+            }
+
+            pokemon.isHealed = false;
+        }
+
+
+        //block the program flow until all the callback functions above finished
+        while (callbackCounter) {}
+
+        afterPokemonRest();
 
     };
+
+
+    resetTurn = () => {
+        this.firstRound = false;
+        this.turnWillFinish = false;
+        this.turnFinished = false;
+        this.energized = false;
+        this.attacked = false;
+        this.retreated = false;
+        this.supported =false;
+        this.cardDrawn = false;
+        this.noCardtoDraw =false;
+    };
+
+    retreatableInTurn(){
+
+        return !this.retreated && !(this.firstRound&&this.isFirstHandPlayer);
+    }
+    
+    attackableInTurn(){
+        
+        return !this.attacked && !(this.firstRound&&this.isFirstHandPlayer);
+    }
 
 
     hasBasicPokemonInHand = () => {
@@ -104,6 +203,70 @@ export default class Player {
 
         }
         return basicPokemonIndex.length>0;
+    };
+
+
+    hasActivePokemon =()=>{
+        return this.active.Cards.size === 1 ;
+    };
+
+    hasPokemonInHand =()=>{
+
+        //if (this.pitStop.Cards.size>0)
+
+        return this.bench.Cards.size > 0 ;
+
+    };
+
+    getRandomPokemonFromBench =()=>{
+        
+        const pokemongKyes = Array.from(this.bench.Cards.keys());
+        if (pokemongKyes.length>0) return this.cards[pokemongKyes[random(0,pokemongKyes.length-1)]];
+
+        return null;
+
+    };
+
+    getActivePokemon = ()=>{
+
+        if (this.hasActivePokemon()) {
+
+            let pokemon = null;
+            for (let key of this.active.Cards.keys()){
+
+                pokemon = this.cards[key];
+
+            }
+
+            return pokemon;
+        }
+        return null;
+    };
+
+    hasEnergyInHnad =()=>{
+        const energyCard = [];
+        for (let key of this.hand.Cards.keys()){
+
+            if (this.cards[key] instanceof EnergyCard) {
+                energyCard.push(key);
+            }
+
+        }
+        return energyCard.length>0;
+    };
+
+    getEnergyCardKey =()=>{
+
+        const energyCard = [];
+        for (let key of this.hand.Cards.keys()){
+
+            if (this.cards[key] instanceof EnergyCard) {
+                energyCard.push(key);
+            }
+
+        }
+
+        return energyCard[0];
     };
 
     glowCards = (cond)=>{
@@ -128,18 +291,8 @@ export default class Player {
         this.cards.map((card)=>{
             card.glow=false;
         });
-    }
-
-
-
-    pickActive = () => {
-        return new Promise((resolve) => {
-
-            console.log("AI first turn move.");
-
-        });
-
     };
+    
 
     setComponent(Component) {
         this.component = Component;
@@ -160,7 +313,14 @@ export default class Player {
         const ids = this.deck.popCardIds();
 
 
-        if(ids)  this.moveCard(this.deck,to, ids[0]);
+        if(ids)  {
+            this.moveCard(this.deck,to, ids[0]);
+
+            return true;
+            
+        } else
+
+            return false;
         
 
     };
@@ -169,7 +329,7 @@ export default class Player {
     moveCard = (sourceStack, targetStack, indexOfCard) => {
 
 
-        if (targetStack===this.bench && this.bench.Cards.size ===this.bench.Capacity)  return;
+        if (targetStack===this.bench && this.bench.Cards.size === this.bench.Capacity)  return;
 
         let card = this.cards[indexOfCard];
 
@@ -183,6 +343,7 @@ export default class Player {
 
         sourceStack.calculate({});
         targetStack.calculate({});
+
 
     };
 
@@ -204,6 +365,7 @@ export default class Player {
         if (card instanceof EnergyCard) {
 
             pokemon.attachEnergy(card);
+            this.energized=true;
             attached = true;
 
         }
@@ -216,7 +378,7 @@ export default class Player {
 
         if (card instanceof PokemonCard && card.attachable) {
 
-            if (this.firstRound||pokemon.isNewInfField) return false;
+            if (this.firstRound||pokemon.isNewInfField ) return false;
             if (pokemon.evolvableFrom(card)) {
 
                 const oldName = pokemon.name;
@@ -234,6 +396,7 @@ export default class Player {
             card.zIndex = 99;    //temporarily move to the top of stack before moving animations
             card.x = pokemon.x;
             card.y = pokemon.y;
+            card.stack = null;
             sourceStack.calculate({});
         }
 
@@ -255,6 +418,7 @@ export default class Player {
                     newPokemon.x= card.x;
                     newPokemon.y= card.y;
                     newPokemon.stack= stack;
+                    newPokemon.isNewInfField=true;
 
                     this.cards[key] = newPokemon;
 

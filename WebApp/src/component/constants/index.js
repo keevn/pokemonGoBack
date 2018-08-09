@@ -38,6 +38,12 @@ export const GAME_STAGE_INIT_ACTIVE="init_active";
 export const GAME_STAGE_INIT_BENCH="init_bench";
 export const GAME_STAGE_INIT_PRIZE="init_prize";
 export const GAME_STAGE_REGULAR_TURN="regular_turn";
+export const GAME_STAGE_ANNOUNCE_WINNER="announce_winner";
 
 export const GLOW_POKEMON_IN_HAND = "pokemon_in_hand";
 export const GLOW_POKEMON_IN_BENCH = "pokemon_in_bench";
+
+export const MULLIGAN ="mulligan";
+export const NO_WINNER="no_winner";
+export const NO_TURN_END="no_turn_end";
+export const GAME_FINISH="game_finished";

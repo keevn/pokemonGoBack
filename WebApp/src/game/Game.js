@@ -1,13 +1,15 @@
 import React from 'react';
 import {
+    MULLIGAN,
+    GAME_FINISH,
     GAME_STAGE_SETTING_UP,
-    GAME_STAGE_INIT_HANDS,
     GAME_STAGE_INIT_PRIZE,
     GAME_STAGE_INIT_ACTIVE,
     GAME_STAGE_INIT_BENCH,
     GAME_STAGE_REGULAR_TURN,
+    GAME_STAGE_ANNOUNCE_WINNER,
     POKEMON_BASIC,
-    GLOW_POKEMON_IN_HAND
+    GLOW_POKEMON_IN_HAND, TRAINER_SUPPORTER, NO_TURN_END
 } from "../component/constants";
 import range from "lodash.range";
 import random from 'lodash.random';
@@ -41,9 +43,11 @@ export default class Game extends React.Component {
         this.gameStage = GAME_STAGE_SETTING_UP;
         this.deckLoaded = false;
         this.firstRound = true;
-        this.inPlayerAction = false;
+        this.inGameLoopControl = false;
+        this.inTurnChecking = false;
 
         this.currentPlayer = null;
+        this.winner = null;
 
         this.gameLoopFuncStack = [];
 
@@ -61,7 +65,7 @@ export default class Game extends React.Component {
 
     loadDecks = () => {
 
-        this.inPlayerAction = true;
+        this.inGameLoopControl = true;
         return new Promise((resolve) => {
             DeckSelector(this.user, resolve);
         });
@@ -88,7 +92,7 @@ export default class Game extends React.Component {
 
     pickFirstPlayer = () => {
         return new Promise((resolve) => {
-            FlipCoin(1, "If it a Head ,the player goes first", resolve);
+            FlipCoin(1, "If it‘s a Head, the player goes first", resolve);
         });
     };
 
@@ -107,7 +111,7 @@ export default class Game extends React.Component {
         this.currentPlayer.opponent.resetTurn(true);
 
         this.gameStage = GAME_STAGE_INIT_ACTIVE;
-        this.inPlayerAction = false;              //let system take over
+        this.inGameLoopControl = false;              //let system take over
     };
 
     prepareFirstHand = () => {
@@ -119,11 +123,11 @@ export default class Game extends React.Component {
                 console.log(this.currentPlayer.name, " draw 7 cards");
 
 
-                const hasBasicPokemon = random(0,1);//this.currentPlayer.hasBasicPokemonInHand();
+                const hasBasicPokemon = random(0, 10) > 3;//this.currentPlayer.hasBasicPokemonInHand();
                 console.log(this.currentPlayer.name, "has basic Pokemon:", hasBasicPokemon);
 
                 if (hasBasicPokemon) resolve();
-                else reject(new Error("mulligan"));
+                else reject(new Error(MULLIGAN));
 
             };
 
@@ -167,19 +171,27 @@ export default class Game extends React.Component {
                     resolve();
                 }, 500);
 
-            } else {           //wait for the user to pick the active pokemon
+            } else {    //wait for the user to pick the active pokemon  ,
+                        //Usually the game flow does two things here :
+                        // 1. determine the condition, and
+                        // 2. notify the user do a move periodically,
+                        //    and make sure the periodic process will end in certain conditions
 
-                if (this.currentPlayer.active.Cards.size === 0) {
+                if (!this.currentPlayer.hasActivePokemon()) {
 
                     message.warning("Place choose your active Pokemon!");
 
                     this.player.glowCards(GLOW_POKEMON_IN_HAND);
                     this.forceUpdate();
+
+                    //save up the callback,then jump out the loop ,give the control to player
+                    this.gameLoopFuncStack.push(resolve);
+
                 }
 
                 this.activePokemonTimer = window.setInterval(() => {
 
-                    if (this.player.active.Cards.size === 0) {
+                    if (!this.currentPlayer.hasActivePokemon()) {
 
                         message.warning("Place choose your active Pokemon!");
 
@@ -198,8 +210,6 @@ export default class Game extends React.Component {
 
                 }, 10000);
 
-                this.gameLoopFuncStack.push(resolve);             //save up the callback,then jump out the loop ,give the control to player
-
             }
 
 
@@ -207,11 +217,17 @@ export default class Game extends React.Component {
     };
 
     finishInitActivePokemon = () => {
-        this.currentPlayer.hasActivePokemon = true;
-        this.inPlayerAction = false;
+        this.inGameLoopControl = false;
     };
 
-    mulligan = () => {
+    mulliganOccurred = (error) => {
+
+        console.log(error);
+
+        if (MULLIGAN!==error.message)   {              //only deal with mulligan
+            this.inGameLoopControl = false;
+            return;
+        }
 
         this.currentPlayer.mulligan++;
         console.log(this.currentPlayer.name, "has a mulligan! total mulligan:", this.currentPlayer.mulligan);
@@ -238,17 +254,27 @@ export default class Game extends React.Component {
             for (let key of hand.Cards.keys()) {
 
                 this.currentPlayer.moveCard(hand, deck, key);
-                this.forceUpdate();
 
             }
+
+            this.forceUpdate();
+
         }, delay);
 
 
         setTimeout(() => {
 
             deck.shuffle();
-            this.AI.hand.face_down = true;
-            this.inPlayerAction = false;
+
+
+            if (this.currentPlayer === this.AI) {
+                hand.face_down = true;
+
+                this.forceUpdate();
+
+            }
+
+            this.inGameLoopControl = false;                 //mulligan process finished, give the control back to game loop
 
         }, 500 + delay);
 
@@ -313,97 +339,6 @@ export default class Game extends React.Component {
 
     };
 
-    prepareBench = () => {
-        return new Promise((resolve) => {
-
-            if (this.currentPlayer === this.AI) {    //AI move
-
-                let i = 0;
-
-                while (true) {
-
-                    if (this.AI.hasBasicPokemonInHand() && random(0, 1)) {
-
-                        const cardIndex = AI.pickPokemonFromHand(this.AI.hand, this.AI.cards);
-
-                        this.AI.moveCard(this.AI.hand, this.AI.bench, cardIndex);
-
-                        this.forceUpdate();
-
-                        i++;
-
-                    } else {
-                        break;
-                    }
-                }
-
-                setTimeout(() => {
-                    message.info(`${this.AI.name} move ${i} basic pokemon${i > 1 ? "s" : ""} to Bench`);
-                    console.log(this.AI.name, "move basic pokemon to Bench", i);
-                    resolve();
-                }, i * 500);
-
-
-            } else {           //wait for the user to place pokemon to bench
-
-                if (this.player.hasBasicPokemonInHand()) {
-
-                    message.warning("Place your Pokemon to your Bench!");
-
-                    this.player.glowCards(GLOW_POKEMON_IN_HAND);
-                    this.forceUpdate();
-
-
-                    let timeOut = 5;
-
-                    this.benchPokemonTimer = window.setInterval(() => {
-
-                        if (this.player.hasBasicPokemonInHand() && timeOut) {
-
-                            this.player.resetGlowness();
-                            this.forceUpdate();
-
-                            timeOut--;
-
-                            if (timeOut) message.warning("Place your Pokemon to your Bench!");
-                            else message.warning("Timeout, move on!");
-
-                        } else {
-
-                            if (this.benchPokemonTimer) {
-                                window.clearTimeout(this.benchPokemonTimer);
-                                this.benchPokemonTimer = null;
-
-                            }
-                            resolve();
-                        }
-
-                    }, 5000);
-
-                } else {
-
-                    resolve();     //no basic pokemon ,move on
-
-                }
-
-            }
-
-        });
-
-    };
-
-    finishInitBench = () => {
-
-        this.AI.pokemonlize();
-        this.AI.bench.face_down=false;
-        this.AI.active.face_down=false;
-
-        this.player.pokemonlize();
-        this.currentPlayer.isBenchReady = true;
-        this.inPlayerAction = false;
-        
-    };
-
     drawPrizeCard = () => {
 
         return new Promise((resolve, reject) => {
@@ -438,13 +373,210 @@ export default class Game extends React.Component {
 
         console.log("Both draw 6 cards to Prize");
         this.gameStage = GAME_STAGE_INIT_BENCH;
-        this.inPlayerAction = false;
+        this.inGameLoopControl = false;
 
     }
 
+    prepareBench = () => {
+        return new Promise((resolve) => {
+
+            if (this.currentPlayer === this.AI) {    //AI move
+
+                let i = 0;
+
+                while (true) {
+
+                    if (this.AI.hasBasicPokemonInHand() && random(0, 1)) {
+
+                        const cardIndex = AI.pickPokemonFromHand(this.AI.hand, this.AI.cards);
+
+                        this.AI.moveCard(this.AI.hand, this.AI.bench, cardIndex);
+
+                        this.forceUpdate();
+
+                        i++;
+
+                    } else {
+                        break;
+                    }
+                }
+
+                setTimeout(() => {
+                    message.info(`${this.AI.name} move ${i} basic pokemon${i > 1 ? "s" : ""} to Bench`);
+                    console.log(this.AI.name, "move basic pokemon to Bench", i);
+                    resolve();
+                }, i? 500:0);
+
+
+            } else {           //wait for the user to place pokemon to bench
+
+                if (this.player.hasBasicPokemonInHand()) {
+
+                    message.warning("Place your Pokemon to your Bench!");
+
+                    this.player.glowCards(GLOW_POKEMON_IN_HAND);
+                    this.forceUpdate();
+
+
+                    let timeOut = 5;
+
+                    this.benchPokemonTimer = window.setInterval(() => {
+
+                        if (this.player.hasBasicPokemonInHand() && timeOut) {
+
+                            //this.player.glowCards(GLOW_POKEMON_IN_HAND);
+                            //this.forceUpdate();
+
+                            timeOut--;
+
+                            if (timeOut) message.warning("Place your Pokemon to your Bench!");
+                            else message.warning("Timeout, move on!");
+
+                        } else {
+
+                            if (this.benchPokemonTimer) {
+                                window.clearTimeout(this.benchPokemonTimer);
+                                this.benchPokemonTimer = null;
+
+                            }
+                            this.player.resetGlowness();
+                            this.forceUpdate();
+
+                            resolve();
+                        }
+
+                    }, 5000);
+
+                } else {
+                    this.player.resetGlowness();
+                    this.forceUpdate();
+
+                    resolve();     //no basic pokemon in hand,move on
+
+                }
+
+            }
+
+        });
+
+    };
+
+    finishInitBench = () => {
+
+        this.currentPlayer.isBenchReady = true;
+        this.inGameLoopControl = false;
+
+    };
+
+    showPokemonOnBench = () => {
+        return new Promise((resolve) => {
+
+            this.AI.pokemonlize();
+            this.AI.bench.face_down = false;
+            this.AI.active.face_down = false;
+
+            this.forceUpdate();
+
+
+            this.player.pokemonlize();
+
+            setTimeout(() => {
+
+                this.gameStage = GAME_STAGE_REGULAR_TURN;
+                resolve();
+            }, 1000);
+
+        });
+
+    };
+
     switchPlayer = () => {
         this.currentPlayer = this.currentPlayer.opponent;
+        this.forceUpdate();
         message.warning(`${this.currentPlayer.name}'s turn!`);
+    };
+
+    winnerCheck= ()=>{    //check whether there is a winner ,if so return winner player, otherwise return null
+
+        console.log("check winner....");
+        this.inGameLoopControl = true;
+       /* 1.who took his/her six prize cards
+        2.whose opponent has no Active Pokémon nor Bench Pokémon
+        3.whose opponent cannot draw a card from their Deck at the beginning of their turn.*/
+
+       return new Promise ((resolve)=>{
+
+           if (this.gameStage===GAME_STAGE_REGULAR_TURN) resolve(null);   //only check in regular turns
+
+           if (this.currentPlayer.prize.Cards.size===0)
+               resolve(this.currentPlayer);
+
+           else if (!this.currentPlayer.hasActivePokemon() && !this.currentPlayer.hasPokemonInHand())
+               resolve(this.currentPlayer.opponent);
+
+           else if (this.currentPlayer.noCardtoDraw)
+               resolve(this.currentPlayer.opponent);
+
+           else resolve(null);
+       });
+
+    };
+
+    afterWinnerCheck = (winner)=>{
+        return new Promise ((resolve,reject)=>{
+            
+            if (winner) {
+
+                this.winner = winner;
+                this.gameStage = GAME_STAGE_ANNOUNCE_WINNER;
+
+                this.inGameLoopControl = false;
+                reject(new Error(GAME_FINISH));               //not a real error, use this to control the game flow
+                
+            }else resolve();
+
+
+        });
+    }
+
+    turnEndingCheck = ()=>{
+        return new Promise ((resolve,reject)=>{
+            this.inGameLoopControl = true;
+
+            console.log(`check if current player's (${this.currentPlayer.name}) turn should be finished.`);
+
+            console.log(this.currentPlayer.attacked,this.currentPlayer.turnWillFinish) ;
+            if (this.currentPlayer.attacked || this.currentPlayer.turnWillFinish) {
+                resolve();
+            }else {
+                this.inGameLoopControl = false;
+                reject(new Error(NO_TURN_END));        //not a real error, use this to control the game flow
+            }
+        });
+        
+    };
+
+    endCurrentTurnStart =()=>{
+        return new Promise ((resolve)=>{
+
+            console.log(`Reset all the pokemon state`);
+
+            //reset active pokemon statues
+
+            //const afterPokemonRest=()=>{
+              //  resolve();
+            //};
+
+            this.currentPlayer.resetPokemonState(resolve);
+            
+        });
+    };
+
+    endCurrentFinished=()=>{
+         console.log(`${this.currentPlayer.name}'s turn finished.`);
+         this.switchPlayer();
+         this.currentPlayer.resetTurn();
+         this.inGameLoopControl = false;                //give back to game loop
     };
 
     gameLoop = (i = 0) => {
@@ -456,7 +588,7 @@ export default class Game extends React.Component {
 
             case GAME_STAGE_SETTING_UP:
 
-                if (this.inPlayerAction) break;
+                if (this.inGameLoopControl) break;
                 console.log("setting up the game");
 
                 this.loadDecks()
@@ -466,21 +598,21 @@ export default class Game extends React.Component {
                 break;
 
             case GAME_STAGE_INIT_ACTIVE:
-                if (this.inPlayerAction) break;
+                if (this.inGameLoopControl) break;                //if already in controlled game flow mood ,do nothing, let the current stage continue
 
-                if (!this.currentPlayer.hasActivePokemon) {
+                if (!this.currentPlayer.hasActivePokemon()) {       //no active pokemon, game control steps in
 
-                    this.inPlayerAction = true;
+                    this.inGameLoopControl = true;                //set the controlling flag
                     console.log(this.currentPlayer.name, " prepare hand and active");
 
                     this.prepareFirstHand()
                         .then(this.setActivePokemon)
                         .then(this.finishInitActivePokemon)
-                        .catch(this.mulligan);
+                        .catch(this.mulliganOccurred);
 
                 } else {
 
-                    if (this.currentPlayer.opponent.hasActivePokemon) //both players finished first hand cards process
+                    if (this.currentPlayer.opponent.hasActivePokemon()) //both players finished first hand cards process
                         this.gameStage = GAME_STAGE_INIT_PRIZE;       //change game stage
 
                     this.switchPlayer();               // switch to another player to prepare first hand cards and active pokemon
@@ -490,9 +622,9 @@ export default class Game extends React.Component {
                 break;
 
             case GAME_STAGE_INIT_PRIZE:
-                if (this.inPlayerAction) break;
+                if (this.inGameLoopControl) break;
 
-                this.inPlayerAction = true;
+                this.inGameLoopControl = true;
                 this.drawPrizeCard()
                     .then(this.processMulligan)
                     .then(this.finishDrawPrize);
@@ -500,36 +632,67 @@ export default class Game extends React.Component {
                 break;
 
             case  GAME_STAGE_INIT_BENCH:
-                if (this.inPlayerAction) break;
+                if (this.inGameLoopControl) break;
 
                 if (!this.currentPlayer.isBenchReady) {
 
-                    this.inPlayerAction = true;
-                    console.log(this.currentPlayer.name, " prepare bench");
+                    this.inGameLoopControl = true;
+                    console.log(this.currentPlayer.name, " prepare the bench");
 
                     this.prepareBench()
                         .then(this.finishInitBench);
 
                 } else {
 
-                    if (this.currentPlayer.opponent.isBenchReady)     //both players finished bench
-                        this.gameStage = GAME_STAGE_REGULAR_TURN;  //change game stage
+                    if (this.currentPlayer.opponent.isBenchReady) {  //both players finished bench
 
+                        this.showPokemonOnBench()    //show bench only both side finished prepare bench ,then change game stage
+                            .then(this.switchPlayer);
 
-                    this.switchPlayer();                         // switch to another player to prepare the bench
+                    } else {
+                        this.switchPlayer();              // switch to another player to prepare the bench
+                    }
 
                 }
 
                 break;
 
             case GAME_STAGE_REGULAR_TURN:
+                if (this.inGameLoopControl) break;
 
-                //message.info(`${this.currentPlayer.name}'s turn`);
+                console.log("turn checking...", i);
+                this.winnerCheck()
+                    .then(this.afterWinnerCheck)
+                    .then(this.turnEndingCheck)
+                    .then(this.endCurrentTurnStart)
+                    .then(this.endCurrentFinished)
+                    .catch((jump)=>{
 
-                if (!this.currentPlayer.turnFinished)
-                    console.log("regular turn");
+                        switch (jump.message) {
+                            case GAME_FINISH:
+                                //console.log("game finished, we have a winner");
+                                break;
+                            case NO_TURN_END:
+                                console.log("no turn change,continue player operation");
+                                if (this.currentPlayer === this.AI) {    //AI move
+                                    this.inGameLoopControl = true;
 
+                                    AI.playTurn(this.AI,this.player,this)
+                                        .then(()=>{
+                                            this.inGameLoopControl = false;
+                                        });
+                                    
+                                } else{                            //user move
 
+                                }
+                                
+                                break;
+                        }
+                    });
+
+                break;
+            case GAME_STAGE_ANNOUNCE_WINNER:
+                console.log("game finished, we have a winner");
                 break;
             default:
         }
@@ -541,13 +704,16 @@ export default class Game extends React.Component {
 
     };
 
+
     runGame = () => {
         this.setState({isRunning: true});
         this.gameLoop();
     }
 
     stopGame = () => {
+
         this.setState({isRunning: false});
+
         if (this.timeoutHandler) {
             window.clearTimeout(this.timeoutHandler);
             this.timeoutHandler = null;
@@ -593,7 +759,7 @@ export default class Game extends React.Component {
 
     handleMouseMove = ({pageX, pageY}) => {
 
-        if (this.inPlayerAction && this.currentPlayer === this.player) {
+        if (this.currentPlayer === this.player) {
 
 
             const {isPressed, topDeltaX, topDeltaY, selectedIndex} = this.state;
@@ -618,7 +784,7 @@ export default class Game extends React.Component {
 
     handleMouseUp = ({pageX, pageY}) => {
 
-        if (this.inPlayerAction && this.currentPlayer === this.player) {
+        if (this.currentPlayer === this.player) {
 
             console.log("mouse released at:", {pageX, pageY});
             const {selectedIndex, dragTarget} = this.state;
@@ -651,10 +817,14 @@ export default class Game extends React.Component {
 
                         }
 
+                        if (dragTarget === this.player.pitStop) {
+                            if (card instanceof TrainerCard && card.category === TRAINER_SUPPORTER) this.player.applySupporter(selectedIndex);
+                        }
+
                         if (movable) this.player.moveCard(card.stack, dragTarget, selectedIndex);
 
 
-                        if (movable && this.gameLoopFuncStack.length > 0) {
+                        if (movable && this.inGameLoopControl && this.gameLoopFuncStack.length > 0) {
                             const func = this.gameLoopFuncStack.pop();
                             if (func) func();               //continue the game loop
                         }
@@ -676,13 +846,13 @@ export default class Game extends React.Component {
 
     };
 
-    handleMouseDown = (index, {pageX, pageY, button}) => {   //pos:the index of cardEl in position
+    handleMouseDown = (index, {pageX, pageY, button}) => {   //pos:the index of card in position
 
         const card = this.player.cards[index];
 
         if (!card.stack.draggable) return;
         const {top, left} = card.stack.Cards.get(index);
-        console.log(index, {top, left}, {pageX, pageY});          //pressX:
+        console.log(index, {top, left}, {pageX, pageY});
         this.setState({
             topDeltaX: pageX - left,
             topDeltaY: pageY - top,
@@ -701,6 +871,13 @@ export default class Game extends React.Component {
         }
     };
 
+    userFinishTurn =()=>{
+
+        this.currentPlayer.turnWillFinish = true;
+        this.inGameLoopControl = false;
+        
+    };
+
     renderStacks() {
         const state = this.state;
 
@@ -708,6 +885,12 @@ export default class Game extends React.Component {
             return (
                 <div>
                     <CoinPic face_up={this.player.isFirstHandPlayer}/>
+                    { this.currentPlayer? (
+                        <div><span style={{width:200,
+                            display: 'inline-block'}}>Current Player:{this.currentPlayer.name} </span>
+                        <Button type="primary" disabled={this.gameStage!==GAME_STAGE_REGULAR_TURN || this.currentPlayer!==this.player} onClick={this.userFinishTurn}>Done</Button>
+                        </div>
+                    ):null}
                     <Active active={this.player.active}
                             onMouseOver={() => {
 
@@ -829,7 +1012,7 @@ export default class Game extends React.Component {
             const stack = card.stack;
 
             if (stack) {
-                const offset = card.stack.Cards.get(i);
+                const offset = stack.Cards.get(i);
 
                 return (                                 //do not show attached cards
                     <div

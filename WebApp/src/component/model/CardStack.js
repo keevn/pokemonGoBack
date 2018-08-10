@@ -92,10 +92,11 @@ export default class CardStack {
                 const offsetX = this.Origin.left + this.Margin;
                 const offsetY = this.Origin.top + this.Margin;
                 Cards.forEach((card, i) => {
+                    
                     this.Cards.set(i, {
                         top: offsetY,
                         left: offsetX + step * i,
-                        zIndex: i + 1
+                        zIndex: i + 1,
                     });
                 });
             }

@@ -21,8 +21,8 @@ export default class Discard extends React.Component {
         };
 
         this.spanStyle = Object.assign({},this.spanStyle,this.props.className ? {
-            right: -(this.width / 4),}:{
-            marginLeft: this.width+2,});
+            right:0,marginRight: this.width+2,}:{
+            left: 0,marginLeft: this.width+2,});
 
     }
 

@@ -13,9 +13,8 @@ import {
 } from "../component/constants";
 import range from "lodash.range";
 import random from 'lodash.random';
-import {shuffle} from "../util/Helpers";
 import Player from '../component/model/Player';
-import {Modal, Button, message, Affix} from 'antd';
+import {Modal, Button, message} from 'antd';
 import {FlipCoin, DeckSelector} from "../util/Helpers";
 import Pokemon from "../component/model/Pokemon";
 import PokemonView from "../component/PokemonView";
@@ -29,7 +28,8 @@ import Hand from "../component/Hand";
 import Prize from "../component/Prize";
 import PitStop from "../component/PitStop";
 import CoinPic from "../component/CoinPic";
-import AI from "../AI/AI";
+import AI from "../logic/AI";
+import Ability from "../logic/Ability";
 
 export default class Game extends React.Component {
 
@@ -76,7 +76,7 @@ export default class Game extends React.Component {
         const component = this;
 
         this.player = Player.getPlayer(this.props.currentUser, decksInfo[0], decksInfo[2]);
-        this.AI = Player.getAIPlayer({name: "AI", id: 1}, decksInfo[1], decksInfo[3]);
+        this.AI = Player.getAIPlayer({name: "Fake AI", id: 1}, decksInfo[1], decksInfo[3]);
 
         this.player.opponent = this.AI;
         this.AI.opponent = this.player;
@@ -123,7 +123,7 @@ export default class Game extends React.Component {
                 console.log(this.currentPlayer.name, " draw 7 cards");
 
 
-                const hasBasicPokemon = random(0, 10) > 3;//this.currentPlayer.hasBasicPokemonInHand();
+                const hasBasicPokemon = this.currentPlayer.hasBasicPokemonInHand();
                 console.log(this.currentPlayer.name, "has basic Pokemon:", hasBasicPokemon);
 
                 if (hasBasicPokemon) resolve();
@@ -159,7 +159,7 @@ export default class Game extends React.Component {
 
                 const cardIndex = AI.pickPokemonFromHand(this.AI.hand, this.AI.cards);
 
-                let card = this.AI.cards[cardIndex];
+                //let card = this.AI.cards[cardIndex];
 
                 this.AI.moveCard(this.AI.hand, this.AI.active, cardIndex);
 
@@ -506,7 +506,7 @@ export default class Game extends React.Component {
 
        return new Promise ((resolve)=>{
 
-           if (this.gameStage===GAME_STAGE_REGULAR_TURN) resolve(null);   //only check in regular turns
+           if (this.gameStage!==GAME_STAGE_REGULAR_TURN) resolve(null);   //only check in regular turns
 
            if (this.currentPlayer.prize.Cards.size===0)
                resolve(this.currentPlayer);
@@ -683,6 +683,13 @@ export default class Game extends React.Component {
                                         });
                                     
                                 } else{                            //user move
+
+                                   if (!this.player.cardDrawn) {
+                                       this.player.draw();
+                                       this.forceUpdate();
+                                       this.player.cardDrawn = true;
+                                       
+                                   }
 
                                 }
                                 
@@ -876,6 +883,25 @@ export default class Game extends React.Component {
         this.currentPlayer.turnWillFinish = true;
         this.inGameLoopControl = false;
         
+    };
+
+    onAttack =(pokemon,ability)=>{
+
+        console.log(pokemon.name,"do",ability.skill.id);
+
+        if (this.player.attackableInTurn()) {
+            const a = new Ability(ability.skill.id,this.player);
+
+            a.promiseSerial().then((result) => {
+                console.log(result);
+
+                this.forceUpdate();
+                setTimeout(()=>{
+                    this.player.attacked = true;
+                },1000);
+            });
+
+        }
     };
 
     renderStacks() {

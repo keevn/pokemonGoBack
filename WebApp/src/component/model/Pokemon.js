@@ -4,7 +4,7 @@ import {
     ENERGY_COLORLESS,
     POKEMON_BASIC,
     POKEMON_NORMAL,
-    POKEMON_DEAD, CARD_ENERGY, POKEMON_POISONED, POKEMON_PARALYZED, POKEMON_ASLEEP,
+    POKEMON_DEAD, CARD_ENERGY, POKEMON_POISONED, POKEMON_PARALYZED, POKEMON_ASLEEP, POKEMON_STUCK,
 } from "../constants";
 import {Card, CardTypeError} from "./Card";
 
@@ -18,6 +18,7 @@ export default class Pokemon {
         this.pic_id = card.cardId;
         this.cardId = card.cardId;
         this.instantKey = card.instantKey;
+        this.cardIndex = card.cardIndex;
         this.name = card.name;
         this.type = CARD_POKEMON;
         this.category = card.category;
@@ -206,7 +207,7 @@ export default class Pokemon {
 
     retreat(){
 
-        if (!this.isRetreatable()) return;
+        //if (!this.isRetreatable()) return;
 
         let detachedCards =[];
 
@@ -223,34 +224,7 @@ export default class Pokemon {
         return detachedCards;
 
     }
-
-    /*attachEnergy(energyCard, ...properties){
-
-        if (properties.length && typeof properties[0]['onBefore'] === "function") {
-
-            let resultBefore = properties[0]['onBefore'](this);
-
-            if (!resultBefore) {
-                throw new Error("Error occurred before attach energy cardEl");
-                return false;
-            }
-        }
-
-        this.attachedEnergy.push(energyCard);
-        this._manifest.push(energyCard);
-
-        if (properties.length && typeof properties[0]['onAfter'] === "function") {
-
-            let resultBefore = properties[0]['onAfter'](this);
-
-            if (!resultBefore) {
-                throw new Error("Error occurred after attach energy cardEl");
-            }
-        }
-
-        return true;
-
-    }*/
+    
 
     attachEnergy(energyCard) {
 
@@ -301,6 +275,7 @@ export default class Pokemon {
 
     attachItem(itemCard) {
 
+        const discardItem =null;
         if (this.attachedItem!=null) {
             this.detachItem();
         }
@@ -309,7 +284,7 @@ export default class Pokemon {
         this.attachedItem = itemCard;
         this._manifest.set(`${itemCard.category}`, itemCard);
         
-
+        return discardItem;
     }
 
     detachItem() {
@@ -324,12 +299,16 @@ export default class Pokemon {
         return itemCard;
     }
 
+    isAttackable(){
+        return (this.status === POKEMON_STUCK || this.status === POKEMON_NORMAL);
+    }
+
 
     hurt(amount) {
 
         this.damage += amount;
         if (this.damage >= this.hp) {
-            this.damage = this.hp;
+           // this.damage = this.hp;
             this.setStatus(POKEMON_DEAD);
         }
 
@@ -337,7 +316,11 @@ export default class Pokemon {
 
     heal(amount) {
 
-        this.damage = this.damage < amount ? 0 : this.damage -= amount;
+        const oldDamage =  this.damage;
+        this.damage = this.damage < amount ? 0 : this.damage - amount;
+
+
+        this.isHealed = this.isHealed || this.damage !== oldDamage ;
 
     }
 

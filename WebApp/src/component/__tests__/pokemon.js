@@ -287,18 +287,25 @@ test('heal(hp) : heal this pokemon', () => {
 
     const pokemon = new Pokemon(pokemoncard);
 
+    pokemon.heal(10);
+    expect(pokemon.isHealed).not.toBeTruthy();
+
     pokemon.hurt(20);
 
 
     pokemon.heal(10);
 
     expect(pokemon.damage).toBe(10);
+    expect(pokemon.isHealed).toBeTruthy();
 
     pokemon.heal(30);
 
     expect(pokemon.damage).toBe(0);
     expect(pokemon.status).toBe(POKEMON_NORMAL);
+    expect(pokemon.isHealed).toBeTruthy();
 
+    pokemon.heal(10);
+    expect(pokemon.isHealed).toBeTruthy();
 
 });
 

@@ -4,12 +4,13 @@ import random from "lodash.random";
 import Pokemon from "./Pokemon";
 import {message} from "antd";
 import {
-    POKEMON_BASIC,
+    CARD_TRAINER,
     GLOW_POKEMON_IN_HAND,
+    POKEMON_ASLEEP,
+    POKEMON_BASIC,
     POKEMON_NORMAL,
-    POKEMON_STUCK,
-    POKEMON_PARALYZED,
-    POKEMON_ASLEEP
+    POKEMON_PARALYZED, POKEMON_STAGE_ONE,
+    POKEMON_STUCK, TRAINER_ITEM, TRAINER_SUPPORTER
 } from "../constants";
 import {FlipCoin} from "../../util/Helpers";
 
@@ -31,7 +32,6 @@ export default class Player {
 
 
         this.opponent = null;
-        this.component = null;
         this.isBenchReady = false;
         this.mulligan = 0;
 
@@ -90,6 +90,7 @@ export default class Player {
             card.zIndex = locationInfo.zIndex;
             card.x = locationInfo.left;
             card.y = locationInfo.top;
+            card.cardIndex = i;
         });
 
         this.cards = cards;
@@ -100,12 +101,10 @@ export default class Player {
 
         //const keys = [...Array.from(this.active.Cards.keys()),...Array.from(this.bench.Cards.keys())];
 
-        let keys = Array.from(this.active.Cards.keys());
-        const activePokemon = keys.length ? this.cards[keys[0]]:null;
+        const activePokemon = this.getActivePokemon();
 
         let callbackCounter=0;
-
-
+        
         if  (activePokemon) {
 
             if (activePokemon.attachedItem)  {
@@ -120,6 +119,7 @@ export default class Player {
             }
 
             activePokemon.isHealed = false;
+            activePokemon.isNewInfField =false;
             if (activePokemon.isPoisoned) activePokemon.hurt(10);
 
             switch (activePokemon.status) {
@@ -141,7 +141,7 @@ export default class Player {
             }
         }
 
-        keys = [...Array.from(this.bench.Cards.keys())];
+        const keys = [...Array.from(this.bench.Cards.keys())];
 
         for(let key of keys){
             const pokemon = this.cards[key];
@@ -158,6 +158,7 @@ export default class Player {
             }
 
             pokemon.isHealed = false;
+            pokemon.isNewInfField =false;
         }
 
 
@@ -183,7 +184,7 @@ export default class Player {
 
     retreatableInTurn(){
 
-        return !this.retreated && !(this.firstRound&&this.isFirstHandPlayer);
+        return !this.retreated && !(this.firstRound&&this.isFirstHandPlayer) && this.bench.Cards.size>=1;
     }
     
     attackableInTurn(){
@@ -203,6 +204,79 @@ export default class Player {
 
         }
         return basicPokemonIndex.length>0;
+    };
+
+    hasStageOnePokemonInHand = () => {
+
+        const stageOnePokemonIndex = [];
+        for (let key of this.hand.Cards.keys()){
+
+            if (this.cards[key] instanceof PokemonCard && this.cards[key].category===POKEMON_STAGE_ONE) {
+                stageOnePokemonIndex.push(key);
+            }
+
+        }
+        return stageOnePokemonIndex.length>0;
+    };
+
+    getStageOnePokemonListFromHand =()=>{
+
+        const stageOnePokemon = [];
+        for (let key of this.hand.Cards.keys()){
+
+            const card = this.cards[key];
+            if (card instanceof PokemonCard && card.category===POKEMON_STAGE_ONE) {
+                stageOnePokemon.push(card);
+            }
+
+        }
+        return stageOnePokemon;
+    };
+
+    getAllBasicPokemonFromField =()=>{
+
+         const pokemonList =[];
+         const active =this.getActivePokemon();
+
+        if (active.category===POKEMON_BASIC) pokemonList.push(active);
+
+        for (let key of this.bench.Cards.keys()){
+
+            const card = this.cards[key];
+            if (card.category===POKEMON_BASIC) {
+                pokemonList.push(card);
+            }
+
+        }
+
+        return pokemonList;
+
+    };
+
+    hasItemCardInHand = () => {
+
+        const itemCardIndex = [];
+        for (let key of this.hand.Cards.keys()){
+
+            if (this.cards[key] instanceof TrainerCard && this.cards[key].category===TRAINER_ITEM) {
+                itemCardIndex.push(key);
+            }
+
+        }
+        return itemCardIndex.length>0;
+    };
+
+    hasSupportedCardInHand = () => {
+
+        const supporterCardIndex = [];
+        for (let key of this.hand.Cards.keys()){
+
+            if (this.cards[key] instanceof TrainerCard && this.cards[key].category===TRAINER_SUPPORTER) {
+                supporterCardIndex.push(key);
+            }
+
+        }
+        return supporterCardIndex.length>0;
     };
 
 
@@ -228,19 +302,19 @@ export default class Player {
     };
 
     getActivePokemon = ()=>{
+        const keys = Array.from(this.active.Cards.keys());
+        return keys.length ? this.cards[keys[0]] : null;
+    };
 
-        if (this.hasActivePokemon()) {
-
-            let pokemon = null;
-            for (let key of this.active.Cards.keys()){
-
-                pokemon = this.cards[key];
-
-            }
-
-            return pokemon;
+    getAllBenchPokemon = ()=>{
+        
+        const pokemons = [];
+        for (let key of this.bench.Cards.keys()){
+            pokemons.push(this.cards[key]);
         }
-        return null;
+
+        return pokemons;
+
     };
 
     hasEnergyInHnad =()=>{
@@ -269,6 +343,36 @@ export default class Player {
         return energyCard[0];
     };
 
+    getItemCardKey=()=>{
+
+        const itemCard = [];
+        for (let key of this.hand.Cards.keys()){
+
+            if (this.cards[key] instanceof TrainerCard && this.cards[key].category===TRAINER_ITEM) {
+                itemCard.push(key);
+            }
+
+        }
+
+        return itemCard[0];
+
+    };
+
+    getSupporterCardKey=()=>{
+
+        const supporterCard = [];
+        for (let key of this.hand.Cards.keys()){
+
+            if (this.cards[key] instanceof TrainerCard && this.cards[key].category===TRAINER_SUPPORTER) {
+                supporterCard.push(key);
+            }
+
+        }
+
+        return supporterCard[0];
+
+    };
+
     glowCards = (cond)=>{
 
         switch (cond) {
@@ -292,11 +396,7 @@ export default class Player {
             card.glow=false;
         });
     };
-    
 
-    setComponent(Component) {
-        this.component = Component;
-    }
 
     setOpponent(player) {
         this.opponent = player;
@@ -373,6 +473,7 @@ export default class Player {
         if (card instanceof TrainerCard && card.attachable) {
 
             pokemon.attachItem(card);
+
             attached = true;
         }
 
@@ -396,13 +497,19 @@ export default class Player {
             card.zIndex = 99;    //temporarily move to the top of stack before moving animations
             card.x = pokemon.x;
             card.y = pokemon.y;
-            card.stack = null;
+            card.stack = null;        
             sourceStack.calculate({});
         }
 
         return true;
 
     };
+
+    discard =(indexOfCards)=>{
+
+    };
+
+    
 
     pokemonlize=()=>{
 
@@ -427,7 +534,7 @@ export default class Player {
             }
         });
 
-    }
+    };
 
 
     //n: times of coin to be flipped

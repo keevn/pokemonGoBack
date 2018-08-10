@@ -1,9 +1,8 @@
-import Pokemon from "../model/Pokemon";
-import {CARD_POKEMON, POKEMON_BASIC} from "../constants";
-import {randomCard} from "../model/Card";
-import AI from '../../AI/AI';
+import {CARD_POKEMON, POKEMON_BASIC} from "../../component/constants";
+import {randomCard} from "../../component/model/Card";
+import AI from '../AI';
 import range from "lodash.range";
-import CardStack from "../model/CardStack";
+import CardStack from "../../component/model/CardStack";
 
 
 let cards;
@@ -26,9 +25,7 @@ beforeEach(() => {
 
 test('pickActiveFromHand()', ()=> {
 
-
-
-     const cardIndex =  AI.pickActiveFromHand(hand,cards);
+     const cardIndex =  AI.pickPokemonFromHand(hand,cards);
 
      console.log(cardIndex);
 

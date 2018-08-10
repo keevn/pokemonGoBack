@@ -11,6 +11,7 @@ import {
     CARD_TRAINER, TRAINER_ITEM, TRAINER_SUPPORTER, ENERGY_DARKNESS
 } from "../constants";
 import Pokemon from "../model/Pokemon";
+import range from "lodash.range";
 
 
 
@@ -91,6 +92,22 @@ test('get a PokemonCard instant', ()=> {
     const card= Card.getCardInstants(1);
 
     expect(card).toBeInstanceOf(PokemonCard);
+
+});
+
+test('get not pokemon card instant', ()=> {
+
+
+
+    const id1= range(2).map(()=>(randomCard(CARD_POKEMON,POKEMON_STAGE_ONE).cardId));
+
+    const id2= range(3).map(()=>(randomCard(CARD_ENERGY).cardId));
+
+    const id3= range(2).map(()=>(randomCard(CARD_TRAINER).cardId));
+
+    const ids=[...id1,...id2,...id3];
+
+    console.log(ids);
 
 });
 

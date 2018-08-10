@@ -14,7 +14,7 @@ import PokemonView from "../component/PokemonView";
 import Bench from "../component/Bench";
 import Pokemon from "../component/model/Pokemon";
 // eslint-disable-next-line
-import Worker from 'worker-loader!../AI/AI.worker.js';
+import Worker from 'worker-loader!../logic/AI.worker.js';
 import {CARD_ENERGY, POKEMON_ASLEEP, POKEMON_BASIC, POKEMON_POISONED} from "../component/constants";
 import {Modal} from "antd/lib/index";
 
